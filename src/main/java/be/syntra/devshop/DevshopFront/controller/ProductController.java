@@ -10,9 +10,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/devshop/admin")
 public class ProductController {
+    private final ProductService productService;
 
     @Autowired
-    ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/addproduct")
     public ModelAndView displayAddProductsFrom() {
