@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = ProductController.class)
 @AutoConfigureMockMvc
-class ProductControllerTest {
+class ProductDtoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
