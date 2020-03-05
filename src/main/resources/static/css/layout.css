@@ -1,0 +1,12 @@
+.page-content {
+    padding-left: 150px;
+    padding-right: 50px;
+}
+
+.mdl-textfield.is-focused .mdl-textfield__label {
+    color: red;
+}
+
+.mdl-textfield__label:after {
+    background-color: red;
+}
