@@ -27,6 +27,7 @@ public class ProductController {
 
     @PostMapping("addproduct")
     public ModelAndView getProductEntry(@ModelAttribute("product") ProductDto productDto) {
+        System.out.println(productDto);
         productService.addProduct(productDto);
         return new ModelAndView();
     }
