@@ -23,17 +23,17 @@
     <main class="mdl-layout__content">
         <div class="page-content">
             <h1>Add Product</h1>
-            <form method="post">
+            <form th:object="${product}" method="post">
                 <div class="mdl-grid">
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="name">
+                            <input class="mdl-textfield__input" type="text" id="name" th:field="*{name}">
                             <label class="mdl-textfield__label" for="name">Product name</label>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="price">
+                            <input class="mdl-textfield__input" type="text" id="price" th:field="*{price}">
                             <label class="mdl-textfield__label" for="name">Product price</label>
                         </div>
                     </div>

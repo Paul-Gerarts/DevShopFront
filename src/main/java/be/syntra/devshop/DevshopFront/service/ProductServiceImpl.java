@@ -9,4 +9,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createEmptyProduct() {
         return new ProductDto();
     }
+
+    @Override
+    public void addProduct(ProductDto productDto) {
+
+    }
 }
