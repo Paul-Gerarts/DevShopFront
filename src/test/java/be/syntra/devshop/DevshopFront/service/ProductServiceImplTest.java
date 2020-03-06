@@ -14,7 +14,7 @@ class ProductServiceImplTest {
 
     @Test
     void createEmptyProduct() {
-        ProductService productService = new ProductServiceImpl(productClient);
+        ProductService productService = new ProductServiceImpl(/*productClient*/);
         ProductDto emptyProductDto = new ProductDto();
 
         assertEquals(productService.createEmptyProduct(), emptyProductDto);

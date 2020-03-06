@@ -1,18 +1,15 @@
 package be.syntra.devshop.DevshopFront.service;
 
-import be.syntra.devshop.DevshopFront.client.ProductClient;
+import be.syntra.devshop.DevshopFront.model.SaveStatus;
 import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private ProductClient productClient;
-
-    @Autowired
-    public ProductServiceImpl(ProductClient productClient) {
-        this.productClient = productClient;
-    }
 
     @Override
     public ProductDto createEmptyProduct() {
@@ -20,7 +17,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductDto productDto) {
-        productClient.addProduct(productDto);
+    public SaveStatus addProduct(ProductDto productDto) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<ProductDto> request = new HttpEntity<>(productDto, httpHeaders);
+        ProductDto productDtoResultFromBackEnd = restTemplate.postForObject("http://localhost:8080/products", request, ProductDto.class);
+        if (productDto.equals(productDtoResultFromBackEnd)) {
+            return SaveStatus.SAVED;
+        }
+        return SaveStatus.ERROR;
     }
 }

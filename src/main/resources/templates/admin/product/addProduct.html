@@ -38,10 +38,19 @@
                         </div>
                     </div>
                 </div>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                        th:disabled="${status != null && status.label.equals('Saved')}">
                     Save
                 </button>
             </form>
+            <div th:if="${status != null}">
+                <!-- Chip -->
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
+                    <span class="mdl-chip__text" th:text="${status.label}">Deletable Chip</span>
+                    <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
+                </span>
+            </div>
         </div>
     </main>
 </div>

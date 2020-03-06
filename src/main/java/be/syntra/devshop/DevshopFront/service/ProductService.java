@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.service;
 
+import be.syntra.devshop.DevshopFront.model.SaveStatus;
 import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
 
 public interface ProductService {
@@ -11,5 +12,11 @@ public interface ProductService {
      */
     ProductDto createEmptyProduct();
 
-    void addProduct(ProductDto productDto);
+    /***
+     * to send the new ProductDto to a RESTfull service
+     * and return a status that corresponds to the success of the action
+     * @param productDto
+     */
+
+    SaveStatus addProduct(ProductDto productDto);
 }
