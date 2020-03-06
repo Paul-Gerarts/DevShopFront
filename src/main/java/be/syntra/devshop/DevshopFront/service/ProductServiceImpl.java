@@ -22,9 +22,13 @@ public class ProductServiceImpl implements ProductService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto, httpHeaders);
-        ProductDto productDtoResultFromBackEnd = restTemplate.postForObject("http://localhost:8080/products", request, ProductDto.class);
-        if (productDto.equals(productDtoResultFromBackEnd)) {
-            return SaveStatus.SAVED;
+        try {
+            ProductDto productDtoResultFromBackEnd = restTemplate.postForObject("http://localhost:8080/products", request, ProductDto.class);
+            if (productDto.equals(productDtoResultFromBackEnd)) {
+                return SaveStatus.SAVED;
+            }
+        } catch (Exception e) {
+
         }
         return SaveStatus.ERROR;
     }
