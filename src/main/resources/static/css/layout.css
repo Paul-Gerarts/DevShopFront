@@ -10,3 +10,7 @@
 .mdl-textfield__label:after {
     background-color: red;
 }
+
+.mdl-layout__content {
+    padding-top: 30px;
+}
