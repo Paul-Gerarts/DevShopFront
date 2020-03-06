@@ -28,7 +28,8 @@ public class ProductServiceImpl implements ProductService {
                 return SaveStatus.SAVED;
             }
         } catch (Exception e) {
-
+            System.out.println(e.getCause());
+            System.out.println(e.getLocalizedMessage());
         }
         return SaveStatus.ERROR;
     }
