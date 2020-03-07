@@ -3,9 +3,7 @@ package be.syntra.devshop.DevshopFront.service;
 import be.syntra.devshop.DevshopFront.model.SaveStatus;
 import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto, httpHeaders);
         try {
-            ProductDto productDtoResultFromBackEnd = restTemplate.postForObject(url, request, ProductDto.class);
-            if (productDto.equals(productDtoResultFromBackEnd)) {
+            ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(url, request, ProductDto.class);
+            if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
                 return SaveStatus.SAVED;
             }
         } catch (Exception e) {

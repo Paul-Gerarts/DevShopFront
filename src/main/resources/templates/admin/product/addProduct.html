@@ -43,11 +43,11 @@
                     Save
                 </button>
             </form>
+            <!-- Chip -->
             <div th:if="${status != null}">
-                <!-- Chip -->
                 <br>
                 <span class="mdl-chip mdl-chip--deletable">
-                    <span class="mdl-chip__text" th:text="${status.label}">Deletable Chip</span>
+                    <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
                 </span>
             </div>

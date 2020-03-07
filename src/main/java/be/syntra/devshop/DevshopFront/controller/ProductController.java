@@ -28,9 +28,8 @@ public class ProductController {
         return "admin/product/addProduct";
     }
 
-    @PostMapping("addproduct")
+    @PostMapping("/addproduct")
     public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
-        System.out.println(productDto);
         SaveStatus saveStatus = productService.addProduct(productDto);
         model.addAttribute("product", productDto);
         model.addAttribute("status", saveStatus);
