@@ -31,6 +31,7 @@ class ProductControllerTest {
 
     @Test
     void displayAddProductsFrom() throws Exception {
+
         //given
         Mockito.when(productService.createEmptyProduct()).thenReturn(new ProductDto());
 
@@ -49,6 +50,7 @@ class ProductControllerTest {
 
     @Test
     void getProductEntry() throws Exception {
+
         //given
         ProductDto dummyProductDto = ProductDto.builder()
                 .name("name")
