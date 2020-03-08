@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.controller;
+package be.syntra.devshop.DevshopFront.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

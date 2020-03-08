@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.controller;
+package be.syntra.devshop.DevshopFront.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

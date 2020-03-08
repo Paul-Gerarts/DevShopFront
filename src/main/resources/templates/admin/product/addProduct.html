@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DevShop</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-red.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link type="text/css" href="../static/css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">DevShop</span>
+            <!-- spacer, to align future elements to the right -->
+            <div class="mdl-layout-spacer"></div>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <span class="mdl-layout-title">Add Product</span>
+            <form th:object="${product}" method="post">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="name" th:field="*{name}">
+                            <label class="mdl-textfield__label" for="name">Product name</label>
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="price" th:field="*{price}">
+                            <label class="mdl-textfield__label" for="name">Product price</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                        th:disabled="${status != null && status.label.equals('Saved')}">
+                    Save
+                </button>
+            </form>
+            <!-- Chip -->
+            <div th:if="${status != null}">
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
+                    <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
+                    <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
+                </span>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
