@@ -15,7 +15,4 @@ class ProductServiceImplTest {
         assertEquals(productService.createEmptyProduct(), emptyProductDto);
     }
 
-    @Test
-    void addProductSuccess() {
-    }
 }

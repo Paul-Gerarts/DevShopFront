@@ -6,9 +6,9 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 public interface ProductService {
 
     /***
-     * creates a Dto of a Product obj
+     * creates an empty Dto of a Product obj
      * to use in the form when creating a new Product
-     * @return
+     * @return productDto
      */
     ProductDto createEmptyProduct();
 

@@ -1,17 +1,14 @@
 package be.syntra.devshop.DevshopFront.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum SaveStatus {
     SAVED("Saved"),
     ERROR("Error");
 
-    private String label;
+    private final String label;
 
-    public String label() {
-        return getLabel();
-    }
 }

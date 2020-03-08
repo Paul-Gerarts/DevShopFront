@@ -31,9 +31,10 @@ class ProductControllerTest {
 
     @Test
     void displayAddProductsFrom() throws Exception {
-
+        //given
         Mockito.when(productService.createEmptyProduct()).thenReturn(new ProductDto());
 
+        //when
         mockMvc.perform(get("/devshop/admin/addproduct"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/product/addProduct"))
@@ -42,15 +43,20 @@ class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", new ProductDto()));
 
+        //then
         verify(productService, times(1)).createEmptyProduct();
     }
 
     @Test
     void getProductEntry() throws Exception {
-        ProductDto emptyProductDto = new ProductDto();
-        ProductDto dummyProductDto = ProductDto.builder().name("name").price(new BigDecimal("55")).build();
+        //given
+        ProductDto dummyProductDto = ProductDto.builder()
+                .name("name")
+                .price(new BigDecimal("55"))
+                .build();
         Mockito.when(productService.addProduct(dummyProductDto)).thenReturn(SaveStatus.SAVED);
 
+        //when
         mockMvc.perform(
                 post("/devshop/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -63,6 +69,7 @@ class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProductDto));
 
+        //then
         verify(productService, times(1)).addProduct(dummyProductDto);
         verify(productService, times(0)).createEmptyProduct();
     }

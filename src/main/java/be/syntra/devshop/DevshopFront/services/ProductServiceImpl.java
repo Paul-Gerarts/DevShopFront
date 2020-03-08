@@ -2,6 +2,8 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.SaveStatus;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class ProductServiceImpl implements ProductService {
     String baseUrl;
     @Value("${productsEndpoint}")
     String endpoint;
+
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
     public ProductDto createEmptyProduct() {
@@ -29,11 +33,14 @@ public class ProductServiceImpl implements ProductService {
         try {
             ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(url, request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
+                logger.info("addProduct() -> saved > " + productDto.toString());
                 return SaveStatus.SAVED;
             }
         } catch (Exception e) {
-            System.out.println(e.getCause());
-            System.out.println(e.getLocalizedMessage());
+            //System.out.println(e.getCause());
+            logger.error("addProduct() -> " + e.getCause().toString());
+            //System.out.println(e.getLocalizedMessage());
+            logger.error("addProduct() -> " + e.getLocalizedMessage());
         }
         return SaveStatus.ERROR;
     }

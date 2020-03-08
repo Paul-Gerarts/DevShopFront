@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/addproduct")
-    public String displayAddProductsFrom(Model model) {
+    public String displayAddProductsForm(Model model) {
         ProductDto emptyProductDto = productService.createEmptyProduct();
         model.addAttribute("product", emptyProductDto);
         return "admin/product/addProduct";
