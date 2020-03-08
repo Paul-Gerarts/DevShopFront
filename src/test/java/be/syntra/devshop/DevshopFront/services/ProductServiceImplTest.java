@@ -1,6 +1,6 @@
-package be.syntra.devshop.DevshopFront.service;
+package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,7 @@
-package be.syntra.devshop.DevshopFront.service;
+package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.model.SaveStatus;
-import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
+import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

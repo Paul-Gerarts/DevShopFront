@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.model;
+package be.syntra.devshop.DevshopFront.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

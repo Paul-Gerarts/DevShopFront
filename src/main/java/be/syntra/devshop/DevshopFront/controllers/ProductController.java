@@ -1,8 +1,8 @@
-package be.syntra.devshop.DevshopFront.controller;
+package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.model.SaveStatus;
-import be.syntra.devshop.DevshopFront.model.dto.ProductDto;
-import be.syntra.devshop.DevshopFront.service.ProductService;
+import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
+import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
