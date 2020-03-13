@@ -1,7 +1,10 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SaveStatus;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
+
+import java.util.List;
 
 public interface ProductService {
 
@@ -19,4 +22,12 @@ public interface ProductService {
      */
 
     SaveStatus addProduct(ProductDto productDto);
+
+    /***
+     * to retrieve all products present from the backend
+     * returns a List of Product
+     * @return List<Product>
+     */
+
+    List<Product> findAll();
 }
