@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DevShop</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-red.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link type="text/css" href="../static/css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">DevShop</span>
+            <!-- spacer, to align future elements to the right -->
+            <div class="mdl-layout-spacer"></div>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <span class="mdl-layout-title">Products</span>
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">photo</i>
+                        <span th:text="${product.name}">Product Name</span>
+                        <span class="mdl-list__item-text-body">
+                            This is a placeholder for a short description, this can be part of our data in the near future.
+                            If No description is going to be used here we can use this block for the name.
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <span class="mdl-list__item-text-body"
+                              th:text="'€ ' + ${product.price}">Product Price</span>
+                            <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
+                    </span>
+                </li>
+
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>

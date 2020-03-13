@@ -23,6 +23,7 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         List<Product> productList = productService.findAll();
-        return "";
+        model.addAttribute("products", productList);
+        return "product/productOverview";
     }
 }
