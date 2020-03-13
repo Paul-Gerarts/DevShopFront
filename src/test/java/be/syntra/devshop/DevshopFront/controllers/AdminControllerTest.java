@@ -20,8 +20,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductController.class)
-class ProductControllerTest {
+@WebMvcTest(AdminController.class)
+class AdminControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/devshop/admin")
-public class ProductController {
+public class AdminController {
     private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public AdminController(ProductService productService) {
         this.productService = productService;
     }
 
