@@ -79,6 +79,7 @@ class ProductServiceImplTest {
     void findAll() throws Exception {
         // given
         final List<Product> dummyProductList = ProductUtils.getDummyProductList();
+        final ProductList expectedProductList = new ProductList(dummyProductList);
         final String dummyProductListJsonString = ProductUtils.returnObjectAsJsonString(dummyProductList);
         final String expectedEndpoint = "http://localhost:8080/products";
         mockServer
@@ -93,7 +94,6 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        final ProductList expectedProductList = new ProductList(dummyProductList);
-        assertEquals(ProductUtils.returnObjectAsJsonString(expectedProductList), ProductUtils.returnObjectAsJsonString(receivedProductList.getProductList()));
+        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
     }
 }
