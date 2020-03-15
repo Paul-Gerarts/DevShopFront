@@ -22,7 +22,7 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        List<Product> productList = productService.findAll();
+        List<Product> productList = productService.findAll().getProductList();
         model.addAttribute("products", productList);
         return "product/productOverview";
     }

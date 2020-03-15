@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
 import be.syntra.devshop.DevshopFront.models.SaveStatus;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -10,8 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.math.BigDecimal;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.times;
@@ -36,7 +36,10 @@ class AdminControllerTest {
         Mockito.when(productService.createEmptyProduct()).thenReturn(new ProductDto());
 
         //when
-        mockMvc.perform(get("/devshop/admin/addproduct"))
+        final ResultActions getResult = mockMvc.perform(get("/devshop/admin/addproduct"));
+
+        //then
+        getResult
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/product/addProduct"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
@@ -44,26 +47,25 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", new ProductDto()));
 
-        //then
         verify(productService, times(1)).createEmptyProduct();
     }
 
     @Test
     void getProductEntry() throws Exception {
 
-        //given
-        ProductDto dummyProductDto = ProductDto.builder()
-                .name("name")
-                .price(new BigDecimal("55"))
-                .build();
+        // given
+        ProductDto dummyProductDto = ProductUtils.getDummyProductDto();
         Mockito.when(productService.addProduct(dummyProductDto)).thenReturn(SaveStatus.SAVED);
 
-        //when
-        mockMvc.perform(
+        // when
+        final ResultActions postRestult = mockMvc.perform(
                 post("/devshop/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("name", "name")
-                        .param("price", "55"))
+                        .param("price", "55"));
+
+        // then
+        postRestult
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/product/addProduct"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
@@ -71,7 +73,6 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProductDto));
 
-        //then
         verify(productService, times(1)).addProduct(dummyProductDto);
         verify(productService, times(0)).createEmptyProduct();
     }
