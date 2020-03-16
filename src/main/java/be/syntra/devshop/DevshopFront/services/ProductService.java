@@ -18,7 +18,6 @@ public interface ProductService {
      * and return a status that corresponds to the success of the action
      * @param productDto
      */
-
     SaveStatus addProduct(ProductDto productDto);
 
     /***
@@ -26,6 +25,5 @@ public interface ProductService {
      * returns a ProductList object
      * @return ProductList
      */
-
     ProductList findAll();
 }
