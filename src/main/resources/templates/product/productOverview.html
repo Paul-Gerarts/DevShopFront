@@ -12,14 +12,7 @@
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-            <!-- Title -->
-            <span class="mdl-layout-title">DevShop</span>
-            <!-- spacer, to align future elements to the right -->
-            <div class="mdl-layout-spacer"></div>
-        </div>
-    </header>
+    <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
             <span class="mdl-layout-title">Products</span>
