@@ -1,29 +1,24 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/devshop/products")
-public class ProductController {
-    private ProductService productService;
+@RequestMapping("/devshop/admin")
+public class AdminController {
+    private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public AdminController(ProductService productService) {
         this.productService = productService;
-    }
-
-    @GetMapping
-    public String displayProductOverview(Model model) {
-        List<Product> productList = productService.findAll().getProductList();
-        model.addAttribute("products", productList);
-        return "product/productOverview";
     }
 
     @GetMapping("/addproduct")
