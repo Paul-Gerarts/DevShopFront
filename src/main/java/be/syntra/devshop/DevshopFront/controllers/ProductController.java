@@ -26,18 +26,4 @@ public class ProductController {
         return "product/productOverview";
     }
 
-    @GetMapping("/addproduct")
-    public String displayAddProductsForm(Model model) {
-        ProductDto emptyProductDto = productService.createEmptyProduct();
-        model.addAttribute("product", emptyProductDto);
-        return "admin/product/addProduct";
-    }
-
-    @PostMapping("/addproduct")
-    public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
-        SaveStatus saveStatus = productService.addProduct(productDto);
-        model.addAttribute("product", productDto);
-        model.addAttribute("status", saveStatus);
-        return "admin/product/addProduct";
-    }
 }
