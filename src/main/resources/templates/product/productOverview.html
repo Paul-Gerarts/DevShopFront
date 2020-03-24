@@ -29,7 +29,16 @@
                     <span class="mdl-list__item-secondary-content">
                         <span class="mdl-list__item-text-body"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
+                        <form th:object="${product}" method="post">
+                            <input type="hidden" name="id" th:value="${product.id}"/>
+                            <!--<a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>-->
+                            <!--<button class="mdl-list__item-secondary-action" href="#"><i class="material-icons mdl-button–icon">add_shopping_cart</i></button>-->
+                            <span class="mdl-list__item-secondary-action">
+                                <button>
+                                    <i class="material-icons">add_shopping_cart</i>
+                                </button>
+                            </span>
+                        </form>
                     </span>
                 </li>
 
