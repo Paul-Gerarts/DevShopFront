@@ -31,7 +31,7 @@ public class ProductController {
 
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("id") Integer id) {
-        System.out.println("chosen product -> " + id);
+        productService.addToCart(id);
         return "redirect:/devshop/products";
     }
 }

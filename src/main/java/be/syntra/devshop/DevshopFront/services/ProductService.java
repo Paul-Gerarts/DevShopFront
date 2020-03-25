@@ -26,4 +26,10 @@ public interface ProductService {
      * @return ProductList
      */
     ProductList findAll();
+
+    /***
+     * adds a poduct with the given id to the cart
+     * @param id
+     */
+    void addToCart(Integer id);
 }
