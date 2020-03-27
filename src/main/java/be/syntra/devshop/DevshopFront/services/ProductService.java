@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SaveStatus;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
@@ -28,8 +29,8 @@ public interface ProductService {
     ProductList findAll();
 
     /***
-     * adds a poduct with the given id to the cart
-     * @param id
+     * adds a poduct to the cart
+     * @param product
      */
-    void addToCart(Integer id);
+    void addToCart(Product product);
 }

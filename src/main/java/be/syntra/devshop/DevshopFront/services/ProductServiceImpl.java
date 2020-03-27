@@ -4,8 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SaveStatus;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -18,18 +17,23 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
     @Value("${baseUrl}")
     private String baseUrl;
     @Value("${productsEndpoint}")
     private String endpoint;
-    private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private String resourceUrl = null;
+    private CartService cartService;
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    public ProductServiceImpl(CartService cartService) {
+        this.cartService = cartService;
+    }
 
     @PostConstruct
     private void init() {
@@ -45,15 +49,15 @@ public class ProductServiceImpl implements ProductService {
     public SaveStatus addProduct(ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         try {
-            logger.info("string from restTemplate -> " + restTemplate.getUriTemplateHandler().toString());
+            log.info("string from restTemplate -> " + restTemplate.getUriTemplateHandler().toString());
             ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
-                logger.info("addProduct() -> saved > " + productDto.toString());
+                log.info("addProduct() -> saved > " + productDto.toString());
                 return SaveStatus.SAVED;
             }
         } catch (Exception e) {
-            logger.info("addProduct() -> " + e.getCause().toString());
-            logger.info("addProduct() -> " + e.getLocalizedMessage());
+            log.info("addProduct() -> " + e.getCause().toString());
+            log.info("addProduct() -> " + e.getLocalizedMessage());
         }
         return SaveStatus.ERROR;
     }
@@ -63,18 +67,17 @@ public class ProductServiceImpl implements ProductService {
         try {
             ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
             if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                logger.info("findAll() -> products retrieved from backEnd");
+                log.info("findAll() -> products retrieved from backEnd");
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {
-            logger.error("findAll() -> " + e.getCause().toString());
-            logger.error("findAll() -> " + e.getLocalizedMessage());
+            log.error("findAll() -> " + e);
         }
         return new ProductList(Collections.emptyList());
     }
 
     @Override
-    public void addToCart(Integer id) {
-
+    public void addToCart(Product product) {
+        cartService.addToCart(product);
     }
 }
