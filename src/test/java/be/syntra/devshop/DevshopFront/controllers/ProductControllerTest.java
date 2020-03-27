@@ -9,12 +9,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
@@ -43,5 +48,25 @@ public class ProductControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
                 .andExpect(model().attribute("products", dummyProductList));
+    }
+
+    @Test
+    void addSelectedProductToCart() throws Exception {
+        // given
+        final Product dummyProduct = ProductUtils.getDummyProduct();
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/devshop/products/")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("id", dummyProduct.getId().toString())
+                .param("name", dummyProduct.getName())
+                .param("price", dummyProduct.getPrice().toString()));
+
+        // then
+        getResult
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/devshop/products"));
+
+        verify(productService, times(1)).addToCart(any(Product.class));
     }
 }
