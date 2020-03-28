@@ -1,41 +1,43 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.CartUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@WebMvcTest(CartServiceImpl.class)
 class CartServiceImplTest {
+    @Autowired
+    CartDto currentCart;
 
-    CartService cartService = new CartServiceImpl();
+    @Autowired
+    CartServiceImpl cartService;
 
     @Test
-    public void getNewCartTest() {
+    void addToNewCart() {
         // given
+        Product product = ProductUtils.getDummyProduct();
 
         // when
-        CartDto newCart = cartService.getCart();
+        cartService.addToCart(product);
 
         // then
-        assertEquals(newCart.getProducts(), null);
-        assertEquals(newCart.isActiveCart(), true);
-        assertEquals(newCart.isFinalizedCart(), false);
-        assertEquals(newCart.isPaidCart(), false);
+        assertEquals(1, currentCart.getProducts().size());
     }
 
     @Test
-    public void getExistingCartTest() {
+    void addToExistingCart() {
         // given
-        CartDto currentCart = CartUtils.getCartWithOneDummyProduct();
+        Product product = ProductUtils.getDummyProduct();
 
         // when
-        CartDto getCart = cartService.getCart();
+        cartService.addToCart(product);
 
         // then
-        assertEquals(getCart.getProducts().size(), 1);
-        assertEquals(getCart.isActiveCart(), true);
-        assertEquals(getCart.isFinalizedCart(), false);
-        assertEquals(getCart.isPaidCart(), false);
+        assertEquals(2, currentCart.getProducts().size());
     }
 }

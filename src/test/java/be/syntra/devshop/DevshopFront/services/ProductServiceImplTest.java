@@ -7,8 +7,11 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -30,7 +35,11 @@ class ProductServiceImplTest {
     RestTemplate restTemplate;
 
     @Autowired
+    @InjectMocks
     ProductServiceImpl productService;
+
+    @MockBean
+    CartService cartService;
 
     MockRestServiceServer mockServer;
 
@@ -95,5 +104,18 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+    }
+
+    @Test
+    void addToCart() {
+        // given
+        Product dummyProduct = ProductUtils.getDummyProduct();
+        Mockito.when(cartService.addToCart(dummyProduct)).thenReturn(dummyProduct);
+
+        // when
+        productService.addToCart(dummyProduct);
+
+        // then
+        verify(cartService, times(1)).addToCart(dummyProduct);
     }
 }

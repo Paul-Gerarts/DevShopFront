@@ -56,8 +56,7 @@ public class ProductServiceImpl implements ProductService {
                 return SaveStatus.SAVED;
             }
         } catch (Exception e) {
-            log.info("addProduct() -> " + e.getCause().toString());
-            log.info("addProduct() -> " + e.getLocalizedMessage());
+            log.error("addProduct() -> " + e);
         }
         return SaveStatus.ERROR;
     }
@@ -67,7 +66,6 @@ public class ProductServiceImpl implements ProductService {
         try {
             ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
             if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                log.info("findAll() -> products retrieved from backEnd");
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {

@@ -2,12 +2,13 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CartServiceImpl implements CartService {
     private CartDto currentCart;
@@ -18,23 +19,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto getCart() {
-        if (currentCart == null) {
-            currentCart = CartDto.builder()
-                    .cartCreationDateTime(LocalDateTime.now())
-                    .finalizedCart(false)
-                    .activeCart(true)
-                    .paidCart(false)
-                    .build();
-        }
-        return currentCart;
-    }
-
-    @Override
     public Product addToCart(Product product) {
-        List<Product> productList = getCart().getProducts();
+        List<Product> productList = currentCart.getProducts();
         productList.add(product);
-        getCart().setProducts(productList);
+        currentCart.setProducts(productList);
         return product;
     }
 }
