@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 
@@ -18,7 +18,7 @@ public interface ProductService {
      * and return a status that corresponds to the success of the action
      * @param productDto
      */
-    SaveStatus addProduct(ProductDto productDto);
+    StatusNotification addProduct(ProductDto productDto);
 
     /***
      * to retrieve all products present from the backend

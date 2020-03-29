@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,11 +68,11 @@ class ProductServiceImplTest {
                 );
 
         // when
-        SaveStatus saveStatus = productService.addProduct(dummyProductDto);
+        StatusNotification statusNotification = productService.addProduct(dummyProductDto);
 
         // then
         mockServer.verify();
-        assertEquals(saveStatus, SaveStatus.SAVED);
+        assertEquals(statusNotification, StatusNotification.SAVED);
     }
 
     @Test

@@ -34,7 +34,7 @@ public class ProductControllerTest {
         Mockito.when(productService.findAll()).thenReturn(new ProductList(dummyProductList));
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/devshop/products"));
+        final ResultActions getResult = mockMvc.perform(get("/products"));
 
         // then
         getResult

@@ -1,8 +1,41 @@
+<!DOCTYPE html>
+<html crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      lang="en" rel="stylesheet"
+      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<link href="../static/css/layout.css" rel="stylesheet" th:href="@{/css/layout.css}" type="text/css"/>
 <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
         <!-- Title -->
         <span class="mdl-layout-title">DevShop</span>
         <!-- spacer, to align future elements to the right -->
-        <div class="mdl-layout-spacer"></div>
+        <div style="position: absolute; left: 45%">
+            <!-- Logged in user welcome-->
+            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')" th:text="Welcome "></span>
+        </div>
+        <div style="position: absolute; left: 50%">
+            <!-- Logged in user -->
+            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')" th:text="${#authentication.getName()}"></span>
+        </div>
+        <div style="position: absolute; right: 20px;">
+            <form method="get" sec:authorize="!hasRole('ROLE_ADMIN')&&!hasRole('ROLE_USER')" th:action="@{/auth/login}">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                    Login
+                </button>
+            </form>
+            <form method="get" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"
+                  th:action="@{/perform_logout}">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                    Logout
+                </button>
+            </form>
+        </div>
+        <div style="position: absolute; right: 120px;">
+            <form method="get" sec:authorize="!hasRole('ROLE_ADMIN')&&!hasRole('ROLE_USER')" th:action="@{/register}">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                    Register
+                </button>
+            </form>
+        </div>
     </div>
 </header>

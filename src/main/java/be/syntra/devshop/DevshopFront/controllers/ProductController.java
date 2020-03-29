@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/devshop/products")
+@RequestMapping("/products")
 public class ProductController {
+
     private ProductService productService;
 
     @Autowired
@@ -26,4 +27,5 @@ public class ProductController {
         model.addAttribute("products", productList);
         return "product/productOverview";
     }
+
 }

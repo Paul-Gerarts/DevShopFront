@@ -1,7 +1,8 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.factories.RestTemplateFactory;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.slf4j.Logger;
@@ -20,20 +21,27 @@ import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Value("${baseUrl}")
     private String baseUrl;
+
     @Value("${productsEndpoint}")
     private String endpoint;
+
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     private String resourceUrl = null;
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private RestTemplateFactory restTemplateFactory;
 
     @PostConstruct
     private void init() {
         resourceUrl = baseUrl.concat(endpoint);
+        restTemplate = restTemplateFactory.ofSecurity();
     }
 
     @Override
@@ -42,20 +50,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public SaveStatus addProduct(ProductDto productDto) {
+    public StatusNotification addProduct(ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         try {
-            logger.info("string from restTemplate -> " + restTemplate.getUriTemplateHandler().toString());
+            logger.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
             ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
-                logger.info("addProduct() -> saved > " + productDto.toString());
-                return SaveStatus.SAVED;
+                logger.info("addProduct() -> saved > {} ", productDto);
+                return StatusNotification.SAVED;
             }
         } catch (Exception e) {
-            logger.info("addProduct() -> " + e.getCause().toString());
-            logger.info("addProduct() -> " + e.getLocalizedMessage());
+            logger.error("addProduct() -> {} ", e.getLocalizedMessage());
         }
-        return SaveStatus.ERROR;
+        return StatusNotification.ERROR;
     }
 
     @Override
@@ -67,8 +74,7 @@ public class ProductServiceImpl implements ProductService {
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {
-            logger.error("findAll() -> " + e.getCause().toString());
-            logger.error("findAll() -> " + e.getLocalizedMessage());
+            logger.error("findAll() -> {} ", e.getLocalizedMessage());
         }
         return new ProductList(Collections.emptyList());
     }

@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/devshop/admin")
+@RequestMapping("/admin")
 public class AdminController {
+
     private final ProductService productService;
 
     @Autowired
@@ -30,9 +31,9 @@ public class AdminController {
 
     @PostMapping("/addproduct")
     public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
-        SaveStatus saveStatus = productService.addProduct(productDto);
+        StatusNotification statusNotification = productService.addProduct(productDto);
         model.addAttribute("product", productDto);
-        model.addAttribute("status", saveStatus);
+        model.addAttribute("status", statusNotification);
         return "admin/product/addProduct";
     }
 }
