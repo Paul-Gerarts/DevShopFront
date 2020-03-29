@@ -39,7 +39,7 @@ public class AuthorisationController {
         StatusNotification statusNotification = authorisationService.register(registerUserDto);
         model.addAttribute("user", registerUserDto);
         model.addAttribute("status", statusNotification);
-        return !statusNotification.equals(StatusNotification.SUCCES)
+        return (!statusNotification.equals(StatusNotification.SUCCES))
                 ? "/user/register"
                 : new RedirectView("products");
     }
