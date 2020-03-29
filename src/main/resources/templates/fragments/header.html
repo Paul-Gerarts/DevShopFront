@@ -1,11 +1,22 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <header class="mdl-layout__header">
-    <div class="mdl-layout__header-row">
+    <div class="mdl-layout__header-row" th:object="${cart}">
         <!-- Title -->
         <span class="mdl-layout-title">DevShop</span>
         <!-- spacer, to align future elements to the right -->
         <div class="mdl-layout-spacer"></div>
         <div>
             <i class="material-icons">shopping_cart</i>
+
+        </div>
+        <div>
+            <label th:text="*{#lists.size(products)}">0</label>
+        </div>
+        <div class="mdl-layout-spacer"></div>
+        <div th:if="*{#lists.size(products) > 0}">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Checkout
+            </button>
         </div>
     </div>
 </header>

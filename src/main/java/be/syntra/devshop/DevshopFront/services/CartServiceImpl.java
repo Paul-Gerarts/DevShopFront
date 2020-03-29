@@ -25,4 +25,9 @@ public class CartServiceImpl implements CartService {
         currentCart.setProducts(productList);
         return product;
     }
+
+    @Override
+    public CartDto getCurrentCart() {
+        return currentCart;
+    }
 }
