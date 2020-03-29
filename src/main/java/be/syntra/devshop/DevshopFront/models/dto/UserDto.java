@@ -5,12 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LogInDto {
+public class UserDto {
 
+    private String token;
     private String userName;
+    private List<String> authorities;
+    private Long userId;
     private String password;
 }

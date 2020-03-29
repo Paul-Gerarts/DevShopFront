@@ -1,7 +1,7 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
-import be.syntra.devshop.DevshopFront.models.SaveStatus;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class AdminControllerTest {
         Mockito.when(productService.createEmptyProduct()).thenReturn(new ProductDto());
 
         //when
-        final ResultActions getResult = mockMvc.perform(get("/devshop/admin/addproduct"));
+        final ResultActions getResult = mockMvc.perform(get("/admin/addproduct"));
 
         //then
         getResult
@@ -55,11 +55,11 @@ class AdminControllerTest {
 
         // given
         ProductDto dummyProductDto = ProductUtils.getDummyProductDto();
-        Mockito.when(productService.addProduct(dummyProductDto)).thenReturn(SaveStatus.SAVED);
+        Mockito.when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
 
         // when
         final ResultActions postRestult = mockMvc.perform(
-                post("/devshop/admin/addproduct")
+                post("/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("name", "name")
                         .param("price", "55"));

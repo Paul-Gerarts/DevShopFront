@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum SaveStatus {
+public enum StatusNotification {
+
+    LOGIN_FAIL("Login failed"),
+    SUCCES("Succes"),
     SAVED("Saved"),
     ERROR("Error");
 
