@@ -65,15 +65,15 @@ public class DataFillerImpl {
         // DO NOT DELETE
         if (userRepository.count() == 0) {
             userRepository.saveAll(List.of(
-                    userFactory.createUser(
+                    userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "lens.huygh@gmail.com",
                             new BCryptPasswordEncoder().encode("Lens")),
-                    userFactory.createUser(
+                    userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "thomasf0n7a1n3@gmail.com",
                             new BCryptPasswordEncoder().encode("Thomas")),
-                    userFactory.createUser(
+                    userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "paul.gerarts@juvo.be",
                             new BCryptPasswordEncoder().encode("Paul")

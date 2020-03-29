@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dto.LogInDto;
+import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
 
 public interface AuthorisationService {
 
-    StatusNotification login(LogInDto logInDto);
+    StatusNotification register(RegisterUserDto registerUserDto);
 }

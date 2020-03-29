@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum StatusNotification {
 
-    LOGIN_FAIL("Login failed"),
+    PASSWORD_NO_MATCH("The provided passwords don't match!"),
+    REGISTER_FAIL("Registering new user failed"),
     SUCCES("Succes"),
     SAVED("Saved"),
     ERROR("Error");

@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class UserFactory {
 
-    public SecurityUser createUser(List<UserRole> roles,
+    public SecurityUser ofSecurity(List<UserRole> roles,
                                    String userName,
                                    String password) {
         final SecurityUser securityUser = new SecurityUser();
