@@ -39,6 +39,9 @@ public class RegisterUserDto {
     private String number;
 
     @NotBlank
+    private String boxNumber;
+
+    @NotBlank
     private String postalCode;
 
     @NotBlank

@@ -74,8 +74,7 @@ public class ProductServiceImpl implements ProductService {
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {
-            logger.error("findAll() -> " + e.getCause().toString());
-            logger.error("findAll() -> " + e.getLocalizedMessage());
+            logger.error("findAll() -> {} ", e.getLocalizedMessage());
         }
         return new ProductList(Collections.emptyList());
     }

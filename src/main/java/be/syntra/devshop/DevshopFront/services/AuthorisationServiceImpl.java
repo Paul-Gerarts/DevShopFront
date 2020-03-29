@@ -25,7 +25,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     @Value("${baseUrl}")
     private String baseUrl;
 
-    @Value("${loginEndpoint}")
+    @Value("${registerEndpoint}")
     private String endpoint;
 
     private Logger logger = LoggerFactory.getLogger(AuthorisationServiceImpl.class);
@@ -58,13 +58,15 @@ public class AuthorisationServiceImpl implements AuthorisationService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RegisterUserDto> request = new HttpEntity<>(registerUserDto, httpHeaders);
-        if (!registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword())){
+
+        if (!registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword())) {
             return StatusNotification.PASSWORD_NO_MATCH;
         }
+
         try {
             ResponseEntity<RegisterUserDto> loginDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, RegisterUserDto.class);
             if (HttpStatus.CREATED.equals(loginDtoResponseEntity.getStatusCode())) {
-                logger.info("register() -> succesfull {}", registerUserDto);
+                logger.info("register() -> succesfull {}", registerUserDto.getUserName());
                 createNewUserLogin(registerUserDto);
                 return StatusNotification.SUCCES;
             }
@@ -77,9 +79,10 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     private void createNewUserLogin(RegisterUserDto registerUserDto) {
         userRepository.save(
                 userFactory.ofSecurity(
-                List.of(userRoleService.findByRoleName(ROLE_USER.name())),
-                registerUserDto.getUserName(),
-                new BCryptPasswordEncoder().encode(registerUserDto.getPassword()))
+                        List.of(userRoleService.findByRoleName(ROLE_USER.name())),
+                        registerUserDto.getUserName(),
+                        new BCryptPasswordEncoder().encode(registerUserDto.getPassword()),
+                        registerUserDto.getFirstName() + " " + registerUserDto.getLastName())
         );
     }
 

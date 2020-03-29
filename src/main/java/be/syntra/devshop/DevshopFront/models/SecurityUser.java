@@ -34,6 +34,9 @@ public class SecurityUser implements UserDetails {
     @Column(name = "userName", unique = true)
     private String userName;
 
+    @NotBlank
+    private String fullName;
+
     @Size(min = 1)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -59,6 +62,10 @@ public class SecurityUser implements UserDetails {
 
     }
 
+    public void setFullName(String fullName){
+        this.fullName = fullName;
+    }
+
     @Override
     public String getPassword() {
         return password;
@@ -70,7 +77,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return fullName;
     }
 
     @Override
