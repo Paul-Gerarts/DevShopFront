@@ -6,6 +6,7 @@ import be.syntra.devshop.DevshopFront.models.UserRole;
 import be.syntra.devshop.DevshopFront.repositories.UserRepository;
 import be.syntra.devshop.DevshopFront.repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,12 @@ import static be.syntra.devshop.DevshopFront.models.UserRoles.ROLE_USER;
 @Service
 public class DataFillerImpl {
 
+    @Value("${lens.password}")
+    private String passwordLens;
+    @Value("${thomas.password}")
+    private String passwordThomas;
+    @Value("${paul.password}")
+    private String passwordPaul;
     private UserRoleRepository userRoleRepository;
     private UserRoleFactory userRoleFactory;
     private UserRepository userRepository;
@@ -68,17 +75,17 @@ public class DataFillerImpl {
                     userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "lens.huygh@gmail.com",
-                            new BCryptPasswordEncoder().encode("Lens"),
+                            new BCryptPasswordEncoder().encode(passwordLens),
                             "Lens Huygh"),
                     userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "thomasf0n7a1n3@gmail.com",
-                            new BCryptPasswordEncoder().encode("Thomas"),
+                            new BCryptPasswordEncoder().encode(passwordThomas),
                             "Thomas Fontaine"),
                     userFactory.ofSecurity(
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "paul.gerarts@juvo.be",
-                            new BCryptPasswordEncoder().encode("Paul"),
+                            new BCryptPasswordEncoder().encode(passwordPaul),
                             "Paul Gerarts"
                     )
             ));
