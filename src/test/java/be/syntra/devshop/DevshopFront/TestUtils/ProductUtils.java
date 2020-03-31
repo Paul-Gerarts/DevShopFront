@@ -2,16 +2,11 @@ package be.syntra.devshop.DevshopFront.TestUtils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductUtils {
-
-    public static String returnObjectAsJsonString(Object object) throws Exception {
-        return new ObjectMapper().writeValueAsString(object);
-    }
 
     public static ProductDto getDummyProductDto() {
         return ProductDto.builder()

@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SecurityUser implements UserDetails {
 
     @Id

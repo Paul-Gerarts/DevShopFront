@@ -1,14 +1,17 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -21,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminController.class)
+@Import(JWTTokenExceptionHandler.class)
 class AdminControllerTest {
 
     @Autowired
@@ -28,6 +32,12 @@ class AdminControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private JWTTokenExceptionHandler jwtTokenExceptionHandler;
+
+    @MockBean
+    private UserService userService;
 
     @Test
     void displayAddProductsFrom() throws Exception {
@@ -62,7 +72,13 @@ class AdminControllerTest {
                 post("/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("name", "name")
-                        .param("price", "55"));
+                        .param("price", "55"))
+                .andExpect(status().isFound());
+
+        final ResultActions getResult = mockMvc.perform(
+                get("/products")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
         // then
         postRestult
