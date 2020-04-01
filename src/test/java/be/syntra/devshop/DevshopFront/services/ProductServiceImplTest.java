@@ -1,17 +1,21 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.factories.RestTemplateFactory;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.*;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
@@ -26,14 +30,13 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-@SpringBootTest
+@RestClientTest(ProductServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
+@Import({TestWebConfig.class})
 class ProductServiceImplTest {
 
-    @Mock
-    RestTemplate restTemplate;
-
     @Autowired
-    private RestTemplateFactory restTemplateFactory = new RestTemplateFactory();
+    RestTemplate restTemplate;
 
     @Value("${baseUrl}")
     private String baseUrl;
@@ -48,8 +51,7 @@ class ProductServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        restTemplate = restTemplateFactory.ofSecurity();
-        mockServer = MockRestServiceServer.bindTo(restTemplate).ignoreExpectOrder(true).build();
+        mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
     @Test
@@ -78,11 +80,9 @@ class ProductServiceImplTest {
                         MockRestResponseCreators
                                 .withStatus(HttpStatus.CREATED)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .body(productDtoAsJson)
-                );
+                                .body(productDtoAsJson));
 
         // when
-        ResponseEntity result = restTemplate.postForEntity(expectedEndpoint, new HttpEntity<ProductDto>(dummyProductDto), ProductDto.class);
         StatusNotification statusNotification = productService.addProduct(dummyProductDto);
 
         // then
@@ -101,8 +101,7 @@ class ProductServiceImplTest {
                 .expect(requestTo(expectedEndpoint))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(
-                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON)
-                );
+                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
         final ProductList receivedProductList = productService.findAll();
