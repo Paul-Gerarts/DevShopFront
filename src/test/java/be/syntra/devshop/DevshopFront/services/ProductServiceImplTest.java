@@ -1,16 +1,17 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.factories.RestTemplateFactory;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
@@ -28,8 +29,17 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @SpringBootTest
 class ProductServiceImplTest {
 
-    @Autowired
+    @Mock
     RestTemplate restTemplate;
+
+    @Autowired
+    private RestTemplateFactory restTemplateFactory = new RestTemplateFactory();
+
+    @Value("${baseUrl}")
+    private String baseUrl;
+
+    @Value("${productsEndpoint}")
+    private String endpoint;
 
     @Autowired
     ProductServiceImpl productService;
@@ -38,7 +48,8 @@ class ProductServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        mockServer = MockRestServiceServer.createServer(restTemplate);
+        restTemplate = restTemplateFactory.ofSecurity();
+        mockServer = MockRestServiceServer.bindTo(restTemplate).ignoreExpectOrder(true).build();
     }
 
     @Test
@@ -58,9 +69,10 @@ class ProductServiceImplTest {
         // given
         final ProductDto dummyProductDto = getDummyProductDto();
         final String productDtoAsJson = returnObjectAsJsonString(dummyProductDto);
-        final String expectedEndpoint = "http://localhost:8080/products";
+        final String expectedEndpoint = baseUrl + endpoint;
 
-        mockServer.expect(requestTo(expectedEndpoint))
+        mockServer
+                .expect(requestTo(expectedEndpoint))
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(
                         MockRestResponseCreators
@@ -70,6 +82,7 @@ class ProductServiceImplTest {
                 );
 
         // when
+        ResponseEntity result = restTemplate.postForEntity(expectedEndpoint, new HttpEntity<ProductDto>(dummyProductDto), ProductDto.class);
         StatusNotification statusNotification = productService.addProduct(dummyProductDto);
 
         // then
@@ -83,7 +96,7 @@ class ProductServiceImplTest {
         final List<Product> dummyProductList = getDummyProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
         final String dummyProductListJsonString = returnObjectAsJsonString(dummyProductList);
-        final String expectedEndpoint = "http://localhost:8080/products";
+        final String expectedEndpoint = baseUrl + endpoint;
         mockServer
                 .expect(requestTo(expectedEndpoint))
                 .andExpect(method(HttpMethod.GET))
