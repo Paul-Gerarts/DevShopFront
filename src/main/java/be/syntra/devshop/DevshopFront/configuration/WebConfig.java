@@ -24,8 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/js/**")
                 .addResourceLocations(
                         "classpath:/static/css/",
-                        "classpath:/static/js/"
-                );
+                        "classpath:/static/js/");
     }
 
     @Bean

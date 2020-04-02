@@ -44,8 +44,7 @@ public class SecurityUser implements UserDetails {
     @JoinTable(
             name = "USER_USERROLE",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id")},
-            foreignKey = @ForeignKey(name = "user_role_fk"))
+            inverseJoinColumns = {@JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id")})
     private List<UserRole> userRoles;
 
     public void setUserName(String userName){

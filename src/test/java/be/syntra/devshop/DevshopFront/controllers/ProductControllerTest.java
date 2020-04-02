@@ -1,17 +1,21 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
-import be.syntra.devshop.DevshopFront.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -20,8 +24,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductController.class)
-@Import(JWTTokenExceptionHandler.class)
+@WebMvcTest(controllers = ProductController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, JWTTokenExceptionHandler.class})
+)
+@ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
 public class ProductControllerTest {
 
     @Autowired
@@ -29,12 +35,6 @@ public class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
-
-    @MockBean
-    private JWTTokenExceptionHandler jwtTokenExceptionHandler;
-
-    @MockBean
-    private UserService userService;
 
     @Test
     public void displayProductOverViewTest() throws Exception {

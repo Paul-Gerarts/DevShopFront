@@ -1,5 +1,8 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.factories.UserFactory;
 import be.syntra.devshop.DevshopFront.models.SecurityUser;
@@ -7,15 +10,15 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
 import be.syntra.devshop.DevshopFront.repositories.UserRepository;
 import be.syntra.devshop.DevshopFront.services.AuthorisationServiceImpl;
-import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.UserRoleService;
-import be.syntra.devshop.DevshopFront.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -23,14 +26,16 @@ import java.util.Collections;
 
 import static be.syntra.devshop.DevshopFront.models.UserRoles.ROLE_USER;
 import static java.util.Optional.ofNullable;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthorisationController.class)
-@Import(JWTTokenExceptionHandler.class)
+@WebMvcTest(controllers = AuthorisationController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, JWTTokenExceptionHandler.class})
+)
+@ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
 public class AuthorisationControllerTest {
 
     private UserFactory userFactory = new UserFactory();
@@ -39,16 +44,7 @@ public class AuthorisationControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private JWTTokenExceptionHandler jwtTokenExceptionHandler;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
     private UserRepository userRepository;
-
-    @MockBean
-    private UserService userService;
 
     @MockBean
     private AuthorisationServiceImpl authService;
@@ -113,10 +109,40 @@ public class AuthorisationControllerTest {
                 .param("city", dummyRegisterDto.getCity())
                 .param("country", dummyRegisterDto.getCountry()));
 
-        // TODO add getGetResult for "/users" to verify that indeed users are registered. To be implemented by DEV-011
+        // then
+        getPostResult
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/products"));
+        verify(authService, times(1)).register(dummyRegisterDto);
+    }
+
+    @Test
+    void canGetRegisterFormTest() throws Exception {
+        //given
+
+        //when
+        final ResultActions getResult = mockMvc.perform(get("/register"));
+
+        //then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("/user/register"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(content().string(containsString("Register form")))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attribute("user", new RegisterUserDto()));
+    }
+
+    @Test
+    void canRedirectToLoginPageTest() throws Exception {
+        // given
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/auth/login"));
 
         // then
-        getPostResult.andExpect(status().isFound());
-        verify(authService, times(1)).register(dummyRegisterDto);
+        getResult
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login"));
     }
 }
