@@ -11,5 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductList {
+
     private List<Product> productList;
 }

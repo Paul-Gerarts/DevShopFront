@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Data
 @Service
 @NoArgsConstructor
@@ -26,8 +24,8 @@ public class UserService implements UserDetailsService {
     }
 
     public SecurityUser findByUserName(String userName) {
-        Optional<SecurityUser> user = userRepository.findByUserName(userName);
-        return user.orElseThrow(() -> new UserNotFoundException("This user cannot be found!"));
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserNotFoundException("This user cannot be found!"));
     }
 
     @Override

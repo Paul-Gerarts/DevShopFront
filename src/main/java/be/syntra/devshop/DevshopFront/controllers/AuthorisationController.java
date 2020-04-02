@@ -35,12 +35,12 @@ public class AuthorisationController {
     }
 
     @PostMapping("/register")
-    public Object getRegisterFormEntry(@ModelAttribute("registerForm")RegisterUserDto registerUserDto, Model model){
+    public String getRegisterFormEntry(@ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model) {
         StatusNotification statusNotification = authorisationService.register(registerUserDto);
         model.addAttribute("user", registerUserDto);
         model.addAttribute("status", statusNotification);
         return (!statusNotification.equals(StatusNotification.SUCCES))
                 ? "/user/register"
-                : new RedirectView("products");
+                : "redirect:/products";
     }
 }
