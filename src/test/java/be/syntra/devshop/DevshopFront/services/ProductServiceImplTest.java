@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
@@ -22,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.JsonUtils.returnObjectAsJsonString;
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductDto;
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +34,9 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @ExtendWith(MockitoExtension.class)
 @Import({TestWebConfig.class})
 class ProductServiceImplTest {
+
+    @Autowired
+    private JsonUtils jsonUtils;
 
     @Autowired
     RestTemplate restTemplate;
@@ -70,7 +73,7 @@ class ProductServiceImplTest {
     void addProductTest() throws Exception {
         // given
         final ProductDto dummyProductDto = getDummyProductDto();
-        final String productDtoAsJson = returnObjectAsJsonString(dummyProductDto);
+        final String productDtoAsJson = jsonUtils.asJsonString(dummyProductDto);
         final String expectedEndpoint = baseUrl + endpoint;
 
         mockServer
@@ -95,7 +98,7 @@ class ProductServiceImplTest {
         // given
         final List<Product> dummyProductList = getDummyProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = returnObjectAsJsonString(dummyProductList);
+        final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
         final String expectedEndpoint = baseUrl + endpoint;
         mockServer
                 .expect(requestTo(expectedEndpoint))
