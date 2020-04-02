@@ -1,14 +1,19 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,16 +23,29 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductDto;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-@SpringBootTest
+@RestClientTest(ProductServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
+@Import({TestWebConfig.class})
 class ProductServiceImplTest {
 
     @Autowired
+    private JsonUtils jsonUtils;
+
+    @Autowired
     RestTemplate restTemplate;
+
+    @Value("${baseUrl}")
+    private String baseUrl;
+
+    @Value("${productsEndpoint}")
+    private String endpoint;
 
     @Autowired
     ProductServiceImpl productService;
@@ -54,40 +72,39 @@ class ProductServiceImplTest {
     @Test
     void addProductTest() throws Exception {
         // given
-        final ProductDto dummyProductDto = ProductUtils.getDummyProductDto();
-        final String productDtoAsJson = ProductUtils.returnObjectAsJsonString(dummyProductDto);
-        final String expectedEndpoint = "http://localhost:8080/products";
+        final ProductDto dummyProductDto = getDummyProductDto();
+        final String productDtoAsJson = jsonUtils.asJsonString(dummyProductDto);
+        final String expectedEndpoint = baseUrl + endpoint;
 
-        mockServer.expect(requestTo(expectedEndpoint))
+        mockServer
+                .expect(requestTo(expectedEndpoint))
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(
                         MockRestResponseCreators
                                 .withStatus(HttpStatus.CREATED)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .body(productDtoAsJson)
-                );
+                                .body(productDtoAsJson));
 
         // when
         StatusNotification statusNotification = productService.addProduct(dummyProductDto);
 
         // then
         mockServer.verify();
-        assertEquals(statusNotification, StatusNotification.SAVED);
+        assertEquals(StatusNotification.SAVED, statusNotification);
     }
 
     @Test
-    void findAll() throws Exception {
+    void findAllTest() throws Exception {
         // given
-        final List<Product> dummyProductList = ProductUtils.getDummyProductList();
+        final List<Product> dummyProductList = getDummyProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = ProductUtils.returnObjectAsJsonString(dummyProductList);
-        final String expectedEndpoint = "http://localhost:8080/products";
+        final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
+        final String expectedEndpoint = baseUrl + endpoint;
         mockServer
                 .expect(requestTo(expectedEndpoint))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(
-                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON)
-                );
+                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
         final ProductList receivedProductList = productService.findAll();

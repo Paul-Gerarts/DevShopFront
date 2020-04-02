@@ -1,26 +1,35 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.configuration.WebConfig;
+import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AdminController.class)
+@WebMvcTest(controllers = AdminController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, JWTTokenExceptionHandler.class})
+)
+@ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
 class AdminControllerTest {
 
     @Autowired
@@ -30,10 +39,11 @@ class AdminControllerTest {
     private ProductService productService;
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void displayAddProductsFrom() throws Exception {
 
         //given
-        Mockito.when(productService.createEmptyProduct()).thenReturn(new ProductDto());
+        when(productService.createEmptyProduct()).thenReturn(new ProductDto());
 
         //when
         final ResultActions getResult = mockMvc.perform(get("/admin/addproduct"));
@@ -51,11 +61,12 @@ class AdminControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void getProductEntry() throws Exception {
 
         // given
         ProductDto dummyProductDto = ProductUtils.getDummyProductDto();
-        Mockito.when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
+        when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
 
         // when
         final ResultActions postRestult = mockMvc.perform(

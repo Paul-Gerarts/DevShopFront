@@ -6,7 +6,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 @ControllerAdvice
 public class JWTTokenExceptionHandler {
@@ -25,7 +25,7 @@ public class JWTTokenExceptionHandler {
 
     @ExceptionHandler({InvalidJWTTokenException.class})
     public void renewToken() {
-        Objects.requireNonNull(cacheManager.getCache("token")).clear();
+        requireNonNull(cacheManager.getCache("token")).clear();
         securityLoginService.login();
     }
 }

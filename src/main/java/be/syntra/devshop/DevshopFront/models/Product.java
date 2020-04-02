@@ -17,7 +17,6 @@ public class Product {
 
     private Long id;
 
-    @NotNull
     @NotBlank
     private String name;
 

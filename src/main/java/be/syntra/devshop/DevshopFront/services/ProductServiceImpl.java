@@ -1,12 +1,10 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.factories.RestTemplateFactory;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     @Value("${baseUrl}")
@@ -28,20 +27,14 @@ public class ProductServiceImpl implements ProductService {
     @Value("${productsEndpoint}")
     private String endpoint;
 
-    private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-
     private String resourceUrl = null;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private RestTemplateFactory restTemplateFactory;
-
     @PostConstruct
     private void init() {
         resourceUrl = baseUrl.concat(endpoint);
-        restTemplate = restTemplateFactory.ofSecurity();
     }
 
     @Override
@@ -53,14 +46,14 @@ public class ProductServiceImpl implements ProductService {
     public StatusNotification addProduct(ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         try {
-            logger.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
+            log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
             ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
-                logger.info("addProduct() -> saved > {} ", productDto);
+                log.info("addProduct() -> saved > {} ", productDto);
                 return StatusNotification.SAVED;
             }
         } catch (Exception e) {
-            logger.error("addProduct() -> {} ", e.getLocalizedMessage());
+            log.error("addProduct() -> {} ", e.getLocalizedMessage());
         }
         return StatusNotification.ERROR;
     }
@@ -70,11 +63,11 @@ public class ProductServiceImpl implements ProductService {
         try {
             ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
             if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                logger.info("findAll() -> products retrieved from backEnd");
+                log.info("findAll() -> products retrieved from backEnd");
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {
-            logger.error("findAll() -> {} ", e.getLocalizedMessage());
+            log.error("findAll() -> {} ", e.getLocalizedMessage());
         }
         return new ProductList(Collections.emptyList());
     }

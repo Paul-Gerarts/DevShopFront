@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SecurityUser implements UserDetails {
 
     @Id
@@ -42,8 +44,7 @@ public class SecurityUser implements UserDetails {
     @JoinTable(
             name = "USER_USERROLE",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id")},
-            foreignKey = @ForeignKey(name = "user_role_fk"))
+            inverseJoinColumns = {@JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id")})
     private List<UserRole> userRoles;
 
     public void setUserName(String userName){
