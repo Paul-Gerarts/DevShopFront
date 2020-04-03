@@ -37,5 +37,12 @@
                 </button>
             </form>
         </div>
+        <div style="position: absolute; right: 120px;">
+            <form method="get" sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/admin/overview}">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                    Admin
+                </button>
+            </form>
+        </div>
     </div>
 </header>

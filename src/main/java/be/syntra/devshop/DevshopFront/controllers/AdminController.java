@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,5 +39,12 @@ public class AdminController {
         model.addAttribute("product", productDto);
         model.addAttribute("status", statusNotification);
         return "admin/product/addProduct";
+    }
+
+    @GetMapping("/overview")
+    public String displayAdminOverview(Model model) {
+        List<AdminFunctions> functionList = Arrays.asList(AdminFunctions.values());
+        model.addAttribute("functions", functionList);
+        return "admin/product/adminOverview";
     }
 }

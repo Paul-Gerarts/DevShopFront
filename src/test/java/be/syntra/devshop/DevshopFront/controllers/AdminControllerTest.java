@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
+import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -19,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Collections;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
@@ -86,5 +89,23 @@ class AdminControllerTest {
 
         verify(productService, times(1)).addProduct(dummyProductDto);
         verify(productService, times(0)).createEmptyProduct();
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void displayAdminFunctionsPageTest() throws Exception {
+        //given
+
+        //when
+        final ResultActions getResult = mockMvc.perform(get("/admin/overview"));
+
+        //then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/adminOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(content().string(containsString("What would you like to do?")))
+                .andExpect(model().attributeExists("functions"))
+                .andExpect(model().size(Collections.singletonList(AdminFunctions.values()).size()));
     }
 }

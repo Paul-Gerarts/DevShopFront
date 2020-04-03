@@ -79,7 +79,17 @@ public class DataFillerImpl {
                             List.of(retrieveUserRole(), retrieveAdminRole()),
                             "paul.gerarts@juvo.be",
                             new BCryptPasswordEncoder().encode("Paul"),
-                            "Paul Gerarts"
+                            "Paul Gerarts"),
+                    userFactory.ofSecurity(
+                            List.of(retrieveUserRole()),
+                            "user@email.com",
+                            new BCryptPasswordEncoder().encode("user"),
+                            "User McUserson"),
+                    userFactory.ofSecurity(
+                            List.of(retrieveAdminRole()),
+                            "admin@email.com",
+                            new BCryptPasswordEncoder().encode("admin"),
+                            "Admin McAdminson"
                     )
             ));
         }
