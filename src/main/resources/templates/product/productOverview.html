@@ -20,7 +20,7 @@
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
                         <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
-                        <i class="material-icons mdl-list__item-avatar" data-th-title="Details">photo</i>
+                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details">photo</em>
                         </a>
                         <span th:text="${product.name}">Product Name</span>
                         <span class="mdl-list__item-text-body">
@@ -30,7 +30,7 @@
                     <span class="mdl-list__item-secondary-content">
                         <span class="mdl-list__item-text-body"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
+                            <a class="mdl-list__item-secondary-action" href="#"><em class="material-icons">add_shopping_cart</em></a>
                     </span>
                 </li>
             </ul>

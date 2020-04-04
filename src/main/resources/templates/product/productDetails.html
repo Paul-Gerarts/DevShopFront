@@ -19,7 +19,7 @@
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-avatar">photo</i>
+                        <em class="material-icons mdl-list__item-avatar">photo</em>
                         <span class="mdl-list__item-text-body">
                             [[${{product.description}}]]
                         </span>
@@ -27,31 +27,37 @@
                     <span class="mdl-list__item-secondary-content">
                         <span class="mdl-list__item-text-body"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
+                            <a class="mdl-list__item-secondary-action" href="#"><em class="material-icons">add_shopping_cart</em></a>
                     </span>
                 </li>
             </ul>
             <div sec:authorize="hasRole('ROLE_ADMIN')"
                  style="display: flex; flex-direction: row; justify-content: space-between">
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
-                   href="#"><i class="material-icons">sync_alt</i>Update Product</a>
-                <a class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white"
-                   href="#"><i class="material-icons">delete_forever</i>Delete Product</a>
+                   href="#"><em class="material-icons">sync_alt</em>Update Product</a>
+                <a class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+                    <em class="material-icons">archive</em>Archive Product</a>
             </div>
         </div>
     </main>
 </div>
 <!--popup for delete button-->
 <dialog class="mdl-dialog">
-    <h4 class="mdl-dialog__title">Delete this product?</h4>
+    <h4 class="mdl-dialog__title">Archive this product?</h4>
     <div class="mdl-dialog__content">
         <p>
-            It will be gone forever. That's a long, long time!
+            It will be avaible when viewing history files, but it won't show up in the main product overview anymore.
         </p>
     </div>
     <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button">Delete</button>
-        <button type="button" class="mdl-button close">Back</button>
+        <button type="button"
+                class="mdl-button close  mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey mdl-color-text--white">
+            <em class="material-icons">undo</em>Back
+        </button>
+        <button type="button"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+            <em class="material-icons">archive</em>Archive Product
+        </button>
     </div>
 </dialog>
 <!--logic for showing popup-->

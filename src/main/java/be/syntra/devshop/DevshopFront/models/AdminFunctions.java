@@ -9,7 +9,7 @@ public enum AdminFunctions {
 
     ADD_PRODUCT("ADD a product", "note_add", "./addproduct"),
     UPDATE_PRODUCT("UPDATE a product", "sync_alt", "/products"),
-    DELETE_PRODUCT("DELETE a product", "delete_forever", "/products");
+    ARCHIVE_PRODUCT("ARCHIVE a product", "archive", "/products");
 
     private final String description;
     private final String icon;
