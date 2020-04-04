@@ -25,4 +25,7 @@ public class Product {
     @Digits(integer = 5, fraction = 2)
     @PositiveOrZero
     private BigDecimal price;
+
+    @NotBlank
+    private String description;
 }

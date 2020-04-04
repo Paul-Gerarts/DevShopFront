@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>DevShop</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-red.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link type="text/css" href="../static/css/productDetail.css" th:href="@{/css/productDetail.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div th:replace="fragments/header :: header">...</div>
+    <main class="mdl-layout__content">
+        <div class="product-detail">
+            <span class="mdl-layout-title">[[${product.name}]]</span>
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">photo</i>
+                        <span class="mdl-list__item-text-body">
+                            [[${{product.description}}]]
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <span class="mdl-list__item-text-body"
+                              th:text="'€ ' + ${product.price}">Product Price</span>
+                            <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
+                    </span>
+                </li>
+            </ul>
+            <div sec:authorize="hasRole('ROLE_ADMIN')"
+                 style="display: flex; flex-direction: row; justify-content: space-between">
+                <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
+                   href="#"><i class="material-icons">sync_alt</i>Update Product</a>
+                <a class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white"
+                   href="#"><i class="material-icons">delete_forever</i>Delete Product</a>
+            </div>
+        </div>
+    </main>
+</div>
+<!--popup for delete button-->
+<dialog class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Delete this product?</h4>
+    <div class="mdl-dialog__content">
+        <p>
+            It will be gone forever. That's a long, long time!
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button">Delete</button>
+        <button type="button" class="mdl-button close">Back</button>
+    </div>
+</dialog>
+<!--logic for showing popup-->
+<script>
+    var dialog = document.querySelector('dialog');
+    var showModalButton = document.querySelector('.show-modal');
+    if (!dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+    showModalButton.addEventListener('click', function () {
+        dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function () {
+        dialog.close();
+    });
+</script>
+</body>
+</html>

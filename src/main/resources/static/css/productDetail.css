@@ -1,0 +1,36 @@
+
+.product-detail {
+    position: absolute;
+    left: 25%;
+    top: 15%;
+    padding-left: 100px;
+    padding-right: 50px;
+}
+
+.mdl-textfield.is-focused .mdl-textfield__label {
+    color: red;
+}
+
+.mdl-textfield__label:after {
+    background-color: red;
+}
+
+.mdl-layout__content {
+    padding-top: 30px;
+}
+
+.product-list-item {
+    width: 750px;
+}
+
+.mdl-list__item-primary-content {
+    width: 85%;
+}
+
+.mdl-list__item-text-body {
+    font-size: 40px;
+}
+
+.mdl-layout-title {
+    font-weight: bold;
+}

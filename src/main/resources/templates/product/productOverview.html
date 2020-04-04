@@ -19,11 +19,12 @@
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
+                        <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
                         <i class="material-icons mdl-list__item-avatar" data-th-title="Details">photo</i>
+                        </a>
                         <span th:text="${product.name}">Product Name</span>
                         <span class="mdl-list__item-text-body">
-                            This is a placeholder for a short description, this can be part of our data in the near future.
-                            If No description is going to be used here we can use this block for the name.
+                            [[${product.description}]]
                         </span>
                     </span>
                     <span class="mdl-list__item-secondary-content">
@@ -32,7 +33,6 @@
                             <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>
                     </span>
                 </li>
-
             </ul>
         </div>
     </main>
