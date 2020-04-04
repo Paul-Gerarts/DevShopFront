@@ -71,4 +71,18 @@ public class ProductServiceImpl implements ProductService {
         }
         return new ProductList(Collections.emptyList());
     }
+
+    @Override
+    public Product findById(Long id) {
+        try {
+            ResponseEntity<?> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
+            if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
+                log.info("findById() -> product retrieved from backEnd");
+                return (Product) productResponseEntity.getBody();
+            }
+        } catch (Exception e) {
+            log.error("findById() -> {} ", e.getLocalizedMessage());
+        }
+        return new Product();
+    }
 }

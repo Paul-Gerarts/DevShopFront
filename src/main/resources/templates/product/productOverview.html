@@ -19,7 +19,7 @@
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-avatar">photo</i>
+                        <i class="material-icons mdl-list__item-avatar" data-th-title="Details">photo</i>
                         <span th:text="${product.name}">Product Name</span>
                         <span class="mdl-list__item-text-body">
                             This is a placeholder for a short description, this can be part of our data in the near future.

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      lang="en" rel="stylesheet"
+<html lang="en" rel="stylesheet"
       xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <link href="../static/css/layout.css" rel="stylesheet" th:href="@{/css/layout.css}" type="text/css"/>
 <header class="mdl-layout__header">
@@ -11,7 +9,8 @@
         <!-- spacer, to align future elements to the right -->
         <div style="position: absolute; left: 45%">
             <!-- Logged in user welcome-->
-            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')" th:text="Welcome "></span>
+            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"
+                  th:text="Welcome "></span>
         </div>
         <div style="position: absolute; left: 50%">
             <!-- Logged in user -->
