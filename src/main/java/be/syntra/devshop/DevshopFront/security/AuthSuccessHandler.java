@@ -36,7 +36,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
             if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
-                return "/products";
+                return "/admin/overview";
             } else if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
                 return "/products";
             } else {

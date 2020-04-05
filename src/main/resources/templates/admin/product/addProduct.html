@@ -36,6 +36,12 @@
                             <label class="mdl-textfield__label" for="description">Product description</label>
                         </div>
                     </div>
+                    <div class="mdl-cell mdl-cell--2-col checkbox_layout">
+                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="archived">
+                            <input class="mdl-checkbox__input" type="checkbox" id="archived" th:field="*{archived}"/>
+                            <label class="mdl-checkbox__label">Product archived</label>
+                        </label>
+                    </div>
                 </div>
                 <button class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         th:disabled="${status != null && status.label.equals('Saved')}">
