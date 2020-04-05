@@ -3,6 +3,23 @@
     padding-right: 50px;
 }
 
+.checkbox_layout {
+    padding-top: 22px;
+    color: lightgray;
+}
+
+.home-logo {
+    color: white;
+}
+
+.mdl-layout-title {
+    font-weight: bold;
+}
+
+.material-icons {
+    padding-right: 10px;
+}
+
 .mdl-textfield.is-focused .mdl-textfield__label {
     color: red;
 }

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Product {
 
     private Long id;
@@ -24,4 +25,9 @@ public class Product {
     @Digits(integer = 5, fraction = 2)
     @PositiveOrZero
     private BigDecimal price;
+
+    @NotBlank
+    private String description;
+
+    private boolean archived;
 }

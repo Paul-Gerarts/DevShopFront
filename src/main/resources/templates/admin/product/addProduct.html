@@ -15,7 +15,12 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title">Add Product</span>
+            <span class="mdl-layout-title" id="title">
+                <script th:inline="javascript">
+                    var title = !!location.href.match(/addproduct/) ? 'Add Product' : 'Update Product';
+                    document.getElementById("title").innerHTML = title;
+                </script>
+            </span>
             <form th:object="${product}" method="post">
                 <div class="mdl-grid">
                     <div class="mdl-cell mdl-cell--2-col">
@@ -30,8 +35,20 @@
                             <label class="mdl-textfield__label" for="name">Product price</label>
                         </div>
                     </div>
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="description" th:field="*{description}">
+                            <label class="mdl-textfield__label" for="description">Product description</label>
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--2-col checkbox_layout">
+                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="archived">
+                            <input class="mdl-checkbox__input" type="checkbox" id="archived" th:field="*{archived}"/>
+                            <label class="mdl-checkbox__label">Product archived</label>
+                        </label>
+                    </div>
                 </div>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                <button class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         th:disabled="${status != null && status.label.equals('Saved')}">
                     Save
                 </button>

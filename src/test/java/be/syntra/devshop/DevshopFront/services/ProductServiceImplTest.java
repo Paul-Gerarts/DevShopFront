@@ -23,8 +23,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductDto;
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductList;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RestClientTest(ProductServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
-@Import({TestWebConfig.class})
+@Import({TestWebConfig.class, JsonUtils.class})
 class ProductServiceImplTest {
 
     @Autowired
@@ -70,7 +70,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void addProductTest() throws Exception {
+    void addProductTest() {
         // given
         final ProductDto dummyProductDto = getDummyProductDto();
         final String productDtoAsJson = jsonUtils.asJsonString(dummyProductDto);
@@ -94,7 +94,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws Exception {
+    void findAllTest() {
         // given
         final List<Product> dummyProductList = getDummyProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
@@ -112,5 +112,48 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+    }
+
+    @Test
+    void findByIdTest() {
+        // given
+        final Product dummyProduct = getDummyProduct();
+        final String dummyProductJsonString = jsonUtils.asJsonString(dummyProduct);
+        final String expectedEndPoint = baseUrl + endpoint + "/details/" + dummyProduct.getId();
+        mockServer
+                .expect(requestTo(expectedEndPoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess(dummyProductJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        final Product receivedProduct = productService.findById(dummyProduct.getId());
+
+        // then
+        mockServer.verify();
+        assertThat(dummyProduct.toString()).isEqualTo(receivedProduct.toString());
+    }
+
+    @Test
+    void archiveProductTest() {
+        // given
+        final Product dummyProduct = getDummyProduct();
+        final String productDtoAsJson = jsonUtils.asJsonString(dummyProduct);
+        final String expectedEndpoint = baseUrl + endpoint + "/update";
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.CREATED)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(productDtoAsJson));
+
+        // when
+        StatusNotification statusNotification = productService.archiveProduct(dummyProduct);
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.UPDATED, statusNotification);
     }
 }
