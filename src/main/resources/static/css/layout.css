@@ -3,6 +3,18 @@
     padding-right: 50px;
 }
 
+.home-logo {
+    color: white;
+}
+
+.mdl-layout-title {
+    font-weight: bold;
+}
+
+.material-icons {
+    padding-right: 10px;
+}
+
 .mdl-textfield.is-focused .mdl-textfield__label {
     color: red;
 }
