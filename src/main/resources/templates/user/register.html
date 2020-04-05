@@ -24,6 +24,8 @@
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="userName" th:field="*{userName}" type="text">
                             <label class="mdl-textfield__label" for="userName">Email</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('userName')}"
+                                   th:errors="*{userName}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
@@ -47,12 +49,16 @@
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="firstName" th:field="*{firstName}" type="text">
                             <label class="mdl-textfield__label" for="firstName">First name</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('firstName')}"
+                                   th:errors="*{firstName}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="lastName" th:field="*{lastName}" type="text">
                             <label class="mdl-textfield__label" for="lastName">Last name</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('lastName')}"
+                                   th:errors="*{lastName}"></small>
                         </div>
                     </div>
                 </div>
@@ -61,36 +67,48 @@
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="street" th:field="*{street}" type="text">
                             <label class="mdl-textfield__label" for="street">Street</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('street')}"
+                                   th:errors="*{street}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="number" th:field="*{number}" type="text">
                             <label class="mdl-textfield__label" for="number">Number</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('number')}"
+                                   th:errors="*{number}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="boxNumber" th:field="*{boxNumber}" type="text">
                             <label class="mdl-textfield__label" for="boxNumber">Box number</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('boxNumber')}"
+                                   th:errors="*{boxNumber}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="postalCode" th:field="*{postalCode}" type="text">
                             <label class="mdl-textfield__label" for="postalCode">Postal code</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('postalCode')}"
+                                   th:errors="*{postalCode}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="city" th:field="*{city}" type="text">
                             <label class="mdl-textfield__label" for="city">City</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('city')}"
+                                   th:errors="*{city}"></small>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" id="country" th:field="*{country}" type="text">
                             <label class="mdl-textfield__label" for="country">Country</label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('country')}"
+                                   th:errors="*{country}"></small>
                         </div>
                     </div>
                 </div>

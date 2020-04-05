@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 import static be.syntra.devshop.DevshopFront.models.UserRoles.ROLE_USER;
 
@@ -47,12 +50,12 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     }
 
     @Override
-    public StatusNotification register(RegisterUserDto registerUserDto) {
+    public StatusNotification register(@Valid RegisterUserDto registerUserDto) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RegisterUserDto> request = new HttpEntity<>(registerUserDto, httpHeaders);
 
-        if (!registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword())) {
+        if (verifiedPasswordAndPasswordDoNotMatch(registerUserDto)) {
             return StatusNotification.PASSWORD_NO_MATCH;
         }
 
@@ -67,6 +70,21 @@ public class AuthorisationServiceImpl implements AuthorisationService {
             log.error("register() -> {}", e.getLocalizedMessage());
         }
         return StatusNotification.REGISTER_FAIL;
+    }
+
+    public StatusNotification registerIfHasNoErrors(RegisterUserDto registerUserDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
+                log.error(code);
+            }
+            return StatusNotification.ERROR;
+        } else
+            register(registerUserDto);
+        return StatusNotification.SUCCES;
+    }
+
+    private boolean verifiedPasswordAndPasswordDoNotMatch(@Valid RegisterUserDto registerUserDto) {
+        return !registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword());
     }
 
     private void createNewUserLogin(RegisterUserDto registerUserDto) {

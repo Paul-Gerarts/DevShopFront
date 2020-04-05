@@ -6,11 +6,14 @@ import be.syntra.devshop.DevshopFront.services.AuthorisationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping()
@@ -35,8 +38,8 @@ public class AuthorisationController {
     }
 
     @PostMapping("/register")
-    public String getRegisterFormEntry(@ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model) {
-        StatusNotification statusNotification = authorisationService.register(registerUserDto);
+    public String getRegisterFormEntry(@Valid @ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model, BindingResult bindingResult) {
+        StatusNotification statusNotification = authorisationService.registerIfHasNoErrors(registerUserDto, bindingResult);
         model.addAttribute("user", registerUserDto);
         model.addAttribute("status", statusNotification);
         return (!statusNotification.equals(StatusNotification.SUCCES))
