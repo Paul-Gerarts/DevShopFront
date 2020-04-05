@@ -92,7 +92,7 @@ public class AuthorisationControllerTest {
                 .city("city")
                 .country("Belgium")
                 .build();
-        when(authService.register(dummyRegisterDto)).thenReturn(StatusNotification.SUCCES);
+        when(authService.register(dummyRegisterDto)).thenReturn(StatusNotification.SUCCESS);
 
         // when
         final ResultActions getPostResult = mockMvc.perform(post("/register")

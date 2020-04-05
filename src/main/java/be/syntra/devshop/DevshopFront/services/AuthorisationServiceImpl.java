@@ -61,7 +61,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
             if (HttpStatus.CREATED.equals(loginDtoResponseEntity.getStatusCode())) {
                 log.info("register() -> succesfull {}", registerUserDto.getUserName());
                 createNewUserLogin(registerUserDto);
-                return StatusNotification.SUCCES;
+                return StatusNotification.SUCCESS;
             }
         } catch (Exception e) {
             log.error("register() -> {}", e.getLocalizedMessage());
