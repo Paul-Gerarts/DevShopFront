@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
+
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
@@ -89,9 +91,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public StatusNotification archiveProduct(Product product) {
         product.setArchived(true);
-        HttpEntity<Product> request = new HttpEntity<>(product);
+        ProductDto productDto = convertToProductDto(product);
+        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         try {
-            ResponseEntity<Product> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, Product.class);
+            ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
                 log.info("updateProduct() -> saved > {} ", product);
                 return StatusNotification.UPDATED;

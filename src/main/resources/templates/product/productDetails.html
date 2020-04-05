@@ -36,7 +36,8 @@
             <div sec:authorize="hasRole('ROLE_ADMIN')"
                  style="display: flex; flex-direction: row; justify-content: space-between">
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
-                   href="#"><em class="material-icons">sync_alt</em>Update Product</a>
+                   th:href="@{/admin/product/{id}/edit(id=${product.id})}"><em class="material-icons">sync_alt</em>Update
+                    Product</a>
                 <a th:if="${product.archived == false}"
                    class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
