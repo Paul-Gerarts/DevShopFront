@@ -10,8 +10,11 @@ public class ProductUtils {
 
     public static ProductDto getDummyProductDto() {
         return ProductDto.builder()
+                .id(1L)
                 .name("name")
                 .price(new BigDecimal("55"))
+                .description("description")
+                .archived(false)
                 .build();
     }
 

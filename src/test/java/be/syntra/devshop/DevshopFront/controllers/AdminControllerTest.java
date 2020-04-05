@@ -78,8 +78,11 @@ class AdminControllerTest {
         final ResultActions postRestult = mockMvc.perform(
                 post("/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .param("id", String.valueOf(1))
                         .param("name", "name")
-                        .param("price", "55"));
+                        .param("price", "55")
+                        .param("description", "description")
+                        .param("archived", String.valueOf(false)));
 
         // then
         postRestult
@@ -128,10 +131,38 @@ class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/product/addProduct"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(content().string(containsString("Product")))
+                .andExpect(content().string(containsString("Update Product")))
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProductDto));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void getUpdatedProductTest() throws Exception {
+        // given
+        ProductDto dummyProductDto = getDummyProductDto();
+        when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
+
+        // when
+        final ResultActions postRestult = mockMvc.perform(
+                post("/admin/product/" + dummyProductDto.getId() + "/edit")
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .param("name", "name")
+                        .param("price", "55")
+                        .param("description", "description")
+                        .param("archived", String.valueOf(false)));
+
+        // then
+        postRestult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addProduct"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(content().string(containsString("Update Product")))
+                .andExpect(model().attributeExists("product"))
+                .andExpect(model().attribute("product", dummyProductDto));
+
+        verify(productService, times(1)).addProduct(dummyProductDto);
     }
 }

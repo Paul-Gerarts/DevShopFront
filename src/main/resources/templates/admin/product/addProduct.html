@@ -15,7 +15,12 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title">Add Product</span>
+            <span class="mdl-layout-title" id="title">
+                <script th:inline="javascript">
+                    var title = !!location.href.match(/addproduct/) ? 'Add Product' : 'Update Product';
+                    document.getElementById("title").innerHTML = title;
+                </script>
+            </span>
             <form th:object="${product}" method="post">
                 <div class="mdl-grid">
                     <div class="mdl-cell mdl-cell--2-col">

@@ -36,10 +36,7 @@ public class AdminController {
 
     @PostMapping("/addproduct")
     public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
-        StatusNotification statusNotification = productService.addProduct(productDto);
-        model.addAttribute("product", productDto);
-        model.addAttribute("status", statusNotification);
-        return PRODUCT_FORM;
+        return handleProductForm(productDto, model);
     }
 
     @GetMapping("/overview")
@@ -53,6 +50,18 @@ public class AdminController {
     public String forward(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         model.addAttribute("product", convertToProductDto(product));
+        return PRODUCT_FORM;
+    }
+
+    @PostMapping("product/{id}/edit")
+    public String getUpdatedProduct(@ModelAttribute("product") ProductDto productDto, Model model) {
+        return handleProductForm(productDto, model);
+    }
+
+    private String handleProductForm(ProductDto productDto, Model model) {
+        StatusNotification statusNotification = productService.addProduct(productDto);
+        model.addAttribute("product", productDto);
+        model.addAttribute("status", statusNotification);
         return PRODUCT_FORM;
     }
 }
