@@ -85,4 +85,20 @@ public class ProductServiceImpl implements ProductService {
         }
         return new Product();
     }
+
+    @Override
+    public StatusNotification archiveProduct(Product product) {
+        product.setArchived(true);
+        HttpEntity<Product> request = new HttpEntity<>(product);
+        try {
+            ResponseEntity<Product> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, Product.class);
+            if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
+                log.info("updateProduct() -> saved > {} ", product);
+                return StatusNotification.UPDATED;
+            }
+        } catch (Exception e) {
+            log.error("updateProduct() -> {} ", e.getLocalizedMessage());
+        }
+        return StatusNotification.ERROR;
+    }
 }

@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,9 @@ import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProduct;
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductList;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ProductController.class,
@@ -54,6 +56,8 @@ public class ProductControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
                 .andExpect(model().attribute("products", dummyProductList));
+
+        verify(productService, times(1)).findAll();
     }
 
     @Test
@@ -72,5 +76,30 @@ public class ProductControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProduct));
+
+        verify(productService, times(1)).findById(dummyProduct.getId());
+    }
+
+    @Test
+    void canArchiveProductTest() throws Exception {
+        // given
+        final Product dummyProduct = getDummyProduct();
+        when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(productService.archiveProduct(dummyProduct)).thenReturn(StatusNotification.UPDATED);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId()));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productDetails"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("product", "status"))
+                .andExpect(model().attribute("product", dummyProduct))
+                .andExpect(model().attribute("status", StatusNotification.UPDATED));
+
+        verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(productService, times(1)).archiveProduct(dummyProduct);
     }
 }

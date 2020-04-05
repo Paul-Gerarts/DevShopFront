@@ -49,3 +49,16 @@
     flex-direction: row;
     justify-content: space-between
 }
+
+.logo {
+    position: absolute;
+    left: 43%;
+    top: 26%;
+    width: 350px;
+    text-transform: uppercase;
+    color: red;
+    font-size: 50px;
+    font-weight: bold;
+    transform: rotate(-35deg);
+    z-index: 1;
+}

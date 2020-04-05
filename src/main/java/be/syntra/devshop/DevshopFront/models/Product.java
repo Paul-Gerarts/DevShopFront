@@ -28,4 +28,6 @@ public class Product {
 
     @NotBlank
     private String description;
+
+    private boolean archived;
 }

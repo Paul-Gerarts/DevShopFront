@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+>
 <head>
     <meta charset="UTF-8">
     <title>DevShop</title>
@@ -27,7 +28,8 @@
                     <span class="mdl-list__item-secondary-content">
                         <span class="mdl-list__item-text-body"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <a class="mdl-list__item-secondary-action" href="#"><em class="material-icons">add_shopping_cart</em></a>
+                            <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action" href="#">
+                                <em class="material-icons">add_shopping_cart</em></a>
                     </span>
                 </li>
             </ul>
@@ -35,11 +37,24 @@
                  style="display: flex; flex-direction: row; justify-content: space-between">
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
                    href="#"><em class="material-icons">sync_alt</em>Update Product</a>
-                <a class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+                <a th:if="${product.archived == false}"
+                   class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
+            </div>
+            <!-- Chip -->
+            <div th:if="${status != null}">
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
+                    <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
+                    <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
+                </span>
             </div>
         </div>
     </main>
+</div>
+<!--archive add-on-->
+<div class="logo" th:if="${product.archived == true}">
+    ARCHIVED
 </div>
 <!--popup for delete button-->
 <dialog class="mdl-dialog">
@@ -54,10 +69,12 @@
                 class="mdl-button close  mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey mdl-color-text--white">
             <em class="material-icons">undo</em>Back
         </button>
-        <button type="button"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
-            <em class="material-icons">archive</em>Archive Product
-        </button>
+        <form method="post" th:object="${product}" th:action="@{/products/details/{id}(id=${product.id})}">
+            <button type="submit"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+                <em class="material-icons">archive</em>Archive Product
+            </button>
+        </form>
     </div>
 </dialog>
 <!--logic for showing popup-->

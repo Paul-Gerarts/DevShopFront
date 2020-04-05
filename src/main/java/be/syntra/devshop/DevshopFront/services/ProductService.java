@@ -29,4 +29,6 @@ public interface ProductService {
     ProductList findAll();
 
     Product findById(Long id);
+
+    StatusNotification archiveProduct(Product product);
 }

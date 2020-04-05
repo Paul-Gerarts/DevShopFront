@@ -27,6 +27,8 @@ public class ProductUtils {
                 .id(1L)
                 .name("product")
                 .price(new BigDecimal("88"))
+                .description("description")
+                .archived(false)
                 .build();
     }
 

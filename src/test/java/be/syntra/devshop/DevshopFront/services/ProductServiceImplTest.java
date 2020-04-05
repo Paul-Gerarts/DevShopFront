@@ -70,7 +70,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void addProductTest() throws Exception {
+    void addProductTest() {
         // given
         final ProductDto dummyProductDto = getDummyProductDto();
         final String productDtoAsJson = jsonUtils.asJsonString(dummyProductDto);
@@ -94,7 +94,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllTest() throws Exception {
+    void findAllTest() {
         // given
         final List<Product> dummyProductList = getDummyProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
@@ -115,7 +115,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findByIdTest() throws Exception {
+    void findByIdTest() {
         // given
         final Product dummyProduct = getDummyProduct();
         final String dummyProductJsonString = jsonUtils.asJsonString(dummyProduct);
@@ -131,5 +131,29 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertThat(dummyProduct.toString()).isEqualTo(receivedProduct.toString());
+    }
+
+    @Test
+    void archiveProductTest() {
+        // given
+        final Product dummyProduct = getDummyProduct();
+        final String productDtoAsJson = jsonUtils.asJsonString(dummyProduct);
+        final String expectedEndpoint = baseUrl + endpoint + "/update";
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.CREATED)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(productDtoAsJson));
+
+        // when
+        StatusNotification statusNotification = productService.archiveProduct(dummyProduct);
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.UPDATED, statusNotification);
     }
 }
