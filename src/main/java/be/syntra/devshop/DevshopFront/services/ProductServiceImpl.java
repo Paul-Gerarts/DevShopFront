@@ -61,17 +61,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findAll() {
-        try {
-            ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
-            if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                log.info("findAll() -> products retrieved from backEnd");
-                return new ProductList((List<Product>) productListResponseEntity.getBody());
-            }
-        } catch (Exception e) {
-            log.error("findAll() -> {} ", e.getLocalizedMessage());
-        }
-        return new ProductList(Collections.emptyList());
+    public ProductList findAllNonArchived() {
+        return retrieveProductListFrom(resourceUrl);
+    }
+
+    @Override
+    public ProductList findAllArchived() {
+        return retrieveProductListFrom(resourceUrl + "/archived");
     }
 
     @Override
@@ -103,5 +99,18 @@ public class ProductServiceImpl implements ProductService {
             log.error("updateProduct() -> {} ", e.getLocalizedMessage());
         }
         return StatusNotification.ERROR;
+    }
+
+    private ProductList retrieveProductListFrom(String resourceUrl) {
+        try {
+            ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
+            if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+                log.info("findProductList() -> products retrieved from backEnd");
+                return new ProductList((List<Product>) productListResponseEntity.getBody());
+            }
+        } catch (Exception e) {
+            log.error("findProductList() -> {} ", e.getLocalizedMessage());
+        }
+        return new ProductList(Collections.emptyList());
     }
 }

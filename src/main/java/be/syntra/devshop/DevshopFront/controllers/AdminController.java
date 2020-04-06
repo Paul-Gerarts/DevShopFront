@@ -58,6 +58,13 @@ public class AdminController {
         return handleProductForm(productDto, model);
     }
 
+    @GetMapping("/archived")
+    public String displayArchivedProducts(Model model) {
+        List<Product> productList = productService.findAllArchived().getProductList();
+        model.addAttribute("products", productList);
+        return "product/productOverview";
+    }
+
     private String handleProductForm(ProductDto productDto, Model model) {
         StatusNotification statusNotification = productService.addProduct(productDto);
         model.addAttribute("product", productDto);

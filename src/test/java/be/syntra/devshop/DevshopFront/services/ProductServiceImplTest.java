@@ -94,9 +94,9 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllTest() {
+    void findAllNonArchivedTest() {
         // given
-        final List<Product> dummyProductList = getDummyProductList();
+        final List<Product> dummyProductList = getDummyNonArchivedProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
         final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
         final String expectedEndpoint = baseUrl + endpoint;
@@ -107,7 +107,28 @@ class ProductServiceImplTest {
                         withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        final ProductList receivedProductList = productService.findAll();
+        final ProductList receivedProductList = productService.findAllNonArchived();
+
+        // then
+        mockServer.verify();
+        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+    }
+
+    @Test
+    void findAllArchivedTest() {
+        // given
+        final List<Product> dummyArchivedProductList = getDummyArchivedProductList();
+        final ProductList expectedProductList = new ProductList(dummyArchivedProductList);
+        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(dummyArchivedProductList);
+        final String expectedEndpoint = baseUrl + endpoint + "/archived";
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        withSuccess(dummyArchivedProductListJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        final ProductList receivedProductList = productService.findAllArchived();
 
         // then
         mockServer.verify();
@@ -117,7 +138,7 @@ class ProductServiceImplTest {
     @Test
     void findByIdTest() {
         // given
-        final Product dummyProduct = getDummyProduct();
+        final Product dummyProduct = getDummyNonArchivedProduct();
         final String dummyProductJsonString = jsonUtils.asJsonString(dummyProduct);
         final String expectedEndPoint = baseUrl + endpoint + "/details/" + dummyProduct.getId();
         mockServer
@@ -136,7 +157,7 @@ class ProductServiceImplTest {
     @Test
     void archiveProductTest() {
         // given
-        final Product dummyProduct = getDummyProduct();
+        final Product dummyProduct = getDummyNonArchivedProduct();
         final String productDtoAsJson = jsonUtils.asJsonString(dummyProduct);
         final String expectedEndpoint = baseUrl + endpoint + "/update";
 

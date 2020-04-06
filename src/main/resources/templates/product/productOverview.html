@@ -15,7 +15,11 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title">Products</span>
+            <span class="mdl-layout-title" id="title">
+                <script th:inline="javascript">
+                    var title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
+                    document.getElementById("title").innerHTML = title;
+                </script>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
