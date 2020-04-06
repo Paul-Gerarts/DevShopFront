@@ -26,7 +26,9 @@ public interface ProductService {
      * returns a ProductList object
      * @return ProductList
      */
-    ProductList findAll();
+    ProductList findAllNonArchived();
+
+    ProductList findAllArchived();
 
     Product findById(Long id);
 

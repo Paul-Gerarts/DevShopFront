@@ -8,6 +8,7 @@ import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collections;
+import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProduct;
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductDto;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
@@ -119,7 +120,7 @@ class AdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void displayAddProductFormWhenEditingTest() throws Exception {
         //given
-        Product dummyProduct = getDummyProduct();
+        Product dummyProduct = getDummyNonArchivedProduct();
         ProductDto dummyProductDto = convertToProductDto(dummyProduct);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
@@ -164,5 +165,26 @@ class AdminControllerTest {
                 .andExpect(model().attribute("product", dummyProductDto));
 
         verify(productService, times(1)).addProduct(dummyProductDto);
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayProductArchivedOverViewTest() throws Exception {
+        // given
+        final List<Product> dummyProductList = getDummyArchivedProductList();
+        when(productService.findAllArchived()).thenReturn(new ProductList(dummyProductList));
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", dummyProductList));
+
+        verify(productService, times(1)).findAllArchived();
     }
 }

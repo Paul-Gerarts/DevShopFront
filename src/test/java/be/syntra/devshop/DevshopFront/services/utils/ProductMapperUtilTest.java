@@ -4,7 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import org.junit.jupiter.api.Test;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProduct;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProductMapperUtilTest {
@@ -12,7 +12,7 @@ class ProductMapperUtilTest {
     @Test
     void convertToProductDtoTest() {
         // given
-        Product product = getDummyProduct();
+        Product product = getDummyNonArchivedProduct();
 
         // when
         ProductDto mappedProductDto = ProductMapperUtil.convertToProductDto(product);

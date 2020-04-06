@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProduct;
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyProductList;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProduct;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,8 +43,8 @@ public class ProductControllerTest {
     public void displayProductOverViewTest() throws Exception {
 
         // given
-        final List<Product> dummyProductList = getDummyProductList();
-        when(productService.findAll()).thenReturn(new ProductList(dummyProductList));
+        final List<Product> dummyProductList = getDummyNonArchivedProductList();
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(dummyProductList));
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -57,13 +57,13 @@ public class ProductControllerTest {
                 .andExpect(model().attributeExists("products"))
                 .andExpect(model().attribute("products", dummyProductList));
 
-        verify(productService, times(1)).findAll();
+        verify(productService, times(1)).findAllNonArchived();
     }
 
     @Test
     void displayProductDetailsTest() throws Exception {
         // given
-        final Product dummyProduct = getDummyProduct();
+        final Product dummyProduct = getDummyNonArchivedProduct();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
         // when
@@ -83,7 +83,7 @@ public class ProductControllerTest {
     @Test
     void canArchiveProductTest() throws Exception {
         // given
-        final Product dummyProduct = getDummyProduct();
+        final Product dummyProduct = getDummyNonArchivedProduct();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(productService.archiveProduct(dummyProduct)).thenReturn(StatusNotification.UPDATED);
 
