@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
@@ -25,5 +26,11 @@ public interface ProductService {
      * returns a ProductList object
      * @return ProductList
      */
-    ProductList findAll();
+    ProductList findAllNonArchived();
+
+    ProductList findAllArchived();
+
+    Product findById(Long id);
+
+    StatusNotification archiveProduct(Product product);
 }

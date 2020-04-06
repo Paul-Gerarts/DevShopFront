@@ -10,8 +10,11 @@ public class ProductUtils {
 
     public static ProductDto getDummyProductDto() {
         return ProductDto.builder()
+                .id(1L)
                 .name("name")
                 .price(new BigDecimal("55"))
+                .description("description")
+                .archived(false)
                 .build();
     }
 
@@ -22,19 +25,41 @@ public class ProductUtils {
                 .build();
     }
 
-    public static Product getDummyProduct() {
+    public static Product getDummyNonArchivedProduct() {
         return Product.builder()
                 .id(1L)
                 .name("product")
                 .price(new BigDecimal("88"))
+                .description("description")
+                .archived(false)
                 .build();
     }
 
-    public static Product getOtherDummyProduct() {
+    public static Product getDummyArchivedProduct() {
+        return Product.builder()
+                .id(1L)
+                .name("product")
+                .price(new BigDecimal("88"))
+                .description("description")
+                .archived(true)
+                .build();
+    }
+
+    public static Product getOtherDummyNonArchivedProduct() {
         return Product.builder()
                 .id(2L)
                 .name("another product")
                 .price(new BigDecimal("0.99"))
+                .archived(false)
+                .build();
+    }
+
+    public static Product getOtherDummyArchivedProduct() {
+        return Product.builder()
+                .id(2L)
+                .name("another product")
+                .price(new BigDecimal("0.99"))
+                .archived(true)
                 .build();
     }
 
@@ -42,7 +67,11 @@ public class ProductUtils {
         return List.of(getDummyProductDto(), getOtherDummyProductDto());
     }
 
-    public static List<Product> getDummyProductList() {
-        return List.of(getDummyProduct(), getOtherDummyProduct());
+    public static List<Product> getDummyNonArchivedProductList() {
+        return List.of(getDummyNonArchivedProduct(), getOtherDummyNonArchivedProduct());
+    }
+
+    public static List<Product> getDummyArchivedProductList() {
+        return List.of(getDummyArchivedProduct(), getOtherDummyArchivedProduct());
     }
 }

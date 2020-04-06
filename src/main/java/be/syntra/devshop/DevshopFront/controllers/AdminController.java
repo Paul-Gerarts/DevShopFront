@@ -1,21 +1,26 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.models.AdminFunctions;
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final ProductService productService;
+    private static final String PRODUCT_FORM = "admin/product/addProduct";
 
     @Autowired
     public AdminController(ProductService productService) {
@@ -26,14 +31,44 @@ public class AdminController {
     public String displayAddProductsForm(Model model) {
         ProductDto emptyProductDto = productService.createEmptyProduct();
         model.addAttribute("product", emptyProductDto);
-        return "admin/product/addProduct";
+        return PRODUCT_FORM;
     }
 
     @PostMapping("/addproduct")
     public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
+        return handleProductForm(productDto, model);
+    }
+
+    @GetMapping("/overview")
+    public String displayAdminOverview(Model model) {
+        List<AdminFunctions> functionList = Arrays.asList(AdminFunctions.values());
+        model.addAttribute("functions", functionList);
+        return "admin/product/adminOverview";
+    }
+
+    @GetMapping("/product/{id}/edit")
+    public String forward(@PathVariable Long id, Model model) {
+        Product product = productService.findById(id);
+        model.addAttribute("product", convertToProductDto(product));
+        return PRODUCT_FORM;
+    }
+
+    @PostMapping("product/{id}/edit")
+    public String getUpdatedProduct(@ModelAttribute("product") ProductDto productDto, Model model) {
+        return handleProductForm(productDto, model);
+    }
+
+    @GetMapping("/archived")
+    public String displayArchivedProducts(Model model) {
+        List<Product> productList = productService.findAllArchived().getProductList();
+        model.addAttribute("products", productList);
+        return "product/productOverview";
+    }
+
+    private String handleProductForm(ProductDto productDto, Model model) {
         StatusNotification statusNotification = productService.addProduct(productDto);
         model.addAttribute("product", productDto);
         model.addAttribute("status", statusNotification);
-        return "admin/product/addProduct";
+        return PRODUCT_FORM;
     }
 }

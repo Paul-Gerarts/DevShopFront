@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
+
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
@@ -59,15 +61,55 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findAll() {
+    public ProductList findAllNonArchived() {
+        return retrieveProductListFrom(resourceUrl);
+    }
+
+    @Override
+    public ProductList findAllArchived() {
+        return retrieveProductListFrom(resourceUrl + "/archived");
+    }
+
+    @Override
+    public Product findById(Long id) {
+        try {
+            ResponseEntity<?> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
+            if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
+                log.info("findById() -> product retrieved from backEnd");
+                return (Product) productResponseEntity.getBody();
+            }
+        } catch (Exception e) {
+            log.error("findById() -> {} ", e.getLocalizedMessage());
+        }
+        return new Product();
+    }
+
+    @Override
+    public StatusNotification archiveProduct(Product product) {
+        product.setArchived(true);
+        ProductDto productDto = convertToProductDto(product);
+        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
+        try {
+            ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
+            if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
+                log.info("updateProduct() -> saved > {} ", product);
+                return StatusNotification.UPDATED;
+            }
+        } catch (Exception e) {
+            log.error("updateProduct() -> {} ", e.getLocalizedMessage());
+        }
+        return StatusNotification.ERROR;
+    }
+
+    private ProductList retrieveProductListFrom(String resourceUrl) {
         try {
             ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
             if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                log.info("findAll() -> products retrieved from backEnd");
+                log.info("findProductList() -> products retrieved from backEnd");
                 return new ProductList((List<Product>) productListResponseEntity.getBody());
             }
         } catch (Exception e) {
-            log.error("findAll() -> {} ", e.getLocalizedMessage());
+            log.error("findProductList() -> {} ", e.getLocalizedMessage());
         }
         return new ProductList(Collections.emptyList());
     }

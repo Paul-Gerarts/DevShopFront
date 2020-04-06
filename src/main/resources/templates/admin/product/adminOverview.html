@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DevShop</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-red.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link type="text/css" href="../static/css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div th:replace="fragments/header :: header">...</div>
+    <main class="mdl-layout__content" style="position: absolute; left: 25%; top: 15%">
+        <div class="page-content">
+            <span class="mdl-layout-title">What would you like to do?</span>
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                th:each="function : ${functions}">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <span class="mdl-list__item-primary-content">
+                       <a th:href="${function.link}" style="text-decoration: none">
+                           <i class="material-icons mdl-list__item-avatar mdl-color--grey">[[${function.icon}]]</i>
+                          <span class="mdl-layout-title"
+                                style="font-size: 20px; color: black; margin:auto; text-align: center"
+                                th:text="${function.description}">Function description</span></a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>
