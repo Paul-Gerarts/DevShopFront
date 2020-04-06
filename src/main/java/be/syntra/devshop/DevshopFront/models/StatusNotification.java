@@ -9,7 +9,7 @@ public enum StatusNotification {
 
     PASSWORD_NO_MATCH("The provided passwords don't match!"),
     REGISTER_FAIL("Registering new user failed. Try a different email-address"),
-    UPDATED("The update was succesful!"),
+    UPDATED("The update was successful!"),
     SUCCESS("Success"),
     SAVED("Saved"),
     ERROR("Error");
