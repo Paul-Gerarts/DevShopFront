@@ -9,11 +9,11 @@
         <!-- Title -->
         <span class="mdl-layout-title">DevShop</span>
         <div class="searchbar">
-            <form class="searchbar" id="searchForm" method="get" th:object="${search}"
-                  th:action="@{/search/{searchRequest}(searchRequest=${search.searchRequest})}">
+            <form class="searchbar" id="searchForm" method="get"
+                  th:action="@{/search/}">
                 <em class="material-icons search-logo md-48">search</em>
-                <input class="searchbar-input" type="text" id="searchRequest" th:name="searchRequest"
-                       th:field="${search.searchRequest}"
+                <input class="searchbar-input" type="text" id="searchRequest"
+                       th:name="searchRequest"
                        placeholder="Search for a product here...">
             </form>
         </div>

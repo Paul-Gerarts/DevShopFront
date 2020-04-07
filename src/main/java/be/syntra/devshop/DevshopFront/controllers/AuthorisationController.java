@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import be.syntra.devshop.DevshopFront.services.AuthorisationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.view.RedirectView;
 public class AuthorisationController {
 
     private AuthorisationServiceImpl authorisationService;
-    private static final String SEARCH = "search";
 
     @Autowired
     public AuthorisationController (AuthorisationServiceImpl authorisationService){
@@ -27,14 +25,12 @@ public class AuthorisationController {
 
     @GetMapping("/auth/login")
     public RedirectView displayLoginPage(Model model) {
-        model.addAttribute(SEARCH, new SearchDto());
         return new RedirectView("/login");
     }
 
     @GetMapping("/register")
     public String displayRegisterForm(Model model){
         model.addAttribute("user", new RegisterUserDto());
-        model.addAttribute(SEARCH, new SearchDto());
         return "/user/register";
     }
 
@@ -43,7 +39,6 @@ public class AuthorisationController {
         StatusNotification statusNotification = authorisationService.register(registerUserDto);
         model.addAttribute("user", registerUserDto);
         model.addAttribute("status", statusNotification);
-        model.addAttribute(SEARCH, new SearchDto());
         return (!statusNotification.equals(StatusNotification.SUCCESS))
                 ? "/user/register"
                 : "redirect:/products";

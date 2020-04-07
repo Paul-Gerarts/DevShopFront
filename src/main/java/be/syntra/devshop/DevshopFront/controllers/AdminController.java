@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ public class AdminController {
     private final ProductService productService;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
     private static final String PRODUCT = "product";
-    private static final String SEARCH = "search";
 
     @Autowired
     public AdminController(ProductService productService) {
@@ -34,7 +32,6 @@ public class AdminController {
     public String displayAddProductsForm(Model model) {
         ProductDto emptyProductDto = productService.createEmptyProduct();
         model.addAttribute(PRODUCT, emptyProductDto);
-        model.addAttribute(SEARCH, new SearchDto());
         return PRODUCT_FORM;
     }
 
@@ -47,7 +44,6 @@ public class AdminController {
     public String displayAdminOverview(Model model) {
         List<AdminFunctions> functionList = Arrays.asList(AdminFunctions.values());
         model.addAttribute("functions", functionList);
-        model.addAttribute(SEARCH, new SearchDto());
         return "admin/product/adminOverview";
     }
 
@@ -55,7 +51,6 @@ public class AdminController {
     public String forward(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         model.addAttribute(PRODUCT, convertToProductDto(product));
-        model.addAttribute(SEARCH, new SearchDto());
         return PRODUCT_FORM;
     }
 
@@ -68,7 +63,6 @@ public class AdminController {
     public String displayArchivedProducts(Model model) {
         List<Product> productList = productService.findAllArchived().getProductList();
         model.addAttribute("products", productList);
-        model.addAttribute(SEARCH, new SearchDto());
         return "product/productOverview";
     }
 
@@ -76,7 +70,6 @@ public class AdminController {
         StatusNotification statusNotification = productService.addProduct(productDto);
         model.addAttribute("products", productDto);
         model.addAttribute("status", statusNotification);
-        model.addAttribute(SEARCH, new SearchDto());
         return PRODUCT_FORM;
     }
 }

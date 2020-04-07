@@ -72,7 +72,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findBySearchRequest(String searchRequest) {
-        return retrieveProductListFrom(resourceUrl + "/search/" + searchRequest);
+        var result = retrieveProductListFrom(resourceUrl + "/search/" + searchRequest);
+        return result.getProductList().isEmpty() ? retrieveProductListFrom(resourceUrl) : result;
     }
 
     @Override
