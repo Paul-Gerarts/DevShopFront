@@ -21,6 +21,7 @@ public class AdminController {
 
     private final ProductService productService;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
+    private static final String PRODUCT = "product";
 
     @Autowired
     public AdminController(ProductService productService) {
@@ -30,7 +31,7 @@ public class AdminController {
     @GetMapping("/addproduct")
     public String displayAddProductsForm(Model model) {
         ProductDto emptyProductDto = productService.createEmptyProduct();
-        model.addAttribute("product", emptyProductDto);
+        model.addAttribute(PRODUCT, emptyProductDto);
         return PRODUCT_FORM;
     }
 
@@ -49,7 +50,7 @@ public class AdminController {
     @GetMapping("/product/{id}/edit")
     public String forward(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
-        model.addAttribute("product", convertToProductDto(product));
+        model.addAttribute(PRODUCT, convertToProductDto(product));
         return PRODUCT_FORM;
     }
 
@@ -67,7 +68,7 @@ public class AdminController {
 
     private String handleProductForm(ProductDto productDto, Model model) {
         StatusNotification statusNotification = productService.addProduct(productDto);
-        model.addAttribute("product", productDto);
+        model.addAttribute("products", productDto);
         model.addAttribute("status", statusNotification);
         return PRODUCT_FORM;
     }

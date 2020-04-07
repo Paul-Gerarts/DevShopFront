@@ -22,7 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
@@ -113,7 +113,7 @@ class AdminControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(content().string(containsString("What would you like to do?")))
                 .andExpect(model().attributeExists("functions"))
-                .andExpect(model().size(Collections.singletonList(AdminFunctions.values()).size()));
+                .andExpect(model().attribute("functions", Arrays.asList(AdminFunctions.values())));
     }
 
     @Test
