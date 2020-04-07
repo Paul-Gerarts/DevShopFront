@@ -44,7 +44,7 @@ public class SearchControllerTest {
         when(productService.findBySearchRequest(searchRequest)).thenReturn(new ProductList(dummyProductList));
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/" + searchRequest));
+        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 
         // then
         getResult
