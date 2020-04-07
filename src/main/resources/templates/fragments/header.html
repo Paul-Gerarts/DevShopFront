@@ -8,15 +8,19 @@
             <em class="material-icons home-logo md-48">home</em></a>
         <!-- Title -->
         <span class="mdl-layout-title">DevShop</span>
-        <!-- spacer, to align future elements to the right -->
-        <div style="position: absolute; left: 45%">
-            <!-- Logged in user welcome-->
-            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"
-                  th:text="Welcome "></span>
+        <div class="searchbar">
+            <form class="searchbar" id="searchForm" method="get" th:object="${search}"
+                  th:action="@{/search/{searchRequest}(searchRequest=${search.searchRequest})}">
+                <em class="material-icons search-logo md-48">search</em>
+                <input class="searchbar-input" type="text" id="searchRequest" th:name="searchRequest"
+                       th:field="${search.searchRequest}"
+                       placeholder="Search for a product here...">
+            </form>
         </div>
-        <div style="position: absolute; left: 50%">
+        <div style="position: absolute; left: 42%">
             <!-- Logged in user -->
-            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')" th:text="${#authentication.getName()}"></span>
+            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"
+                  th:text="|Welcome ${#authentication.getName()}|"></span>
         </div>
         <div style="position: absolute; right: 20px;">
             <form method="get" sec:authorize="!hasRole('ROLE_ADMIN')&&!hasRole('ROLE_USER')" th:action="@{/auth/login}">

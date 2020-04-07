@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ProductController {
 
     private ProductService productService;
+    private static final String SEARCH = "search";
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -28,6 +30,7 @@ public class ProductController {
     public String displayProductOverview(Model model) {
         List<Product> productList = productService.findAllNonArchived().getProductList();
         model.addAttribute("products", productList);
+        model.addAttribute(SEARCH, new SearchDto());
         return "product/productOverview";
     }
 
@@ -35,6 +38,7 @@ public class ProductController {
     public String handleGet(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         model.addAttribute("product", product);
+        model.addAttribute(SEARCH, new SearchDto());
         return "product/productDetails";
     }
 
@@ -44,6 +48,7 @@ public class ProductController {
         StatusNotification statusNotification = productService.archiveProduct(product);
         model.addAttribute("product", product);
         model.addAttribute("status", statusNotification);
+        model.addAttribute(SEARCH, new SearchDto());
         return "product/productDetails";
     }
 }
