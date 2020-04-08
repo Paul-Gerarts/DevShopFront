@@ -38,8 +38,8 @@ public class AuthorisationController {
     }
 
     @PostMapping("/register")
-    public String getRegisterFormEntry(@Valid @ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model, BindingResult bindingResult) {
-        StatusNotification statusNotification = authorisationService.registerIfHasNoErrors(registerUserDto, bindingResult);
+    public String getRegisterFormEntry(@Valid @ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model) {
+        StatusNotification statusNotification = authorisationService.register(registerUserDto);
         model.addAttribute("user", registerUserDto);
         model.addAttribute("status", statusNotification);
         return (!statusNotification.equals(StatusNotification.SUCCESS))

@@ -62,7 +62,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
         try {
             ResponseEntity<RegisterUserDto> loginDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, RegisterUserDto.class);
             if (HttpStatus.CREATED.equals(loginDtoResponseEntity.getStatusCode())) {
-                log.info("register() -> succesfull {}", registerUserDto.getUserName());
+                log.info("register() -> successful {}", registerUserDto.getUserName());
                 createNewUserLogin(registerUserDto);
                 return StatusNotification.SUCCESS;
             }
@@ -72,15 +72,6 @@ public class AuthorisationServiceImpl implements AuthorisationService {
         return StatusNotification.REGISTER_FAIL;
     }
 
-    public StatusNotification registerIfHasNoErrors(@Valid RegisterUserDto registerUserDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
-                log.error(code);
-            }
-            return StatusNotification.ERROR;
-        }
-        return register(registerUserDto);
-    }
 
     private boolean verifiedPasswordAndPasswordDoNotMatch(@Valid RegisterUserDto registerUserDto) {
         return !registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword());

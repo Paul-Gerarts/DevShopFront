@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class AdminController {
     }
 
     @PostMapping("/addproduct")
-    public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
+    public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, Model model) {
         return handleProductForm(productDto, model);
     }
 
