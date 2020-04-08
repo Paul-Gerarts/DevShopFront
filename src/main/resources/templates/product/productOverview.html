@@ -15,9 +15,17 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title" id="title">
+            <span class="mdl-layout-title" id="title"></span>
                 <script th:inline="javascript">
-                    var title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
+                    const queryString = location.search;
+                    const urlParams = new URLSearchParams(queryString);
+                    const searchRequest = urlParams.get('searchRequest');
+                    let title;
+                    if (!!searchRequest) {
+                        title = 'You are now viewing all products matching your search for ' + searchRequest.toUpperCase();
+                    } else {
+                        title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
+                    }
                     document.getElementById("title").innerHTML = title;
                 </script>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">

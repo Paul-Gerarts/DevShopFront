@@ -1,43 +1,71 @@
+/*CSS in common with productDetail.css*/
+
 .page-content {
     padding-left: 100px;
     padding-right: 50px;
-}
-
-.checkbox_layout {
-    padding-top: 22px;
-    color: lightgray;
 }
 
 .home-logo {
     color: white;
 }
 
-.mdl-layout-title {
-    font-weight: bold;
-}
-
-.material-icons {
-    padding-right: 10px;
-}
-
 .mdl-textfield.is-focused .mdl-textfield__label {
     color: red;
 }
 
-.mdl-textfield__label:after {
-    background-color: red;
+.mdl-layout-title {
+    font-weight: bold;
 }
 
 .mdl-layout__content {
     padding-top: 30px;
 }
 
-.product-list-item {
-    width: 750px;
+.material-icons {
+    padding-right: 10px;
+}
+
+.mdl-textfield__label:after {
+    background-color: red;
 }
 
 .mdl-list__item-primary-content {
     width: 85%;
+}
+
+.searchbar {
+    position: relative;
+    left: 4%;
+    width: 430px;
+    z-index: 1;
+    background: white;
+    border-radius: 25px;
+    display: flex;
+}
+
+.searchbar-input[type=text] {
+    width: 90%;
+    margin: 8px;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    font-size: larger;
+}
+
+.search-logo {
+    color: lightgray;
+    padding-top: 6px;
+}
+
+/*file-specific CSS*/
+
+.checkbox_layout {
+    padding-top: 22px;
+    color: lightgray;
+}
+
+.product-list-item {
+    width: 750px;
 }
 
 

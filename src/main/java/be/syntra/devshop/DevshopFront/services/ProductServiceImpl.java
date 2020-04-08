@@ -71,6 +71,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductList findBySearchRequest(String searchRequest) {
+        var result = retrieveProductListFrom(resourceUrl + "/search/" + searchRequest);
+        return result.getProductList().isEmpty() ? retrieveProductListFrom(resourceUrl) : result;
+    }
+
+    @Override
     public Product findById(Long id) {
         try {
             ResponseEntity<?> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);

@@ -27,7 +27,7 @@ public class AuthorisationController {
     }
 
     @GetMapping("/auth/login")
-    public RedirectView displayLoginPage(){
+    public RedirectView displayLoginPage(Model model) {
         return new RedirectView("/login");
     }
 

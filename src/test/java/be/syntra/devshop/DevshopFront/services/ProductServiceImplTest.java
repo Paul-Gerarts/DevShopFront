@@ -177,4 +177,26 @@ class ProductServiceImplTest {
         mockServer.verify();
         assertEquals(StatusNotification.UPDATED, statusNotification);
     }
+
+    @Test
+    void findBySearchRequestTest() {
+        // given
+        final String searchRequest = "product";
+        final List<Product> dummyProductList = List.of(getDummyNonArchivedProduct());
+        final ProductList expectedProductList = new ProductList(dummyProductList);
+        final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
+        final String expectedEndpoint = baseUrl + endpoint + "/search/" + searchRequest;
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        final ProductList receivedProductList = productService.findBySearchRequest(searchRequest);
+
+        // then
+        mockServer.verify();
+        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+    }
 }
