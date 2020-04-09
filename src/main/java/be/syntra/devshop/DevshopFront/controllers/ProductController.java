@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        List<Product> productList = productService.findAllNonArchived().getProductList();
+        List<Product> productList = productService.findAllNonArchived().getProducts();
         model.addAttribute("products", productList);
         return "product/productOverview";
     }

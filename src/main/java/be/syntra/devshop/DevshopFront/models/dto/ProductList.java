@@ -1,16 +1,16 @@
 package be.syntra.devshop.DevshopFront.models.dto;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ProductList {
 
-    private List<Product> productList;
+    private List<Product> products;
 }

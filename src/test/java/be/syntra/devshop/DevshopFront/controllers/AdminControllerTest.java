@@ -171,8 +171,9 @@ class AdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     public void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final List<Product> dummyProductList = getDummyArchivedProductList();
-        when(productService.findAllArchived()).thenReturn(new ProductList(dummyProductList));
+        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final ProductList dummyProductList = new ProductList(dummyProducts);
+        when(productService.findAllArchived()).thenReturn(dummyProductList);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
@@ -183,7 +184,7 @@ class AdminControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProductList));
+                .andExpect(model().attribute("products", dummyProducts));
 
         verify(productService, times(1)).findAllArchived();
     }
