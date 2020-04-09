@@ -98,7 +98,7 @@ class ProductServiceImplTest {
         // given
         final List<Product> dummyProductList = getDummyNonArchivedProductList();
         final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
+        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductList);
         final String expectedEndpoint = baseUrl + endpoint;
         mockServer
                 .expect(requestTo(expectedEndpoint))
@@ -111,7 +111,7 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
     }
 
     @Test
@@ -119,7 +119,7 @@ class ProductServiceImplTest {
         // given
         final List<Product> dummyArchivedProductList = getDummyArchivedProductList();
         final ProductList expectedProductList = new ProductList(dummyArchivedProductList);
-        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(dummyArchivedProductList);
+        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(expectedProductList);
         final String expectedEndpoint = baseUrl + endpoint + "/archived";
         mockServer
                 .expect(requestTo(expectedEndpoint))
@@ -132,7 +132,7 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
     }
 
     @Test
@@ -184,7 +184,7 @@ class ProductServiceImplTest {
         final String searchRequest = "product";
         final List<Product> dummyProductList = List.of(getDummyNonArchivedProduct());
         final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = jsonUtils.asJsonString(dummyProductList);
+        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductList);
         final String expectedEndpoint = baseUrl + endpoint + "/search/" + searchRequest;
         mockServer
                 .expect(requestTo(expectedEndpoint))
@@ -197,6 +197,6 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
     }
 }

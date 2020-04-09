@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProduct;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,8 +40,9 @@ public class SearchControllerTest {
     public void canDisplaySearchedForProductsTest() throws Exception {
         // given
         final String searchRequest = "product";
-        final ProductList dummyProductList = new ProductList(List.of(getDummyNonArchivedProduct()));
-        when(productService.findBySearchRequest(searchRequest)).thenReturn(new ProductList(dummyProductList));
+        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final ProductList dummyProductList = new ProductList(dummyProducts);
+        when(productService.findBySearchRequest(searchRequest)).thenReturn(dummyProductList);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
@@ -51,7 +53,7 @@ public class SearchControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProductList));
+                .andExpect(model().attribute("products", dummyProducts));
 
         verify(productService, times(1)).findBySearchRequest(searchRequest);
     }

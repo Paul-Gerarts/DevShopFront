@@ -61,7 +61,7 @@ public class AdminController {
 
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
-        List<Product> productList = productService.findAllArchived();
+        List<Product> productList = productService.findAllArchived().getProducts();
         model.addAttribute("products", productList);
         return "product/productOverview";
     }
