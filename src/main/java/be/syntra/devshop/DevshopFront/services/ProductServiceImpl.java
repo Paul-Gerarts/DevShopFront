@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.exceptions.UserNotFoundException;
+import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
                 log.info("findById() -> product retrieved from backEnd");
                 return (Product) productResponseEntity.getBody();
             } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
-                throw new UserNotFoundException("User with" + id + "is not found");
+                throw new ProductNotFoundException("Product with" + id + "was not found");
             }
         return new Product();
     }
