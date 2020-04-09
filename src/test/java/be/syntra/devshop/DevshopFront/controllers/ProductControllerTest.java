@@ -18,8 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
-
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProduct;
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
 import static org.mockito.Mockito.*;
@@ -43,7 +41,7 @@ public class ProductControllerTest {
     public void displayProductOverViewTest() throws Exception {
 
         // given
-        final List<Product> dummyProductList = getDummyNonArchivedProductList();
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         when(productService.findAllNonArchived()).thenReturn(new ProductList(dummyProductList));
 
         // when

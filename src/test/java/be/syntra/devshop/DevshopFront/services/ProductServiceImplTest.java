@@ -111,7 +111,7 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
     }
 
     @Test
@@ -132,7 +132,7 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
     }
 
     @Test
@@ -197,6 +197,6 @@ class ProductServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProductList().size(), receivedProductList.getProductList().size());
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.size());
     }
 }

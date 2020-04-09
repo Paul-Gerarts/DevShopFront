@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
-import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ public class SearchControllerTest {
     public void canDisplaySearchedForProductsTest() throws Exception {
         // given
         final String searchRequest = "product";
-        final List<Product> dummyProductList = List.of(getDummyNonArchivedProduct());
+        final ProductList dummyProductList = new ProductList(List.of(getDummyNonArchivedProduct()));
         when(productService.findBySearchRequest(searchRequest)).thenReturn(new ProductList(dummyProductList));
 
         // when

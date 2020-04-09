@@ -56,16 +56,12 @@ public class AuthorisationServiceImpl implements AuthorisationService {
             return StatusNotification.PASSWORD_NO_MATCH;
         }
 
-        try {
             ResponseEntity<RegisterUserDto> loginDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, RegisterUserDto.class);
             if (HttpStatus.CREATED.equals(loginDtoResponseEntity.getStatusCode())) {
                 log.info("register() -> succesfull {}", registerUserDto.getUserName());
                 createNewUserLogin(registerUserDto);
                 return StatusNotification.SUCCESS;
             }
-        } catch (Exception e) {
-            log.error("register() -> {}", e.getLocalizedMessage());
-        }
         return StatusNotification.REGISTER_FAIL;
     }
 

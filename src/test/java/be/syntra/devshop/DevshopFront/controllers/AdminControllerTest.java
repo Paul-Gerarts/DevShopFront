@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
@@ -171,7 +170,7 @@ class AdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     public void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final List<Product> dummyProductList = getDummyArchivedProductList();
+        final ProductList dummyProductList = new ProductList(getDummyArchivedProductList());
         when(productService.findAllArchived()).thenReturn(new ProductList(dummyProductList));
 
         // when

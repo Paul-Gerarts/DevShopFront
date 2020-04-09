@@ -1,16 +1,19 @@
 package be.syntra.devshop.DevshopFront.models.dto;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class ProductList {
+@ToString
+public class ProductList extends ArrayList<Product> {
 
-    private List<Product> productList;
+    @Transient
+    private List<Product> products;
 }

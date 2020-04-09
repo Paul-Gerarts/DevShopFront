@@ -24,7 +24,7 @@ public class SearchController {
 
     @GetMapping("/")
     public String showSearchBarResult(@RequestParam String searchRequest, Model model) {
-        List<Product> productList = productService.findBySearchRequest(searchRequest).getProductList();
+        List<Product> productList = productService.findBySearchRequest(searchRequest);
         model.addAttribute("products", productList);
         return "product/productOverview";
     }
