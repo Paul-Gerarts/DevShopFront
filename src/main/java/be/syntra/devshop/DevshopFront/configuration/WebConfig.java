@@ -1,7 +1,6 @@
 package be.syntra.devshop.DevshopFront.configuration;
 
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -34,11 +33,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .errorHandler(new RestTemplateResponseErrorHandler())
                 .interceptors(Collections.singleton(interceptor))
                 .build();
-    }
-
-    @Bean
-    public DozerBeanMapper dozerMapper() {
-        return new DozerBeanMapper();
     }
 }
 
