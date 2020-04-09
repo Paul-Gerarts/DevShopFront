@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
-import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
@@ -48,16 +47,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public StatusNotification addProduct(ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        try {
             log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
             ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
                 log.info("addProduct() -> saved > {} ", productDto);
                 return StatusNotification.SAVED;
             }
-        } catch (Exception e) {
-            log.error("addProduct() -> {} ", e.getLocalizedMessage());
-        }
         return StatusNotification.ERROR;
     }
 
@@ -74,12 +69,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductList findBySearchRequest(String searchRequest) {
         var result = retrieveProductListFrom(resourceUrl + "/search/" + searchRequest);
-        return result.getProductList().isEmpty() ? retrieveProductListFrom(resourceUrl) : result;
+        return result.getProducts().isEmpty() ? retrieveProductListFrom(resourceUrl) : result;
     }
 
     @Override
     public Product findById(Long id) {
-            ResponseEntity<?> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
+        ResponseEntity<Product> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
             if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
                 log.info("findById() -> product retrieved from backEnd");
                 return (Product) productResponseEntity.getBody();
@@ -94,28 +89,20 @@ public class ProductServiceImpl implements ProductService {
         product.setArchived(true);
         ProductDto productDto = convertToProductDto(product);
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        try {
             ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
             if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
                 log.info("updateProduct() -> saved > {} ", product);
                 return StatusNotification.UPDATED;
             }
-        } catch (Exception e) {
-            log.error("updateProduct() -> {} ", e.getLocalizedMessage());
-        }
         return StatusNotification.ERROR;
     }
 
     private ProductList retrieveProductListFrom(String resourceUrl) {
-        try {
-            ResponseEntity<?> productListResponseEntity = restTemplate.getForEntity(resourceUrl, List.class);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductList.class);
             if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
                 log.info("findProductList() -> products retrieved from backEnd");
-                return new ProductList((List<Product>) productListResponseEntity.getBody());
+                return productListResponseEntity.getBody();
             }
-        } catch (Exception e) {
-            log.error("findProductList() -> {} ", e.getLocalizedMessage());
-        }
         return new ProductList(Collections.emptyList());
     }
 }
