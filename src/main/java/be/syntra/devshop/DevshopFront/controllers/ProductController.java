@@ -47,9 +47,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public String addSelectedProductToCart(@ModelAttribute("id") Integer id) {
-        log.info("chosen product -> " + id);
-        productService.addToCart(id);
+    public String addSelectedProductToCart(@ModelAttribute("product") Product product) {
+        log.info("chosen product -> " + product);
+        productService.addToCart(product);
         return "redirect:/products";
     }
 }

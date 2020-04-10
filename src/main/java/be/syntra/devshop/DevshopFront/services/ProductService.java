@@ -37,8 +37,8 @@ public interface ProductService {
     StatusNotification archiveProduct(Product product);
 
     /***
-     * adds a poduct with the given id to the cart
-     * @param id
+     * adds a poduct to the cart
+     * @param product
      */
-    void addToCart(Integer id);
+    void addToCart(Product product);
 }

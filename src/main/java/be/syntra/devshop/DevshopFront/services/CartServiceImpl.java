@@ -2,10 +2,12 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class CartServiceImpl implements CartService {
     CartDto currentCart = null;
 
