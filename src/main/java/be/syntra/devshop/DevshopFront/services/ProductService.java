@@ -35,4 +35,10 @@ public interface ProductService {
     Product findById(Long id);
 
     StatusNotification archiveProduct(Product product);
+
+    /***
+     * adds a poduct with the given id to the cart
+     * @param id
+     */
+    void addToCart(Integer id);
 }

@@ -102,4 +102,9 @@ public class ProductServiceImpl implements ProductService {
             }
         return new ProductList(Collections.emptyList());
     }
+
+    @Override
+    public void addToCart(Integer id) {
+
+    }
 }
