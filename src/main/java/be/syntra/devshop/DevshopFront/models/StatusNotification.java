@@ -12,7 +12,7 @@ public enum StatusNotification {
     UPDATED("The update was successful!"),
     SUCCESS("Success"),
     SAVED("Saved"),
-    ERROR("Error");
+    ERROR("Error: make sure you fill in the form correctly");
 
     private final String label;
 

@@ -12,9 +12,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.util.Collections;
 
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
@@ -45,14 +47,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public StatusNotification addProduct(ProductDto productDto) {
+    public StatusNotification addProduct(@Valid ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-            log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
-            ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-            if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
-                log.info("addProduct() -> saved > {} ", productDto);
-                return StatusNotification.SAVED;
-            }
+        log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
+        ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
+
+        if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
+            log.info("addProduct() -> saved > {} ", productDto);
+            return StatusNotification.SAVED;
+        }
         return StatusNotification.ERROR;
     }
 
@@ -75,12 +78,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(Long id) {
         ResponseEntity<Product> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
-            if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
-                log.info("findById() -> product retrieved from backEnd");
-                return (Product) productResponseEntity.getBody();
-            } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
-                throw new ProductNotFoundException("Product with" + id + "was not found");
-            }
+        if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
+            log.info("findById() -> product retrieved from backEnd");
+            return productResponseEntity.getBody();
+        } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
+            throw new ProductNotFoundException("Product with" + id + "was not found");
+        }
         return new Product();
     }
 
@@ -89,20 +92,20 @@ public class ProductServiceImpl implements ProductService {
         product.setArchived(true);
         ProductDto productDto = convertToProductDto(product);
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-            ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
-            if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
-                log.info("updateProduct() -> saved > {} ", product);
-                return StatusNotification.UPDATED;
-            }
+        ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
+        if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
+            log.info("updateProduct() -> saved > {} ", product);
+            return StatusNotification.UPDATED;
+        }
         return StatusNotification.ERROR;
     }
 
     private ProductList retrieveProductListFrom(String resourceUrl) {
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductList.class);
-            if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                log.info("findProductList() -> products retrieved from backEnd");
-                return productListResponseEntity.getBody();
-            }
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            log.info("findProductList() -> products retrieved from backEnd");
+            return productListResponseEntity.getBody();
+        }
         return new ProductList(Collections.emptyList());
     }
 }
