@@ -68,7 +68,6 @@ public class AuthorisationServiceImpl implements AuthorisationService {
         return StatusNotification.REGISTER_FAIL;
     }
 
-
     private boolean verifiedPasswordAndPasswordDoNotMatch(@Valid RegisterUserDto registerUserDto) {
         return !registerUserDto.getPassword().equals(registerUserDto.getConfirmedPassword());
     }

@@ -1,7 +1,5 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.exceptions.ControllerExceptionAdvice;
-import be.syntra.devshop.DevshopFront.exceptions.ValidationErrorDto;
 import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
@@ -9,7 +7,6 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
@@ -45,6 +43,9 @@ public class AdminController {
     @PostMapping("/addproduct")
     public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
+                log.error(code);
+            }
             return PRODUCT_FORM;
         }
         return handleProductForm(productDto, model);
@@ -67,7 +68,10 @@ public class AdminController {
     @PostMapping("product/{id}/edit")
     public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return PRODUCT;
+            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
+                log.error(code);
+            }
+            return PRODUCT_FORM;
         }
         return handleProductForm(productDto, model);
     }

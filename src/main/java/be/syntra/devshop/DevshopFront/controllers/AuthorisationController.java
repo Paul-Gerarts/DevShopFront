@@ -3,20 +3,22 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
 import be.syntra.devshop.DevshopFront.services.AuthorisationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
+@Slf4j
 @Controller
 @RequestMapping()
 public class AuthorisationController {
+    private static final String REGISTER_FORM = "/user/register";
 
     private AuthorisationService authorisationService;
 
@@ -33,16 +35,23 @@ public class AuthorisationController {
     @GetMapping("/register")
     public String displayRegisterForm(Model model){
         model.addAttribute("user", new RegisterUserDto());
-        return "/user/register";
+        return REGISTER_FORM;
     }
 
     @PostMapping("/register")
-    public String getRegisterFormEntry(@Valid @ModelAttribute("registerForm") RegisterUserDto registerUserDto, Model model) {
-        StatusNotification statusNotification = authorisationService.register(registerUserDto);
-        model.addAttribute("user", registerUserDto);
-        model.addAttribute("status", statusNotification);
-        return (!statusNotification.equals(StatusNotification.SUCCESS))
-                ? "/user/register"
-                : "redirect:/products";
+    public String getRegisterFormEntry(@Valid @ModelAttribute("user") RegisterUserDto registerUserDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
+                log.error(code);
+            }
+            return REGISTER_FORM;
+        } else {
+            StatusNotification statusNotification = authorisationService.register(registerUserDto);
+            model.addAttribute("user", registerUserDto);
+            model.addAttribute("status", statusNotification);
+            return (!statusNotification.equals(StatusNotification.SUCCESS))
+                    ? REGISTER_FORM
+                    : "redirect:/products";
+        }
     }
 }

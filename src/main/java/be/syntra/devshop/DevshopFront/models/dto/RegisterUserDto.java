@@ -9,44 +9,44 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class RegisterUserDto {
 
-    @Email
-    @NotBlank
+    @Email(message = "This is not a valid email")
+    @NotBlank(message = "Please enter an email")
     private String userName;
 
-    @NotBlank
+    @NotBlank(message = "Fill out a password, just to be safe")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Confirm password")
     private String confirmedPassword;
 
-    @NotBlank
+    @NotBlank(message = "You have a first name right?")
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "You have a last name right?")
     private String lastName;
 
-    @NotBlank
+    @NotBlank(message = "Enter your street")
     private String street;
 
-    @NotBlank
-    @Pattern(regexp = "\\d*\\w[a-zA-Z]?")
+    @NotBlank(message = "Fill out your address number")
+    @Pattern(regexp = "\\d*\\w[a-zA-Z]?", message = "Has to be a number or a number with letters")
     private String number;
 
-    @NotBlank
     private String boxNumber;
 
-    @NotBlank
+    @NotBlank(message = "Fill out your postal code")
     private String postalCode;
 
-    @NotBlank
+    @NotBlank(message = "In which city do you live in")
     private String city;
 
-    @NotBlank
+    @NotBlank(message = "In which country do you live in")
     private String country;
 }
