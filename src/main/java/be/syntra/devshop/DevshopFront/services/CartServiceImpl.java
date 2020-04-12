@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CartServiceImpl implements CartService {
         this.currentCart = currentCart;
     }
 
+    @Cacheable(value = "currentCart")
     @Override
     public CartDto getCart() {
         return currentCart;

@@ -1,55 +1,57 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
+import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@RestClientTest(CartService.class)
+@ExtendWith(MockitoExtension.class)
+@Import({TestWebConfig.class, JsonUtils.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CartServiceImplTest {
 
     @Autowired
     CartDto currentCart;
 
-
-    @InjectMocks
+    @Autowired
     CartServiceImpl cartService;
 
-    @BeforeEach
-    void init() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
-    @Ignore
     public void getNewCartTest() {
         // given
         // when
         CartDto newCart = cartService.getCart();
 
         // then
-        assertEquals(newCart.isActiveCart(), true);
-        assertEquals(newCart.isFinalizedCart(), false);
-        assertEquals(newCart.isPaidCart(), false);
-        assertEquals(newCart.getProducts().size(), 0);
+        assertEquals(true,newCart.isActiveCart());
+        assertEquals(false,newCart.isFinalizedCart());
+        assertEquals(false,newCart.isPaidCart());
+        assertEquals(0,newCart.getProducts().size());
     }
 
     @Test
-    @Ignore
     public void getExistingCartTest() {
         // given
-        CartDto currentCart = CartUtils.getCartWithOneDummyProduct();
+        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
 
         // when
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
         CartDto getCart = cartService.getCart();
 
         // then

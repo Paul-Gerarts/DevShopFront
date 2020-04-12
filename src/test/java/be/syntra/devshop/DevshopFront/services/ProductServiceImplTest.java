@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -51,8 +52,8 @@ class ProductServiceImplTest {
     @Autowired
     ProductServiceImpl productService;
 
-    @Mock
-    ProductServiceImpl service;
+    @MockBean
+    CartService service;
 
     MockRestServiceServer mockServer;
 
