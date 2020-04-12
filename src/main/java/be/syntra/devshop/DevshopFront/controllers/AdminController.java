@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
@@ -42,12 +41,6 @@ public class AdminController {
 
     @PostMapping("/addproduct")
     public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
-                log.error(code);
-            }
-            return PRODUCT_FORM;
-        }
         return handleProductForm(productDto, model);
     }
 
@@ -67,12 +60,6 @@ public class AdminController {
 
     @PostMapping("product/{id}/edit")
     public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
-                log.error(code);
-            }
-            return PRODUCT_FORM;
-        }
         return handleProductForm(productDto, model);
     }
 

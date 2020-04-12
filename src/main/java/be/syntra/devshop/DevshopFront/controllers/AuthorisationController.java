@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -40,18 +39,11 @@ public class AuthorisationController {
 
     @PostMapping("/register")
     public String getRegisterFormEntry(@Valid @ModelAttribute("user") RegisterUserDto registerUserDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            for (String code : Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getCodes())) {
-                log.error(code);
-            }
-            return REGISTER_FORM;
-        } else {
             StatusNotification statusNotification = authorisationService.register(registerUserDto);
             model.addAttribute("user", registerUserDto);
             model.addAttribute("status", statusNotification);
             return (!statusNotification.equals(StatusNotification.SUCCESS))
                     ? REGISTER_FORM
                     : "redirect:/products";
-        }
     }
 }
