@@ -9,44 +9,44 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class RegisterUserDto {
 
-    @Email
-    @NotBlank
+    @Email(message = "This is not a valid email")
+    @NotBlank(message = "Please enter an email")
     private String userName;
 
-    @NotBlank
+    @NotBlank(message = "Fill out a password, just to be safe")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Confirm password")
     private String confirmedPassword;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String lastName;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String street;
 
-    @NotBlank
-    @Pattern(regexp = "\\d*\\w[a-zA-Z]?")
+    @NotBlank(message = "This is a required field")
+    @Pattern(regexp = "\\d*\\w[a-zA-Z]?", message = "Has to be a number or a number with letters")
     private String number;
 
-    @NotBlank
     private String boxNumber;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String postalCode;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String city;
 
-    @NotBlank
+    @NotBlank(message = "This is a required field")
     private String country;
 }
