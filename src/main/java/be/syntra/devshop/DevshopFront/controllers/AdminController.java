@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class AdminController {
     }
 
     @PostMapping("/addproduct")
-    public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, Model model) {
+    public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
         return handleProductForm(productDto, model);
     }
 
@@ -58,7 +59,7 @@ public class AdminController {
     }
 
     @PostMapping("product/{id}/edit")
-    public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, Model model) {
+    public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         return handleProductForm(productDto, model);
     }
 
