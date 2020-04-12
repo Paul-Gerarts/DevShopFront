@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -102,5 +103,25 @@ public class ProductControllerTest {
 
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).archiveProduct(dummyProduct);
+    }
+
+    @Test
+    void addSelectedProductToCart() throws Exception {
+        // given
+        final Product dummyProduct = getDummyNonArchivedProduct();
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/products/")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("id", dummyProduct.getId().toString())
+                .param("name", dummyProduct.getName())
+                .param("price", dummyProduct.getPrice().toString()));
+
+        // then
+        getResult
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/products"));
+
+        verify(productService, times(1)).addToCart(any(Product.class));
     }
 }
