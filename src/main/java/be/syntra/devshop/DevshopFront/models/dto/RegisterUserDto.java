@@ -26,27 +26,27 @@ public class RegisterUserDto {
     @NotBlank(message = "Confirm password")
     private String confirmedPassword;
 
-    @NotBlank(message = "You have a first name right?")
+    @NotBlank(message = "This is a required field")
     private String firstName;
 
-    @NotBlank(message = "You have a last name right?")
+    @NotBlank(message = "This is a required field")
     private String lastName;
 
-    @NotBlank(message = "Enter your street")
+    @NotBlank(message = "This is a required field")
     private String street;
 
-    @NotBlank(message = "Fill out your address number")
+    @NotBlank(message = "This is a required field")
     @Pattern(regexp = "\\d*\\w[a-zA-Z]?", message = "Has to be a number or a number with letters")
     private String number;
 
     private String boxNumber;
 
-    @NotBlank(message = "Fill out your postal code")
+    @NotBlank(message = "This is a required field")
     private String postalCode;
 
-    @NotBlank(message = "In which city do you live in")
+    @NotBlank(message = "This is a required field")
     private String city;
 
-    @NotBlank(message = "In which country do you live in")
+    @NotBlank(message = "This is a required field")
     private String country;
 }

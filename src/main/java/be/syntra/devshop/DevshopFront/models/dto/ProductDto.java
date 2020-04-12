@@ -19,15 +19,15 @@ public class ProductDto {
 
     private Long id;
 
-    @NotBlank(message = "I need a name")
+    @NotBlank(message = "This is a required field")
     private String name;
 
-    @NotNull(message = "Madam or Sir, I have value!")
-    @PositiveOrZero(message = "I need to be positive")
+    @NotNull(message = "This is a required field")
+    @PositiveOrZero(message = "Positive value required")
     @Digits(integer = 5, fraction = 2, message = "Range between 0 and 99999,99")
     private BigDecimal price;
 
-    @NotBlank(message = "Describe me in detail")
+    @NotBlank(message = "This is a required field")
     private String description;
     private boolean archived;
 }
