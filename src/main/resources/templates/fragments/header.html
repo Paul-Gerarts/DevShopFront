@@ -49,17 +49,16 @@
                 </button>
             </form>
         </div>
-        <div style="position: absolute; right: 250px;" th:object="${cart}">
+        <!--<div th:if="${cart != null}">-->
+        <div th:if="${cart != null}" style="position: absolute; right: 250px;" th:object="${cart}">
             <div style="position: absolute; right: 40px;" th:if="*{#lists.size(products) > 0}">
-                <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">
-                    Checkout
-                </button>-->
                 <label th:text="*{#lists.size(products)}">0</label>
             </div>
             <form>
                 <i class="material-icons">shopping_cart</i>
             </form>
         </div>
+        <!--</div>-->
 
     </div>
 </header>
