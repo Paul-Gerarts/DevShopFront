@@ -32,18 +32,21 @@ public class AuthorisationController {
     }
 
     @GetMapping("/register")
-    public String displayRegisterForm(Model model){
+    public String displayRegisterForm(Model model) {
         model.addAttribute("user", new RegisterUserDto());
         return REGISTER_FORM;
     }
 
     @PostMapping("/register")
     public String getRegisterFormEntry(@Valid @ModelAttribute("user") RegisterUserDto registerUserDto, BindingResult bindingResult, Model model) {
+        if (!bindingResult.hasErrors()) {
             StatusNotification statusNotification = authorisationService.register(registerUserDto);
             model.addAttribute("user", registerUserDto);
             model.addAttribute("status", statusNotification);
             return (!statusNotification.equals(StatusNotification.SUCCESS))
                     ? REGISTER_FORM
                     : "redirect:/products";
+        }
+        return REGISTER_FORM;
     }
 }

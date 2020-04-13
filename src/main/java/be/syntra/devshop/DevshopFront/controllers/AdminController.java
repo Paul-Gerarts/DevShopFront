@@ -41,7 +41,9 @@ public class AdminController {
 
     @PostMapping("/addproduct")
     public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
-        return handleProductForm(productDto, model);
+        return (!bindingResult.hasErrors())
+                ? handleProductForm(productDto, model)
+                : PRODUCT_FORM;
     }
 
     @GetMapping("/overview")
@@ -60,7 +62,9 @@ public class AdminController {
 
     @PostMapping("product/{id}/edit")
     public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
-        return handleProductForm(productDto, model);
+        return (!bindingResult.hasErrors())
+                ? handleProductForm(productDto, model)
+                : PRODUCT_FORM;
     }
 
     @GetMapping("/archived")
