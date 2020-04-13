@@ -6,8 +6,11 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,13 +43,18 @@ public class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private CartService cartService;
+
     @Test
     public void displayProductOverViewTest() throws Exception {
 
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
+        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         when(productService.findAllNonArchived()).thenReturn(dummyProductList);
+        when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -57,7 +65,9 @@ public class ProductControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts));
+                .andExpect(model().attribute("products", dummyProducts))
+                .andExpect(model().attribute("cart", dummyCartDto));
+
 
         verify(productService, times(1)).findAllNonArchived();
     }

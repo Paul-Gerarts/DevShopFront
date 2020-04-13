@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
     private ProductService productService;
+    private CartService cartService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CartService cartService) {
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     @GetMapping
     public String displayProductOverview(Model model) {
         List<Product> productList = productService.findAllNonArchived().getProducts();
         model.addAttribute("products", productList);
+        model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
     }
 
