@@ -5,8 +5,12 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,14 +40,24 @@ public class SearchControllerTest {
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private CartService cartService;
+
+    // todo: (DEV-015) might change
+    @MockBean
+    private SearchService searchService;
+
     @Test
     public void canDisplaySearchedForProductsTest() throws Exception {
         // given
         final String searchRequest = "product";
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
+        final CartDto dummyCart = CartUtils.getCartWithOneDummyProduct();
         when(productService.findBySearchRequest(searchRequest)).thenReturn(dummyProductList);
-
+        when(cartService.getCart()).thenReturn(dummyCart);
+        // todo: (DEV-015) might change
+        when(searchService.getSearchModelDto().getBasicSearchTerm()).thenReturn(searchRequest);
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 
@@ -53,7 +67,8 @@ public class SearchControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts));
+                .andExpect(model().attribute("products", dummyProducts))
+                .andExpect(model().attribute("cart", dummyCart));
 
         verify(productService, times(1)).findBySearchRequest(searchRequest);
     }

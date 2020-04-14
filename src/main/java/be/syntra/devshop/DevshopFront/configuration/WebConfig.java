@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.configuration;
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.dto.SearchModelDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +51,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .paidCart(false)
                 .products(productList)
                 .build();
+    }
+
+    // todo: DEV-015 might not create the SearchModelDto here
+
+    @Bean
+    public SearchModelDto getSearchModelDto() {
+        return new SearchModelDto();
     }
 }
 

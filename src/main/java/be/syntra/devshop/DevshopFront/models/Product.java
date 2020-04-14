@@ -30,4 +30,7 @@ public class Product {
     private String description;
 
     private boolean archived;
+
+    @Builder.Default
+    private int numberInCart = 0;
 }
