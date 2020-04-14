@@ -7,6 +7,7 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.models.dto.SearchModelDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -54,10 +55,13 @@ public class SearchControllerTest {
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
         final CartDto dummyCart = CartUtils.getCartWithOneDummyProduct();
-        when(productService.findBySearchRequest(searchRequest)).thenReturn(dummyProductList);
+        final SearchModelDto dummySearchModelDto = new SearchModelDto();
+        dummySearchModelDto.setBasicSearchTerm(searchRequest);
+
+        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         // todo: (DEV-015) might change
-        when(searchService.getSearchModelDto().getBasicSearchTerm()).thenReturn(searchRequest);
+        when(searchService.getSearchModelDto()).thenReturn(dummySearchModelDto);
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 
