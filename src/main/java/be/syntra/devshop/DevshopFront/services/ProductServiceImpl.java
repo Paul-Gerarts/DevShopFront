@@ -3,8 +3,8 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;

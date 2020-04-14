@@ -4,7 +4,7 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
-import be.syntra.devshop.DevshopFront.models.dto.ErrorDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ErrorDto;
 import be.syntra.devshop.DevshopFront.services.ErrorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

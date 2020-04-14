@@ -7,7 +7,7 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.factories.UserFactory;
 import be.syntra.devshop.DevshopFront.models.SecurityUser;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
+import be.syntra.devshop.DevshopFront.models.dtos.RegisterUserDto;
 import be.syntra.devshop.DevshopFront.repositories.UserRepository;
 import be.syntra.devshop.DevshopFront.services.AuthorisationServiceImpl;
 import be.syntra.devshop.DevshopFront.services.UserRoleService;

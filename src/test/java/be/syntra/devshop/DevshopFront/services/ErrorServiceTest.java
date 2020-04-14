@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
-import be.syntra.devshop.DevshopFront.models.dto.ErrorDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ErrorDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

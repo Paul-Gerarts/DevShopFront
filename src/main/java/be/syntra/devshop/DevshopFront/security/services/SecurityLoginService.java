@@ -1,7 +1,7 @@
 package be.syntra.devshop.DevshopFront.security.services;
 
-import be.syntra.devshop.DevshopFront.models.dto.JWTTokenDto;
-import be.syntra.devshop.DevshopFront.models.dto.LogInDto;
+import be.syntra.devshop.DevshopFront.models.dtos.JWTTokenDto;
+import be.syntra.devshop.DevshopFront.models.dtos.LogInDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
