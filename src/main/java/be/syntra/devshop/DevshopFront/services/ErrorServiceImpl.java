@@ -16,17 +16,18 @@ public class ErrorServiceImpl implements ErrorService {
         String message = errorCode;
 
         if (null != status) {
-            switch (status.toString()) {
+            String statusCode = status.toString();
+            switch (statusCode) {
                 case "400":
-                    errorCode = status.toString() + " BAD REQUEST";
+                    errorCode = statusCode + " BAD REQUEST";
                     message = "We had trouble fetching what you wanted...";
                     break;
                 case "404":
-                    errorCode = status.toString() + " NOT FOUND";
+                    errorCode = statusCode + " NOT FOUND";
                     message = "We couldn't find what you're searching for...";
                     break;
                 default:
-                    errorCode = "";
+                    errorCode = statusCode;
                     message = "Something went wrong...";
             }
         }

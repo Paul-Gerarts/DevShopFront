@@ -12,7 +12,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -73,6 +72,12 @@ public class ProductServiceImpl implements ProductService {
     public ProductList findBySearchRequest(String searchRequest) {
         var result = retrieveProductListFrom(resourceUrl + "/search/" + searchRequest);
         return result.getProducts().isEmpty() ? retrieveProductListFrom(resourceUrl) : result;
+    }
+
+    @Override
+    public ProductList findBySearchRequestSortByName(String searchRequest, boolean sortAsc) {
+        sortAsc = !sortAsc;
+        return retrieveProductListFrom(resourceUrl + "/search/" + searchRequest + "/" + sortAsc);
     }
 
     @Override
