@@ -137,6 +137,7 @@ public class ProductControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/products"));
 
-        verify(productService, times(1)).addToCart(any(Product.class));
+        verify(productService, times(1)).addToCart(any());
+        verify(productListCacheService, times(1)).findById(dummyProduct.getId());
     }
 }

@@ -50,8 +50,7 @@
                                 <!--<a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">add_shopping_cart</i></a>-->
                                 <!--<button class="mdl-list__item-secondary-action" href="#"><i class="material-icons mdl-button–icon">add_shopping_cart</i></button>-->
                             <span class="mdl-list__item-secondary-action">
-                                <label th:text="${product.numberInCart}">test</label>
-                                    <button>
+                                    <button th:disabled="${product.numberInCart > 0}">
                                         <i class="material-icons">add_shopping_cart</i>
                                     </button>
                                 </span>

@@ -56,7 +56,7 @@ public class ProductController {
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("product") Product product) {
         log.info("chosen product -> " + product);
-        productService.addToCart(product);
+        productService.addToCart(productListCacheService.findById(product.getId()));
         return "redirect:/products";
     }
 }
