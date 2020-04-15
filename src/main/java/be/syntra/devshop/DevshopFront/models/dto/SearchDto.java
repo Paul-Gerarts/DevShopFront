@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchModelDto {
+public class SearchDto {
     // todo: expand model with DEV-015
     private String basicSearchTerm;
 }

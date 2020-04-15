@@ -33,7 +33,7 @@ public class SearchController {
         // todo: (DEV-015) the search string is saved into the SearchModelDto starting here
         searchService.captureSearchedTerm(searchRequest);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here
-        List<Product> productList = productService.findBySearchRequest(searchService.getSearchModelDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -44,7 +44,7 @@ public class SearchController {
         log.info("(searchPage) chosen product -> " + product);
         productService.addToCart(product);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here, if 'showSearchBarResult' is changed to not use @RequestParam's the code below can be replaced wiht a redirect to '/search' to use the showSearchBarResult method
-        List<Product> productList = productService.findBySearchRequest(searchService.getSearchModelDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
