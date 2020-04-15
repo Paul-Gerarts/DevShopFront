@@ -46,7 +46,8 @@ public class SearchController {
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("product") Product product, Model model) {
         log.info("(searchPage) chosen product -> " + product);
-        productService.addToCart(product);
+        //productService.addToCart(product);
+        productService.addToCart(productListCacheService.findById(product.getId()));
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here, if 'showSearchBarResult' is changed to not use @RequestParam's the code below can be replaced wiht a redirect to '/search' to use the showSearchBarResult method
         //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
