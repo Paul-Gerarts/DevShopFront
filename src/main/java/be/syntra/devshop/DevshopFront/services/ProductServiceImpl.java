@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -34,13 +34,15 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private CartService cartService;
+    private UpdateProductCache updateProductCache;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    public ProductServiceImpl(CartService cartService) {
+    public ProductServiceImpl(CartService cartService, UpdateProductCache updateProductCache) {
         this.cartService = cartService;
+        this.updateProductCache = updateProductCache;
     }
 
     @PostConstruct
@@ -58,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-
+        updateProductCache.setCacheNeedsUpdate(true);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;

@@ -9,6 +9,7 @@ import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
@@ -42,6 +43,9 @@ public class SearchControllerTest {
     private ProductService productService;
 
     @MockBean
+    private ProductListCacheService productListCacheService;
+
+    @MockBean
     private CartService cartService;
 
     // todo: (DEV-015) might change
@@ -58,7 +62,8 @@ public class SearchControllerTest {
         final SearchDto dummySearchDto = new SearchDto();
         dummySearchDto.setBasicSearchTerm(searchRequest);
 
-        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        //when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productListCacheService.findBySearchRequest(anyString())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         // todo: (DEV-015) might change
         when(searchService.getSearchDto()).thenReturn(dummySearchDto);
@@ -74,6 +79,6 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("products", dummyProducts))
                 .andExpect(model().attribute("cart", dummyCart));
 
-        verify(productService, times(1)).findBySearchRequest(searchRequest);
+        verify(productListCacheService, times(1)).findBySearchRequest(searchRequest);
     }
 }

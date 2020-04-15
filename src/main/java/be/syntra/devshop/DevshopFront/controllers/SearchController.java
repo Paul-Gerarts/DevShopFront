@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +21,14 @@ public class SearchController {
     private ProductService productService;
     private CartService cartService;
     private SearchService searchService;
+    private ProductListCacheService productListCacheService;
 
     @Autowired
-    public SearchController(ProductService productService, CartService cartService, SearchService searchService) {
+    public SearchController(ProductService productService, CartService cartService, SearchService searchService, ProductListCacheService productListCacheService) {
         this.productService = productService;
         this.cartService = cartService;
         this.searchService = searchService;
+        this.productListCacheService = productListCacheService;
     }
 
     @GetMapping("/")
@@ -33,7 +36,8 @@ public class SearchController {
         // todo: (DEV-015) the search string is saved into the SearchModelDto starting here
         searchService.captureSearchedTerm(searchRequest);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here
-        List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -44,7 +48,8 @@ public class SearchController {
         log.info("(searchPage) chosen product -> " + product);
         productService.addToCart(product);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here, if 'showSearchBarResult' is changed to not use @RequestParam's the code below can be replaced wiht a redirect to '/search' to use the showSearchBarResult method
-        List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

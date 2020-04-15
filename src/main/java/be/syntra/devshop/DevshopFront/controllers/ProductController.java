@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,19 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
     private CartService cartService;
+    private ProductListCacheService productListCacheService;
 
     @Autowired
-    public ProductController(ProductService productService, CartService cartService) {
+    public ProductController(ProductService productService, CartService cartService, ProductListCacheService productListCacheService) {
         this.productService = productService;
         this.cartService = cartService;
+        this.productListCacheService = productListCacheService;
     }
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        List<Product> productList = productService.findAllNonArchived().getProducts();
+        //List<Product> productList = productService.findAllNonArchived().getProducts();
+        List<Product> productList = productListCacheService.getProductListCache().getCachedProductList();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

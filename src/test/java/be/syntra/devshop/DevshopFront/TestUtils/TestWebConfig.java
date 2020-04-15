@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.TestUtils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -36,5 +37,10 @@ public class TestWebConfig {
     @Bean
     public SearchDto getSearchModelDto() {
         return new SearchDto();
+    }
+
+    @Bean
+    public UpdateProductCache getUpdateProductCache() {
+        return UpdateProductCache.builder().build();
     }
 }

@@ -2,6 +2,8 @@ package be.syntra.devshop.DevshopFront.configuration;
 
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,16 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public SearchDto getSearchModelDto() {
         return new SearchDto();
+    }
+
+    @Bean
+    public ProductListCache getProductListCache() {
+        return new ProductListCache();
+    }
+
+    @Bean
+    public UpdateProductCache getUpdateProductCache() {
+        return UpdateProductCache.builder().build();
     }
 }
 

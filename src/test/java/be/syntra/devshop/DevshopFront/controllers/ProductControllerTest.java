@@ -5,10 +5,11 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
 import org.junit.jupiter.api.Test;
@@ -46,15 +47,19 @@ public class ProductControllerTest {
     @MockBean
     private CartService cartService;
 
+    @MockBean
+    private ProductListCacheService productListCacheService;
+
     @Test
     public void displayProductOverViewTest() throws Exception {
 
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
-        when(productService.findAllNonArchived()).thenReturn(dummyProductList);
+        final ProductListCache productListCache = new ProductListCache();
+        productListCache.setCachedProductList(dummyProducts);
         when(cartService.getCart()).thenReturn(dummyCartDto);
+        when(productListCacheService.getProductListCache()).thenReturn(productListCache);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -69,7 +74,7 @@ public class ProductControllerTest {
                 .andExpect(model().attribute("cart", dummyCartDto));
 
 
-        verify(productService, times(1)).findAllNonArchived();
+        verify(productListCacheService, times(1)).getProductListCache();
     }
 
     @Test
