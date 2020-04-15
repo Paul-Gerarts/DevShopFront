@@ -81,7 +81,8 @@ public class ProductControllerTest {
     void displayProductDetailsTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        //when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(productListCacheService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -94,7 +95,8 @@ public class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProduct));
 
-        verify(productService, times(1)).findById(dummyProduct.getId());
+        //verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(productListCacheService, times(1)).findById(dummyProduct.getId());
     }
 
     @Test

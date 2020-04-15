@@ -39,8 +39,10 @@ public class ProductController {
 
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model) {
-        Product product = productService.findById(id);
+        //Product product = productService.findById(id);
+        Product product = productListCacheService.findById(id);
         model.addAttribute("product", product);
+        model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
     }
 
@@ -58,5 +60,11 @@ public class ProductController {
         log.info("chosen product -> " + product);
         productService.addToCart(productListCacheService.findById(product.getId()));
         return "redirect:/products";
+    }
+
+    @PostMapping("/details/addtocart/{id}")
+    public String addSelectedProductToCart(@PathVariable Long id) {
+        productService.addToCart(productListCacheService.findById(id));
+        return "redirect:/products/details/" + id;
     }
 }
