@@ -5,16 +5,20 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -36,8 +40,10 @@ public class AdminController {
     }
 
     @PostMapping("/addproduct")
-    public String getProductEntry(@ModelAttribute("product") ProductDto productDto, Model model) {
-        return handleProductForm(productDto, model);
+    public String getProductEntry(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
+        return (!bindingResult.hasErrors())
+                ? handleProductForm(productDto, model)
+                : PRODUCT_FORM;
     }
 
     @GetMapping("/overview")
@@ -55,8 +61,10 @@ public class AdminController {
     }
 
     @PostMapping("product/{id}/edit")
-    public String getUpdatedProduct(@ModelAttribute("product") ProductDto productDto, Model model) {
-        return handleProductForm(productDto, model);
+    public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
+        return (!bindingResult.hasErrors())
+                ? handleProductForm(productDto, model)
+                : PRODUCT_FORM;
     }
 
     @GetMapping("/archived")
