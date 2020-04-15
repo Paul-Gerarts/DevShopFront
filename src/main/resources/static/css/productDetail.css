@@ -60,6 +60,27 @@
     padding-top: 6px;
 }
 
+html, body, .spinner {
+    height: 100%;
+    overflow: hidden;
+}
+
+.mdl-spinner {
+    height: 100px;
+    width: 100px;
+}
+
+.spinner {
+    position: relative;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-on {
+    display: flex;
+}
+
 /*file-specific CSS*/
 
 .mdl-list__item-primary-content {

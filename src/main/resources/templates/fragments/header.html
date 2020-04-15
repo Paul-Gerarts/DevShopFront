@@ -2,7 +2,21 @@
 <html lang="en" rel="stylesheet"
       xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <link href="../static/css/layout.css" rel="stylesheet" th:href="@{/css/layout.css}" type="text/css"/>
+<!--logic for spinner-->
+<script>
+    $(function () {
+        var overflow = $('body,html, .spinner');
+        $(".spinner").addClass('spinner-on');
+        $(".spinner").fadeOut(1, function () {
+            $("body").fadeIn(1);
+            overflow.css('overflow', 'visible');
+        });
+    });
+</script>
 <header class="mdl-layout__header">
+    <div class="spinner">
+        <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+    </div>
     <div class="mdl-layout__header-row">
         <a th:href="@{/products}">
             <em class="material-icons home-logo md-48">home</em></a>
