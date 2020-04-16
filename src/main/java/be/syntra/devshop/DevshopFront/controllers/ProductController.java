@@ -30,7 +30,6 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        //List<Product> productList = productService.findAllNonArchived().getProducts();
         List<Product> productList = productListCacheService.getProductListCache().getCachedProductList();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
@@ -39,7 +38,6 @@ public class ProductController {
 
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model) {
-        //Product product = productService.findById(id);
         Product product = productListCacheService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());

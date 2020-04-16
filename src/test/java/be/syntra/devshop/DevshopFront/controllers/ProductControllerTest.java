@@ -81,7 +81,6 @@ public class ProductControllerTest {
     void displayProductDetailsTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        //when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(productListCacheService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
         // when
@@ -95,7 +94,6 @@ public class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProduct));
 
-        //verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productListCacheService, times(1)).findById(dummyProduct.getId());
     }
 
