@@ -54,14 +54,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public String addSelectedProductToCart(@ModelAttribute("product") Product product) {
-        log.info("chosen product -> " + product);
-        productService.addToCart(productListCacheService.findById(product.getId()));
+    public String addSelectedProductToCart(@ModelAttribute("id") Long id) {
+        log.info("chosen product id-> " + id);
+        productService.addToCart(productListCacheService.findById(id));
         return "redirect:/products";
     }
 
     @PostMapping("/details/addtocart/{id}")
-    public String addSelectedProductToCart(@PathVariable Long id) {
+    public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
         productService.addToCart(productListCacheService.findById(id));
         return "redirect:/products/details/" + id;
     }
