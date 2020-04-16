@@ -56,7 +56,7 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
         if (productOptional.isPresent()) {
             return productOptional.get();
         } else {
-            throw new ProductNotFoundException("Product with" + id + "was not found");
+            throw new ProductNotFoundException("Product with " + id + " was not found");
         }
     }
 }
