@@ -10,6 +10,7 @@
 
 .mdl-layout-title {
     font-weight: bold;
+    font-size: 30px;
 }
 
 .mdl-layout__content {
@@ -25,20 +26,16 @@
 }
 
 .product-detail {
-    position: absolute;
-    left: 25%;
+    position: relative;
+    left: 18%;
     top: 15%;
     padding-left: 100px;
     padding-right: 50px;
 }
 
-.product-list-item {
-    width: 750px;
-}
-
 .searchbar {
     position: relative;
-    left: 4%;
+    left: 3%;
     width: 430px;
     z-index: 1;
     background: white;
@@ -81,11 +78,24 @@ html, body, .spinner {
     display: flex;
 }
 
-/*file-specific CSS*/
-
 .mdl-list__item-primary-content {
     width: 85%;
+    font-size: xx-large;
+    height: 0;
+    padding-top: 25px;
 }
+
+.product-tile {
+    height: 185px;
+    padding-bottom: 15%;
+}
+
+.product-list-item {
+    width: 60%;
+    min-height: 200px;
+}
+
+/*file-specific CSS*/
 
 .mdl-list__item-text-body {
     font-size: 40px;
@@ -104,12 +114,12 @@ html, body, .spinner {
 
 .logo {
     position: absolute;
-    left: 43%;
-    top: 26%;
+    left: 40%;
+    top: 40%;
     width: 350px;
     text-transform: uppercase;
     color: red;
-    font-size: 50px;
+    font-size: 80px;
     font-weight: bold;
     transform: rotate(-35deg);
     z-index: 1;

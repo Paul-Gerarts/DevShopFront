@@ -15,6 +15,7 @@
 
 .mdl-layout-title {
     font-weight: bold;
+    font-size: 30px;
 }
 
 .mdl-layout__content {
@@ -31,11 +32,15 @@
 
 .mdl-list__item-primary-content {
     width: 85%;
+    font-size: xx-large;
+    height: 0;
+    padding-top: 25px;
+
 }
 
 .searchbar {
     position: relative;
-    left: 4%;
+    left: 3%;
     width: 430px;
     z-index: 1;
     background: white;
@@ -78,15 +83,21 @@ html, body, .spinner {
     display: flex;
 }
 
+.product-tile {
+    height: 185px;
+    padding-bottom: 15%;
+}
+
+.product-list-item {
+    width: 60%;
+    min-height: 200px;
+}
+
 /*file-specific CSS*/
 
 .checkbox_layout {
     padding-top: 22px;
     color: lightgray;
-}
-
-.product-list-item {
-    width: 750px;
 }
 
 .text-danger {
@@ -100,8 +111,8 @@ html, body, .spinner {
     position: fixed;
     width: 30%;
     height: 80%;
-    padding-left: 69%;
-    padding-top: 6%;
+    padding-left: 65%;
+    padding-top: 125px;
     text-decoration: none;
 }
 
@@ -121,6 +132,7 @@ html, body, .spinner {
     padding-left: 10px;
     padding-top: 8px;
     padding-right: 55px;
+    font-size: x-large;
 }
 
 
