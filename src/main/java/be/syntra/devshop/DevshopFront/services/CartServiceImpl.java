@@ -4,7 +4,9 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -13,10 +15,18 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
     private CartDto currentCart;
 
+    @Value("${baseUrl}")
+    private String baseUrl;
+    @Value("${cartEndpointEnding}")
+    private String endpointEnding;
+
     @Autowired
-    public CartServiceImpl(CartDto currentCart) {
+    private CartServiceImpl(CartDto currentCart) {
         this.currentCart = currentCart;
     }
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     //@Cacheable(value = "currentCart")
     @Override

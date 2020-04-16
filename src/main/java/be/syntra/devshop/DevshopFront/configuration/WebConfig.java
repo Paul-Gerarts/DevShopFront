@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Configuration
@@ -70,6 +71,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public UpdateProductCache getUpdateProductCache() {
         return UpdateProductCache.builder().build();
+    }
+
+    @Bean
+    public HashMap<String, Boolean> dataStore() {
+
     }
 }
 

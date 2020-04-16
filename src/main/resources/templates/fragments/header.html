@@ -53,9 +53,9 @@
             <div style="position: absolute; right: 40px;" th:if="*{#lists.size(products) > 0}">
                 <label th:text="*{#lists.size(products)}">0</label>
             </div>
-            <form>
+            <a th:href="@{/cart/submit}">
                 <i class="material-icons">shopping_cart</i>
-            </form>
+            </a>
         </div>
     </div>
 </header>
