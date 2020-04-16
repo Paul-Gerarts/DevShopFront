@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.configuration;
 
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
-import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -69,13 +66,11 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public UpdateProductCache getUpdateProductCache() {
-        return UpdateProductCache.builder().build();
-    }
-
-    @Bean
-    public HashMap<String, Boolean> dataStore() {
-
+    public DataStore getDataStore() {
+        Map<String, Boolean> dataStore = new HashMap<>();
+        dataStore.put("cacheNeedsUpdate", true);
+        dataStore.put("redirectToCartAfterUserSuccessfulLogin", false);
+        return new DataStore(dataStore);
     }
 }
 

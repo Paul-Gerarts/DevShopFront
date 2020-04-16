@@ -2,9 +2,9 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ class ProductServiceImplTest {
     CartService service;
 
     @Autowired
-    private UpdateProductCache updateProductCache;
+    private DataStore dataStore;
 
     MockRestServiceServer mockServer;
 

@@ -17,8 +17,6 @@ public class CartServiceImpl implements CartService {
 
     @Value("${baseUrl}")
     private String baseUrl;
-    @Value("${cartEndpointEnding}")
-    private String endpointEnding;
 
     @Autowired
     private CartServiceImpl(CartDto currentCart) {

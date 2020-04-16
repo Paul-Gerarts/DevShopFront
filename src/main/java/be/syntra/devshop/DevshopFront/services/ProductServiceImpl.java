@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import lombok.extern.slf4j.Slf4j;
@@ -34,15 +34,15 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private CartService cartService;
-    private UpdateProductCache updateProductCache;
+    private DataStore dataStore;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    public ProductServiceImpl(CartService cartService, UpdateProductCache updateProductCache) {
+    public ProductServiceImpl(CartService cartService, DataStore dataStore) {
         this.cartService = cartService;
-        this.updateProductCache = updateProductCache;
+        this.dataStore = dataStore;
     }
 
     @PostConstruct
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-        updateProductCache.setCacheNeedsUpdate(true);
+        dataStore.getMap().put("cacheNeedsUpdate", true);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;

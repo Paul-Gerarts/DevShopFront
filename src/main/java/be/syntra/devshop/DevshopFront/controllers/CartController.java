@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-    final String CART_OVERVIEW_PAGE = "";
-    CartService cartService;
+    private DataStore dataStore;
 
     @Autowired
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
+    public CartController(DataStore dataStore) {
+        this.dataStore = dataStore;
     }
 
-    @GetMapping("/submit")
-    public String submitCart() {
-        log.info("submitCart");
-        return CART_OVERVIEW_PAGE;
+    @GetMapping("/details")
+    public String setAfterLoginForUserCart() {
+        log.info("setAfterLogintoUserCart");
+        dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", true);
+        return "redirect:/users/cart";
     }
 }

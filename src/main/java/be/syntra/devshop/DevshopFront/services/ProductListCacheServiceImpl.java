@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
-import be.syntra.devshop.DevshopFront.models.UpdateProductCache;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 public class ProductListCacheServiceImpl implements ProductListCacheService {
     private ProductListCache productListCache;
     private ProductService productService;
-    private UpdateProductCache updateProductCache;
+    private DataStore dataStore;
 
     @Autowired
-    public ProductListCacheServiceImpl(ProductListCache productListCache, ProductService productService, UpdateProductCache updateProductCache) {
+    public ProductListCacheServiceImpl(ProductListCache productListCache, ProductService productService, DataStore dataStore) {
         this.productListCache = productListCache;
         this.productService = productService;
-        this.updateProductCache = updateProductCache;
+        this.dataStore = dataStore;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     @Override
     public ProductListCache getProductListCache() {
-        if (updateProductCache.getCacheNeedsUpdate()) {
-            updateProductCache.setCacheNeedsUpdate(false);
+        if (dataStore.getMap().get("cacheNeedsUpdate")) {
+            dataStore.getMap().put("cacheNeedsUpdate", false);
             updateProductListCache();
         }
         return productListCache;
