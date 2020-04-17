@@ -5,9 +5,9 @@ import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -59,14 +59,13 @@ public class SearchControllerTest {
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
         final CartDto dummyCart = CartUtils.getCartWithOneDummyProduct();
-        final SearchDto dummySearchDto = new SearchDto();
-        dummySearchDto.setBasicSearchTerm(searchRequest);
+        final SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setSearchRequest(searchRequest);
 
-        //when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
         when(productListCacheService.findBySearchRequest(anyString())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         // todo: (DEV-015) might change
-        when(searchService.getSearchDto()).thenReturn(dummySearchDto);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 

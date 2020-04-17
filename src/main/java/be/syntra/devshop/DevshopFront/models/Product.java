@@ -32,5 +32,5 @@ public class Product {
     private boolean archived;
 
     @Builder.Default
-    private int numberInCart = 0;
+    private int totalInCart = 0;
 }

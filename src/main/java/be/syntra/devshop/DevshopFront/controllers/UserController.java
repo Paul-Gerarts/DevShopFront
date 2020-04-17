@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private final String CART_DETAIL_TEMPLATE = "redirect:/users/cart/detail";
 
     @GetMapping("/cart")
     public String displayCartWhenLoggedIn() {
-        log.info("go to detail");
-        return CART_DETAIL_TEMPLATE;
+        log.info("displayCartWhenLoggedIn()");
+        return "redirect:/users/cart/detail";
     }
 }

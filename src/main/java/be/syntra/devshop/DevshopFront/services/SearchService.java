@@ -1,11 +1,11 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 
 // todo: replace or alter with DEV-015
 
 public interface SearchService {
-    void captureSearchedTerm(String searchTerm);
+    void captureSearchRequest(String searchRequest);
 
-    SearchDto getSearchDto();
+    SearchModel getSearchModel();
 }

@@ -57,7 +57,7 @@ public class ProductControllerTest {
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         final ProductListCache productListCache = new ProductListCache();
-        productListCache.setCachedProductList(dummyProducts);
+        productListCache.setProducts(dummyProducts);
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(productListCacheService.getProductListCache()).thenReturn(productListCache);
 
@@ -134,7 +134,7 @@ public class ProductControllerTest {
 
         // then
         getResult
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/products"));
 
         verify(productService, times(1)).addToCart(any());

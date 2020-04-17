@@ -11,5 +11,5 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductListCache {
-    List<Product> cachedProductList = new ArrayList<>();
+    List<Product> products = new ArrayList<>();
 }

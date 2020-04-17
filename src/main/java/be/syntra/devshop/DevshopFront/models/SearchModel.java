@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.models.dto;
+package be.syntra.devshop.DevshopFront.models;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchDto {
+public class SearchModel {
     // todo: expand model with DEV-015
-    private String basicSearchTerm;
+    private String searchRequest;
 }

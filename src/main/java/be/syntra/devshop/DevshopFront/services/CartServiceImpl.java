@@ -26,7 +26,6 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private RestTemplate restTemplate;
 
-    //@Cacheable(value = "currentCart")
     @Override
     public CartDto getCart() {
         return currentCart;
@@ -34,11 +33,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Product addToCart(Product product) {
-        product.setNumberInCart(product.getNumberInCart() + 1);
+        product.setTotalInCart(product.getTotalInCart() + 1);
         List<Product> productList = getCart().getProducts();
         productList.add(product);
         getCart().setProducts(productList);
-        log.info("product added , new cart size -> " + currentCart.getProducts().size());
+        log.info("addToCart() -> {}", currentCart.getProducts().size());
         return product;
     }
 }

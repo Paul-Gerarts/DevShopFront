@@ -30,7 +30,7 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        List<Product> productList = productListCacheService.getProductListCache().getCachedProductList();
+        List<Product> productList = productListCacheService.getProductListCache().getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -55,13 +55,14 @@ public class ProductController {
 
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("id") Long id) {
-        log.info("chosen product id-> " + id);
+        log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productListCacheService.findById(id));
         return "redirect:/products";
     }
 
     @PostMapping("/details/addtocart/{id}")
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
+        log.info("addSelectedProductFromDetailToCart()-> {}", id);
         productService.addToCart(productListCacheService.findById(id));
         return "redirect:/products/details/" + id;
     }

@@ -34,10 +34,10 @@ public class SearchController {
     @GetMapping("/")
     public String showSearchBarResult(@RequestParam String searchRequest, Model model) {
         // todo: (DEV-015) the search string is saved into the SearchModelDto starting here
-        searchService.captureSearchedTerm(searchRequest);
+        searchService.captureSearchRequest(searchRequest);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here
         //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel().getSearchRequest()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -45,12 +45,10 @@ public class SearchController {
 
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("product") Product product, Model model) {
-        log.info("(searchPage) chosen product -> " + product);
-        //productService.addToCart(product);
+        log.info("addSelectedProductToCart -> {}", product);
         productService.addToCart(productListCacheService.findById(product.getId()));
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here, if 'showSearchBarResult' is changed to not use @RequestParam's the code below can be replaced wiht a redirect to '/search' to use the showSearchBarResult method
-        //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel().getSearchRequest()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

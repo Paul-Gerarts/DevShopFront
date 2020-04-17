@@ -2,10 +2,9 @@ package be.syntra.devshop.DevshopFront.configuration;
 
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
 import be.syntra.devshop.DevshopFront.models.DataStore;
-import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -43,21 +45,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public CartDto getCurrentCart() {
-        List<Product> productList = new ArrayList<>();
         return CartDto.builder()
                 .cartCreationDateTime(LocalDateTime.now())
                 .finalizedCart(false)
                 .activeCart(true)
                 .paidCart(false)
-                .products(productList)
+                .products(new ArrayList<>())
                 .build();
     }
 
     // todo: DEV-015 might not create the SearchModelDto here
 
     @Bean
-    public SearchDto getSearchModelDto() {
-        return new SearchDto();
+    public SearchModel getSearchDto() {
+        return new SearchModel();
     }
 
     @Bean

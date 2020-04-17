@@ -45,9 +45,9 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
                 return "/admin/overview";
             } else if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
-                if (dataStore.getMap().get("redirectToCartAfterUserSuccessfulLogin")) {
-                    log.info("going after login to cart page");
-                    dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", false);
+                if (checkDataStoreForRedirectStrategyAfterLogin()) {
+                    log.info("determineTargetUrl()");
+                    disableDataStoreRedirectStrategyAfterLogin();
                     return "/users/cart";
                 }
                 return "/products";
@@ -56,6 +56,14 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             }
         }
         return "auth/login";
+    }
+
+    private Boolean disableDataStoreRedirectStrategyAfterLogin() {
+        return dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", false);
+    }
+
+    private Boolean checkDataStoreForRedirectStrategyAfterLogin() {
+        return dataStore.getMap().get("redirectToCartAfterUserSuccessfulLogin");
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request) {

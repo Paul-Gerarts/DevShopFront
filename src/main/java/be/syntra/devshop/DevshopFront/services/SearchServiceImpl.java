@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +9,22 @@ public class SearchServiceImpl implements SearchService {
 
     // todo DEV-015 might use other way of creation of the SearchModelDto , for now it's by @Bean in the config
 
-    private SearchDto searchDto;
+    private SearchModel searchModel;
 
     @Autowired
-    public SearchServiceImpl(SearchDto searchDto) {
-        this.searchDto = searchDto;
+    public SearchServiceImpl(SearchModel searchModel) {
+        this.searchModel = searchModel;
     }
 
-    // todo: DEV-015 impl's from interface might replace captureSearchedTerm & getSearchModelDto
+    // todo: DEV-015 impl's from interface might replace captureSearchRequest & getSearchModelDto
 
     @Override
-    public void captureSearchedTerm(String searchTerm) {
-        searchDto.setBasicSearchTerm(searchTerm);
+    public void captureSearchRequest(String searchRequest) {
+        searchModel.setSearchRequest(searchRequest);
     }
 
     @Override
-    public SearchDto getSearchDto() {
-        return searchDto;
+    public SearchModel getSearchModel() {
+        return searchModel;
     }
 }

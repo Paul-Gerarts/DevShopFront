@@ -32,6 +32,6 @@ class UserControllerTest {
         final ResultActions getResult = mockMvc.perform(get("/users/cart"));
 
         // then
-        getResult.andExpect(status().is3xxRedirection());
+        getResult.andExpect(status().isFound());
     }
 }

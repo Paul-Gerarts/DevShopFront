@@ -33,8 +33,8 @@
                                       th:action="@{/products/details/addtocart/{id}(id=${product.id})}">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span class="mdl-list__item-secondary-action">
-                                    <button th:disabled="${product.numberInCart > 0}">
-                                        <i class="material-icons">add_shopping_cart</i>
+                                    <button th:disabled="${product.totalInCart > 0}">
+                                        <em class="material-icons">add_shopping_cart</em>
                                     </button>
                                 </span>
                         </form>

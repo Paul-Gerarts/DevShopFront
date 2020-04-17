@@ -49,7 +49,7 @@ class ProductListCacheServiceImplTest {
         productListCacheService.updateProductListCache();
 
         // then
-        verify(productListCache).setCachedProductList(anyList());
+        verify(productListCache).setProducts(anyList());
     }
 
     @Test
@@ -77,9 +77,9 @@ class ProductListCacheServiceImplTest {
         when(dataStore.getMap()).thenReturn(dummyMap);
 
         // when
-        var result = productListCacheService.findBySearchRequest("test");
+        ProductList resultProductList = productListCacheService.findBySearchRequest("test");
 
         // then
-        assertEquals(result.getProducts().size(), 0);
+        assertEquals(resultProductList.getProducts().size(), 0);
     }
 }

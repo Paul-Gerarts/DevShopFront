@@ -45,7 +45,7 @@
                             <form th:object="${product}" method="post">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span class="mdl-list__item-secondary-action">
-                                    <button th:disabled="${product.numberInCart > 0}">
+                                    <button th:disabled="${product.totalInCart > 0}">
                                         <i class="material-icons">add_shopping_cart</i>
                                     </button>
                                 </span>

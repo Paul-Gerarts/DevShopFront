@@ -8,7 +8,6 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,37 +25,44 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     @Override
     public void updateProductListCache() {
-        productListCache.setCachedProductList(productService.findAllNonArchived().getProducts());
+        productListCache.setProducts(productService.findAllNonArchived().getProducts());
     }
 
     @Override
     public ProductListCache getProductListCache() {
-        if (dataStore.getMap().get("cacheNeedsUpdate")) {
-            dataStore.getMap().put("cacheNeedsUpdate", false);
+        if (checkIfProductsCacheNeedsUpdate()) {
+            disableProductsCacheNeedsUpdate();
             updateProductListCache();
         }
         return productListCache;
     }
 
+    private Boolean disableProductsCacheNeedsUpdate() {
+        return dataStore.getMap().put("cacheNeedsUpdate", false);
+    }
+
+    private Boolean checkIfProductsCacheNeedsUpdate() {
+        return dataStore.getMap().get("cacheNeedsUpdate");
+    }
+
     @Override
     public ProductList findBySearchRequest(String searchRequest) {
         var result = getProductListCache()
-                .getCachedProductList().stream()
+                .getProducts().stream()
                 .filter(product ->
                         product.getName()
                                 .toLowerCase()
                                 .contains(searchRequest.toLowerCase()))
-                .collect(Collectors.toList());
-        return result.isEmpty() ? new ProductList(getProductListCache().getCachedProductList()) : new ProductList(result);
+                .collect(Collectors.toUnmodifiableList());
+        return result.isEmpty() ? new ProductList(getProductListCache().getProducts()) : new ProductList(result);
     }
 
     @Override
     public Product findById(Long id) {
-        Optional<Product> productOptional = getProductListCache().getCachedProductList().stream().filter(product -> product.getId() == id).findFirst();
-        if (productOptional.isPresent()) {
-            return productOptional.get();
-        } else {
-            throw new ProductNotFoundException("Product with " + id + " was not found");
-        }
+        return getProductListCache().getProducts()
+                .stream()
+                .filter(product -> product.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product with " + id + " was not found"));
     }
 }

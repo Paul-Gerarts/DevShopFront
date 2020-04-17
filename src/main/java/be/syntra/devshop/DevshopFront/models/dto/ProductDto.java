@@ -29,6 +29,7 @@ public class ProductDto {
     @NotBlank(message = "This is a required field")
     private String description;
     private boolean archived;
+
     @Builder.Default
-    private int numberInCart = 0;
+    private int totalInCart = 0;
 }

@@ -19,8 +19,8 @@ public class CartController {
     }
 
     @GetMapping("/details")
-    public String setAfterLoginForUserCart() {
-        log.info("setAfterLogintoUserCart");
+    public String gotoCartAfterLogin() {
+        log.info("gotoCartAfterLogin() -> redirect user to cart-details page after login/loginCheck");
         dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", true);
         return "redirect:/users/cart";
     }

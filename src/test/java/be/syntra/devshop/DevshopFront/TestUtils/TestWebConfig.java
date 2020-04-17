@@ -3,8 +3,8 @@ package be.syntra.devshop.DevshopFront.TestUtils;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dto.SearchDto;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -38,8 +38,8 @@ public class TestWebConfig {
     // todo: DEV-015 might not create the SearchModelDto here
 
     @Bean
-    public SearchDto getSearchModelDto() {
-        return new SearchDto();
+    public SearchModel getSearchModelDto() {
+        return new SearchModel();
     }
 
     @Bean
