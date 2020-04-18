@@ -58,11 +58,11 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         return "auth/login";
     }
 
-    private Boolean disableDataStoreRedirectStrategyAfterLogin() {
+    private boolean disableDataStoreRedirectStrategyAfterLogin() {
         return dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", false);
     }
 
-    private Boolean checkDataStoreForRedirectStrategyAfterLogin() {
+    private boolean checkDataStoreForRedirectStrategyAfterLogin() {
         return dataStore.getMap().get("redirectToCartAfterUserSuccessfulLogin");
     }
 

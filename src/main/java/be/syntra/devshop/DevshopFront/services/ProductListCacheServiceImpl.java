@@ -31,17 +31,17 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     @Override
     public ProductListCache getProductListCache() {
         if (checkIfProductsCacheNeedsUpdate()) {
-            disableProductsCacheNeedsUpdate();
+            updateCacheToFalse();
             updateProductListCache();
         }
         return productListCache;
     }
 
-    private Boolean disableProductsCacheNeedsUpdate() {
+    private boolean updateCacheToFalse() {
         return dataStore.getMap().put("cacheNeedsUpdate", false);
     }
 
-    private Boolean checkIfProductsCacheNeedsUpdate() {
+    private boolean checkIfProductsCacheNeedsUpdate() {
         return dataStore.getMap().get("cacheNeedsUpdate");
     }
 

@@ -36,7 +36,6 @@ public class SearchController {
         // todo: (DEV-015) the search string is saved into the SearchModelDto starting here
         searchService.captureSearchRequest(searchRequest);
         // todo: (DEV-015) the searchTerm is retrieved from the from the SearchModelDto here
-        //List<Product> productList = productService.findBySearchRequest(searchService.getSearchDto().getBasicSearchTerm()).getProducts();
         List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel().getSearchRequest()).getProducts();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
