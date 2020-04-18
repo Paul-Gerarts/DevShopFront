@@ -4,6 +4,20 @@
     color: white;
 }
 
+.cart-icon {
+    padding-top: 5px;
+    font-size: 36px;
+    padding-left: 10px;
+    color: red;
+}
+
+.cart-icon-disabled {
+    padding-top: 5px;
+    font-size: 36px;
+    padding-left: 10px;
+    color: slategray;
+}
+
 .mdl-textfield.is-focused .mdl-textfield__label {
     color: red;
 }
