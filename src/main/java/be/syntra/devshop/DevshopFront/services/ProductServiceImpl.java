@@ -85,12 +85,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findBySearchRequestSortByName(String searchRequest, boolean sortAsc) {
-        sortAsc = !sortAsc;
-        return retrieveProductListFrom(resourceUrl + "/search/" + searchRequest + "/" + sortAsc);
-    }
-
-    @Override
     public Product findById(Long id) {
         ResponseEntity<Product> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
         if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {

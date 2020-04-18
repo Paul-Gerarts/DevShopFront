@@ -47,7 +47,7 @@
                             <form th:object="${product}" method="post">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span class="mdl-list__item-secondary-action">
-                                    <button id="cartIcon" th:disabled="${product.totalInCart > 0}">
+                                    <button th:disabled="${product.totalInCart > 0}">
                                         <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
                                         <em th:if="${product.totalInCart > 0}"
                                             class="material-icons cart-icon-disabled">add_shopping_cart</em>
@@ -59,6 +59,21 @@
             </ul>
         </div>
     </main>
+</div>
+<!--search filters-->
+<div class="search-filters">
+    <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+        <li class="mdl-list__item mdl-list__item--three-line">
+            <div class="sorting">
+                <em class="material-icons mdl-list__item-avatar mdl-color--blue" data-th-title="Alfabetically"
+                    th:href="@{/search/details/{id}(id=${1})}">sort</em>
+                <div class="sorting-text">sort by name</div>
+                <em class="material-icons mdl-list__item-avatar mdl-color--blue" data-th-title="Price"
+                    th:href="@{/search/details/{id}(id=${1})}">sort</em>
+                <div class="sorting-text">sort by price</div>
+            </div>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.lang.Boolean.parseBoolean;
-
 @Slf4j
 @Controller
 @RequestMapping("/search")
@@ -55,10 +53,4 @@ public class SearchController {
         return "product/productOverview";
     }
 
-    @GetMapping("/filter/{searchRequest}/{sortAsc}")
-    public String sortByAlfabeticOrder(@PathVariable String searchRequest, @PathVariable String sortAsc, Model model) {
-        List<Product> productList = productService.findBySearchRequestSortByName(searchRequest, parseBoolean(sortAsc)).getProducts();
-        model.addAttribute("products", productList);
-        return "product/productOverview";
-    }
 }

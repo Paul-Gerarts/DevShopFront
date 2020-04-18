@@ -8,6 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchModel {
-    // todo: expand model with DEV-015
+
     private String searchRequest;
+    private String description;
+    private String priceLow;
+    private String priceHigh;
+    private boolean searchFailure;
 }

@@ -32,8 +32,6 @@ public interface ProductService {
 
     ProductList findBySearchRequest(String searchRequest);
 
-    ProductList findBySearchRequestSortByName(String searchRequest, boolean sortAsc);
-
     Product findById(Long id);
 
     StatusNotification archiveProduct(Product product);
