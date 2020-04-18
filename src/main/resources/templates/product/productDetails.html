@@ -31,7 +31,15 @@
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
                             <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action" href="#">
-                                <em class="material-icons" style="font-size: 36px">add_shopping_cart</em></a>
+                                <form method="post" th:object="${product}"
+                                      th:action="@{/products/details/addtocart/{id}(id=${product.id})}">
+                            <input type="hidden" name="id" th:value="${product.id}"/>
+                            <span class="mdl-list__item-secondary-action">
+                                    <button th:disabled="${product.totalInCart > 0}">
+                                        <em class="material-icons">add_shopping_cart</em>
+                                    </button>
+                                </span>
+                        </form>
                     </span>
                 </li>
             </ul>

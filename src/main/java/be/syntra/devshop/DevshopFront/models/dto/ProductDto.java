@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class ProductDto {
-
     private Long id;
 
     @NotBlank(message = "This is a required field")
@@ -30,4 +29,7 @@ public class ProductDto {
     @NotBlank(message = "This is a required field")
     private String description;
     private boolean archived;
+
+    @Builder.Default
+    private int totalInCart = 0;
 }

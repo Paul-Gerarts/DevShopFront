@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
@@ -32,8 +33,17 @@ public class ProductServiceImpl implements ProductService {
 
     private String resourceUrl = null;
 
+    private CartService cartService;
+    private DataStore dataStore;
+
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    public ProductServiceImpl(CartService cartService, DataStore dataStore) {
+        this.cartService = cartService;
+        this.dataStore = dataStore;
+    }
 
     @PostConstruct
     private void init() {
@@ -50,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-
+        dataStore.getMap().put("cacheNeedsUpdate", true);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;
@@ -112,5 +122,10 @@ public class ProductServiceImpl implements ProductService {
             return productListResponseEntity.getBody();
         }
         return new ProductList(Collections.emptyList());
+    }
+
+    @Override
+    public void addToCart(Product product) {
+        cartService.addToCart(product);
     }
 }

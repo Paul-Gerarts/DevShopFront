@@ -63,5 +63,13 @@
                 </button>
             </form>
         </div>
+        <div th:if="${cart != null}" style="position: absolute; right: 250px;" th:object="${cart}">
+            <div style="position: absolute; right: 40px;" th:if="*{#lists.size(products) > 0}">
+                <label th:text="*{#lists.size(products)}">0</label>
+            </div>
+            <a th:href="@{/cart/details}">
+                <em class="material-icons home-logo md-48">shopping_cart</em></a>
+            </a>
+        </div>
     </div>
 </header>
