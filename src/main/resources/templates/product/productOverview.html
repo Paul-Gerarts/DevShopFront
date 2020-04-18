@@ -16,37 +16,41 @@
     <main class="mdl-layout__content">
         <div class="page-content">
             <span class="mdl-layout-title" id="title"></span>
-                <script th:inline="javascript">
-                    const queryString = location.search;
-                    const urlParams = new URLSearchParams(queryString);
-                    const searchRequest = urlParams.get('searchRequest');
-                    let title;
-                    if (!!searchRequest) {
-                        title = 'You are now viewing all products matching your search for ' + searchRequest.toUpperCase();
-                    } else {
-                        title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
-                    }
-                    document.getElementById("title").innerHTML = title;
-                </script>
+            <script th:inline="javascript">
+                const queryString = location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const searchRequest = urlParams.get('searchRequest');
+                let title;
+                if (!!searchRequest) {
+                    title = 'You are now viewing your searchresults for ' + searchRequest.toUpperCase();
+                } else {
+                    title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
+                }
+                document.getElementById("title").innerHTML = title;
+            </script>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
-                <li class="mdl-list__item mdl-list__item--three-line">
+                <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
                         <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
-                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details">photo</em>
+                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details"
+                            style="width: 140px; height: 140px">photo</em>
                         </a>
                         <span th:text="${product.name}">Product Name</span>
-                        <span class="mdl-list__item-text-body">
+                        <span class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
                             [[${product.description}]]
                         </span>
                     </span>
-                    <span class="mdl-list__item-secondary-content">
+                    <span class="mdl-list__item-secondary-content" style="padding-top: 4%">
                         <span class="mdl-list__item-text-body"
+                              style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
                             <form th:object="${product}" method="post">
                             <input type="hidden" name="id" th:value="${product.id}"/>
-                            <span class="mdl-list__item-secondary-action">
+                            <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
-                                        <i class="material-icons">add_shopping_cart</i>
+                                        <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
+                                        <em th:if="${product.totalInCart > 0}"
+                                            class="material-icons cart-icon-disabled">add_shopping_cart</em>
                                     </button>
                                 </span>
                         </form>

@@ -33,8 +33,8 @@ public class ProductServiceImpl implements ProductService {
 
     private String resourceUrl = null;
 
-    private CartService cartService;
-    private DataStore dataStore;
+    private final CartService cartService;
+    private final DataStore dataStore;
 
     @Autowired
     private RestTemplate restTemplate;

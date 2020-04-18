@@ -4,12 +4,27 @@
     color: white;
 }
 
+.cart-icon {
+    padding-top: 5px;
+    font-size: 36px;
+    padding-left: 10px;
+    color: red;
+}
+
+.cart-icon-disabled {
+    padding-top: 5px;
+    font-size: 36px;
+    padding-left: 10px;
+    color: slategray;
+}
+
 .mdl-textfield.is-focused .mdl-textfield__label {
     color: red;
 }
 
 .mdl-layout-title {
     font-weight: bold;
+    font-size: 30px;
 }
 
 .mdl-layout__content {
@@ -25,20 +40,16 @@
 }
 
 .product-detail {
-    position: absolute;
-    left: 25%;
+    position: relative;
+    left: 18%;
     top: 15%;
     padding-left: 100px;
     padding-right: 50px;
 }
 
-.product-list-item {
-    width: 750px;
-}
-
 .searchbar {
     position: relative;
-    left: 4%;
+    left: 3%;
     width: 430px;
     z-index: 1;
     background: white;
@@ -60,11 +71,45 @@
     padding-top: 6px;
 }
 
-/*file-specific CSS*/
+html, body, .spinner {
+    height: 100%;
+    overflow: hidden;
+}
+
+.mdl-spinner {
+    height: 100px;
+    width: 100px;
+}
+
+.spinner {
+    position: relative;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-on {
+    display: flex;
+}
 
 .mdl-list__item-primary-content {
     width: 85%;
+    font-size: xx-large;
+    height: 0;
+    padding-top: 25px;
 }
+
+.product-tile {
+    height: 185px;
+    padding-bottom: 15%;
+}
+
+.product-list-item {
+    width: 60%;
+    min-height: 200px;
+}
+
+/*file-specific CSS*/
 
 .mdl-list__item-text-body {
     font-size: 40px;
@@ -83,12 +128,12 @@
 
 .logo {
     position: absolute;
-    left: 43%;
-    top: 26%;
+    left: 40%;
+    top: 40%;
     width: 350px;
     text-transform: uppercase;
     color: red;
-    font-size: 50px;
+    font-size: 80px;
     font-weight: bold;
     transform: rotate(-35deg);
     z-index: 1;

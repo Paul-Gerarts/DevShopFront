@@ -10,5 +10,6 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 public class DataStore {
+
     Map<String, Boolean> map;
 }

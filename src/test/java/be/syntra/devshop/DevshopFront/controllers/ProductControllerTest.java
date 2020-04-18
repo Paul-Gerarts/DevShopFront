@@ -94,7 +94,7 @@ public class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProduct));
 
-        verify(productListCacheService, times(1)).findById(dummyProduct.getId());
+        verify(productListCacheService, times(2)).findById(dummyProduct.getId());
     }
 
     @Test

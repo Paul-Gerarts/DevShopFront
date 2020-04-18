@@ -18,19 +18,19 @@ import static be.syntra.devshop.DevshopFront.models.UserRoles.ROLE_USER;
 @Service
 public class DataFillerImpl {
 
-    private UserRoleRepository userRoleRepository;
-    private UserRoleFactory userRoleFactory;
-    private UserRepository userRepository;
-    private UserFactory userFactory;
-    private UserRoleService userRoleService;
+    private final UserRoleRepository userRoleRepository;
+    private final UserRoleFactory userRoleFactory;
+    private final UserRepository userRepository;
+    private final UserFactory userFactory;
+    private final UserRoleService userRoleService;
 
     @Autowired
     public DataFillerImpl(
-                          UserRoleRepository userRoleRepository,
-                          UserRoleFactory userRoleFactory,
-                          UserRepository userRepository,
-                          UserFactory userFactory,
-                          UserRoleService userRoleService
+            UserRoleRepository userRoleRepository,
+            UserRoleFactory userRoleFactory,
+            UserRepository userRepository,
+            UserFactory userFactory,
+            UserRoleService userRoleService
     ) {
         this.userRoleRepository = userRoleRepository;
         this.userRoleFactory = userRoleFactory;

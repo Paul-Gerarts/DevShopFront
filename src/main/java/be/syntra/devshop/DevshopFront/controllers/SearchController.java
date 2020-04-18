@@ -18,10 +18,10 @@ import java.util.List;
 @RequestMapping("/search")
 public class SearchController {
 
-    private ProductService productService;
-    private CartService cartService;
-    private SearchService searchService;
-    private ProductListCacheService productListCacheService;
+    private final ProductService productService;
+    private final CartService cartService;
+    private final SearchService searchService;
+    private final ProductListCacheService productListCacheService;
 
     @Autowired
     public SearchController(ProductService productService, CartService cartService, SearchService searchService, ProductListCacheService productListCacheService) {
@@ -52,4 +52,5 @@ public class SearchController {
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
     }
+
 }

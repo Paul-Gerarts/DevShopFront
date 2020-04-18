@@ -20,9 +20,10 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping()
 public class AuthorisationController {
+
     private static final String REGISTER_FORM = "/user/register";
 
-    private AuthorisationService authorisationService;
+    private final AuthorisationService authorisationService;
 
     @Autowired
     public AuthorisationController(AuthorisationService authorisationService) {

@@ -17,12 +17,17 @@ import java.util.List;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-    private ProductService productService;
-    private CartService cartService;
-    private ProductListCacheService productListCacheService;
+
+    private final ProductService productService;
+    private final CartService cartService;
+    private final ProductListCacheService productListCacheService;
 
     @Autowired
-    public ProductController(ProductService productService, CartService cartService, ProductListCacheService productListCacheService) {
+    public ProductController(
+            ProductService productService,
+            CartService cartService,
+            ProductListCacheService productListCacheService
+    ) {
         this.productService = productService;
         this.cartService = cartService;
         this.productListCacheService = productListCacheService;
@@ -38,7 +43,10 @@ public class ProductController {
 
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model) {
-        Product product = productListCacheService.findById(id);
+        Product product =
+                (null == productListCacheService.findById(id))
+                        ? productService.findById(id)
+                        : productListCacheService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
@@ -48,6 +56,7 @@ public class ProductController {
     public String archiveProduct(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         StatusNotification statusNotification = productService.archiveProduct(product);
+        productListCacheService.updateProductListCache();
         model.addAttribute("product", product);
         model.addAttribute("status", statusNotification);
         return "product/productDetails";

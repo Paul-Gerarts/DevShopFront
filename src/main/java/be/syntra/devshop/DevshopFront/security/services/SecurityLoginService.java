@@ -20,7 +20,7 @@ public class SecurityLoginService {
     @Value("${backend.password}")
     private String password;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public SecurityLoginService (

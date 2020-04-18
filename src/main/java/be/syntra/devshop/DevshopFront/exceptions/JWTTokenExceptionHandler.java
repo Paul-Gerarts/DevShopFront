@@ -11,14 +11,14 @@ import static java.util.Objects.requireNonNull;
 @ControllerAdvice
 public class JWTTokenExceptionHandler {
 
-    private SecurityLoginService securityLoginService;
-    private CacheManager cacheManager;
+    private final SecurityLoginService securityLoginService;
+    private final CacheManager cacheManager;
 
     @Autowired
     private JWTTokenExceptionHandler(
             SecurityLoginService securityLoginService,
             CacheManager cacheManager
-    ){
+    ) {
         this.securityLoginService = securityLoginService;
         this.cacheManager = cacheManager;
     }

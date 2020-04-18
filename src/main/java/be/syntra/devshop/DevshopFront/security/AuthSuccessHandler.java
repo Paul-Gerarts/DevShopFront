@@ -1,10 +1,9 @@
 package be.syntra.devshop.DevshopFront.security;
 
-import be.syntra.devshop.DevshopFront.exceptions.CustomException;
+import be.syntra.devshop.DevshopFront.exceptions.UserRoleNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -21,7 +20,7 @@ import java.util.Collection;
 @Slf4j
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Autowired
     private DataStore dataStore;
@@ -52,14 +51,14 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 }
                 return "/products";
             } else {
-                throw new CustomException(HttpStatus.UNAUTHORIZED, "Please contact your admin");
+                throw new UserRoleNotFoundException("Please contact your admin");
             }
         }
         return "auth/login";
     }
 
-    private boolean disableDataStoreRedirectStrategyAfterLogin() {
-        return dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", false);
+    private void disableDataStoreRedirectStrategyAfterLogin() {
+        dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", false);
     }
 
     private boolean checkDataStoreForRedirectStrategyAfterLogin() {
