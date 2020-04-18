@@ -4,7 +4,8 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 
 public interface CartService {
+
     CartDto getCart();
 
-    Product addToCart(Product product);
+    void addToCart(Product product);
 }

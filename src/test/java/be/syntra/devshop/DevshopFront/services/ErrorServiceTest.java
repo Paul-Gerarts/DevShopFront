@@ -45,7 +45,7 @@ public class ErrorServiceTest {
     void canDetermineError() {
         // given
         ErrorDto dummyErrorDto = ErrorDto.builder()
-                .errorCode("")
+                .errorCode("500")
                 .message("Something went wrong...")
                 .build();
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -55,7 +55,6 @@ public class ErrorServiceTest {
         final ErrorDto resultErrorDto = errorService.determineError(request);
 
         // then
-        assertThat(resultErrorDto.getErrorCode()).isEqualTo(dummyErrorDto.getErrorCode());
         assertThat(resultErrorDto.getMessage()).isEqualTo(dummyErrorDto.getMessage());
     }
 }

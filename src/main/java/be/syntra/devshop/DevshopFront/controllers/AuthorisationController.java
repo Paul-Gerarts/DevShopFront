@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
@@ -17,9 +20,10 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping()
 public class AuthorisationController {
+
     private static final String REGISTER_FORM = "/user/register";
 
-    private AuthorisationService authorisationService;
+    private final AuthorisationService authorisationService;
 
     @Autowired
     public AuthorisationController(AuthorisationService authorisationService) {

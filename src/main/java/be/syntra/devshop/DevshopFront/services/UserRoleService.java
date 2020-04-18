@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRoleService {
 
-    private UserRoleRepository userRoleRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
     public UserRoleService(UserRoleRepository userRoleRepository) {

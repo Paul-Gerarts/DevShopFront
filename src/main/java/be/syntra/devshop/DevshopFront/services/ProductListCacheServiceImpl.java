@@ -1,6 +1,5 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
@@ -12,9 +11,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductListCacheServiceImpl implements ProductListCacheService {
-    private ProductListCache productListCache;
-    private ProductService productService;
-    private DataStore dataStore;
+
+    private final ProductListCache productListCache;
+    private final ProductService productService;
+    private final DataStore dataStore;
 
     @Autowired
     public ProductListCacheServiceImpl(ProductListCache productListCache, ProductService productService, DataStore dataStore) {
@@ -37,8 +37,8 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
         return productListCache;
     }
 
-    private boolean updateCacheToFalse() {
-        return dataStore.getMap().put("cacheNeedsUpdate", false);
+    private void updateCacheToFalse() {
+        dataStore.getMap().put("cacheNeedsUpdate", false);
     }
 
     private boolean checkIfProductsCacheNeedsUpdate() {
@@ -47,12 +47,11 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     @Override
     public ProductList findBySearchRequest(String searchRequest) {
-        var result = getProductListCache()
-                .getProducts().stream()
-                .filter(product ->
-                        product.getName()
-                                .toLowerCase()
-                                .contains(searchRequest.toLowerCase()))
+        var result = getProductListCache().getProducts()
+                .stream()
+                .filter(product -> product.getName()
+                        .toLowerCase()
+                        .contains(searchRequest.toLowerCase()))
                 .collect(Collectors.toUnmodifiableList());
         return result.isEmpty() ? new ProductList(getProductListCache().getProducts()) : new ProductList(result);
     }
@@ -61,8 +60,8 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     public Product findById(Long id) {
         return getProductListCache().getProducts()
                 .stream()
-                .filter(product -> product.getId() == id)
+                .filter(product -> product.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException("Product with " + id + " was not found"));
+                .orElse(null);
     }
 }
