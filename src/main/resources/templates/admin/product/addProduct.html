@@ -33,7 +33,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="number" id="price" th:field="*{price}">
+                            <input class="mdl-textfield__input" type="text" id="price" th:field="*{price}">
                             <label class="mdl-textfield__label" for="name">Product price</label>
                             <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}"
                                    th:errors="*{price}"></small>
