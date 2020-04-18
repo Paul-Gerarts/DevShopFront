@@ -44,12 +44,16 @@ public class ProductController {
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model) {
         Product product =
-                (null == productListCacheService.findById(id))
+                isProductListCacheEmpty(id)
                         ? productService.findById(id)
                         : productListCacheService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
+    }
+
+    private boolean isProductListCacheEmpty(@PathVariable Long id) {
+        return null == productListCacheService.findById(id);
     }
 
     @PostMapping("/details/{id}")
