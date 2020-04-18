@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-    private DataStore dataStore;
+
+    private final DataStore dataStore;
 
     @Autowired
     public CartController(DataStore dataStore) {

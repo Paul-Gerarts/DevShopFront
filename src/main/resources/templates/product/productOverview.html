@@ -46,7 +46,7 @@
                               th:text="'€ ' + ${product.price}">Product Price</span>
                             <form th:object="${product}" method="post">
                             <input type="hidden" name="id" th:value="${product.id}"/>
-                            <span class="mdl-list__item-secondary-action">
+                            <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
                                         <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
                                         <em th:if="${product.totalInCart > 0}"

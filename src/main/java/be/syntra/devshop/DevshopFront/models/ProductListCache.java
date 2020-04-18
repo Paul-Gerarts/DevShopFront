@@ -11,5 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductListCache {
+
     List<Product> products = new ArrayList<>();
 }

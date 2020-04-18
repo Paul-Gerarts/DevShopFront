@@ -32,12 +32,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Product addToCart(Product product) {
+    public void addToCart(Product product) {
         product.setTotalInCart(product.getTotalInCart() + 1);
         List<Product> productList = getCart().getProducts();
         productList.add(product);
         getCart().setProducts(productList);
         log.info("addToCart() -> {}", currentCart.getProducts().size());
-        return product;
     }
 }

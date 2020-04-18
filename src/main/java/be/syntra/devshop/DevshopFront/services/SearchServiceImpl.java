@@ -9,7 +9,7 @@ public class SearchServiceImpl implements SearchService {
 
     // todo DEV-015 might use other way of creation of the SearchModelDto , for now it's by @Bean in the config
 
-    private SearchModel searchModel;
+    private final SearchModel searchModel;
 
     @Autowired
     public SearchServiceImpl(SearchModel searchModel) {
