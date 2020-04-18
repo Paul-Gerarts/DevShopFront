@@ -52,4 +52,5 @@ public class SearchController {
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
     }
+
 }

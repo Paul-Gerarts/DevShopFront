@@ -2,10 +2,24 @@
 <html lang="en" rel="stylesheet"
       xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <link href="../static/css/layout.css" rel="stylesheet" th:href="@{/css/layout.css}" type="text/css"/>
+<!--logic for spinner-->
+<script>
+    $(function () {
+        var overflow = $('body,html, .spinner');
+        $(".spinner").addClass('spinner-on');
+        $(".spinner").fadeOut(1, function () {
+            $("body").fadeIn(1);
+            overflow.css('overflow', 'visible');
+        });
+    });
+</script>
 <header class="mdl-layout__header">
+    <div class="spinner">
+        <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+    </div>
     <div class="mdl-layout__header-row">
         <a th:href="@{/products}">
-            <em class="material-icons home-logo md-48">home</em></a>
+            <em class="material-icons home-logo" style="font-size: 36px">home</em></a>
         <!-- Title -->
         <span class="mdl-layout-title">DevShop</span>
         <div class="searchbar">
@@ -51,10 +65,11 @@
         </div>
         <div th:if="${cart != null}" style="position: absolute; right: 250px;" th:object="${cart}">
             <div style="position: absolute; right: 40px;" th:if="*{#lists.size(products) > 0}">
-                <label th:text="*{#lists.size(products)}">0</label>
+                <label th:text="*{#lists.size(products)}" class="mdl-layout-title"
+                       style="padding-top: 13px; padding-right: 14px">0</label>
             </div>
             <a th:href="@{/cart/details}">
-                <em class="material-icons home-logo md-48">shopping_cart</em></a>
+                <em class="material-icons home-logo" style="font-size: 36px; padding-top: 9px">shopping_cart</em>
             </a>
         </div>
     </div>
