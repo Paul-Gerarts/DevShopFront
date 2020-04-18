@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,12 @@ class ProductServiceImplTest {
 
     @Autowired
     ProductServiceImpl productService;
+
+    @MockBean
+    CartService service;
+
+    @Autowired
+    private DataStore dataStore;
 
     MockRestServiceServer mockServer;
 

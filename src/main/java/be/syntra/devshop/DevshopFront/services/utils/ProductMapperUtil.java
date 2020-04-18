@@ -12,6 +12,7 @@ public class ProductMapperUtil {
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .archived(product.isArchived())
+                .totalInCart(product.getTotalInCart())
                 .build();
     }
 }
