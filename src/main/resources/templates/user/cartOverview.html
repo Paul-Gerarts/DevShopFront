@@ -16,7 +16,8 @@
     <main class="mdl-layout__content">
         <div class="page-content" th:object="${cart}">
             <span class="mdl-layout-title" id="title">Cart overview</span>
-            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                th:each="product : ${cart.getProducts()}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
                         <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
@@ -30,6 +31,7 @@
                     </span>
                     <span class="mdl-list__item-secondary-content">
                         <span class="mdl-list__item-text-body"
+                              style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
                     </span>
                 </li>
@@ -38,11 +40,10 @@
         <div class="page-content" th:object="${payment}">
             <span class="mdl-layout-title" id="title">Payment</span>
             <ul class="payment-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
-                th:each="paymentoption : ${paymentoption}">
+                th:each="paymentoption : ${payment.getPaymentOptions()}">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <span class="mdl-list__item-primary-content">
-                       <a th:href="${option.link}" style="text-decoration: none">
-                           <i class="material-icons mdl-list__item-avatar mdl-color--grey">[[${option.icon}]]</i>
+                       <a th:href="${paymentoption.getLink()}" style="text-decoration: none">
                           <span class="mdl-layout-title"
                                 style="font-size: 20px; color: black; margin:auto; text-align: center"
                                 th:text="${paymentoption.description}">Payment option description</span></a>

@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum PaymentOption {
-    PAY("regular payment");
+    PAY("regular payment", "/paycart");
 
     private final String description;
+    private final String link;
 }

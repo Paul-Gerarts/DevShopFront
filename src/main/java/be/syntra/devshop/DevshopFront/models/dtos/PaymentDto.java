@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.models.PaymentOption;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,5 +15,5 @@ import java.util.List;
 public class PaymentDto {
 
     private BigDecimal totalPrice;
-    private List<PaymentOption> paymentOptions;
+    private List<PaymentOption> paymentOptions = new ArrayList<>(List.of(PaymentOption.values()));
 }
