@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
@@ -10,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.math.BigDecimal;
 
 @Slf4j
 @Controller
@@ -31,9 +34,17 @@ public class UserController {
 
     @GetMapping("/cart/overview")
     public String displayCartOverview(Model model) {
+        PaymentDto paymentDto = new PaymentDto();
+        cartTotalPrice(paymentDto);
         model.addAttribute("cart", cartService.getCart());
-        model.addAttribute("payment", new PaymentDto());
+        model.addAttribute("payment", paymentDto);
         return "user/cartOverview";
+    }
+
+    private void cartTotalPrice(PaymentDto paymentDto) {
+        paymentDto.setTotalPrice(cartService.getCart().getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     @PostMapping("/cart/overview/paycart")

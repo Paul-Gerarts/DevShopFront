@@ -41,8 +41,11 @@
             <span class="mdl-layout-title" id="title">Payment</span>
             <ul class="payment-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
                 th:each="paymentoption : ${payment.getPaymentOptions()}">
-                <li class="mdl-list__item mdl-list__item--three-line">
-                    <span class="mdl-list__item-primary-content">
+                <label class="mdl-list__item-text-body"
+                       style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
+                       th:text="'€ ' + ${payment.getTotalPrice()}">Total Price</label>
+                <li class="mdl-list__item mdl-list__item--three-line product-tile">
+                    <span class="mdl-list__item-secondary-content">
                        <a th:href="${paymentoption.getLink()}" style="text-decoration: none">
                           <span class="mdl-layout-title"
                                 style="font-size: 20px; color: black; margin:auto; text-align: center"
