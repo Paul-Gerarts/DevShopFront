@@ -54,8 +54,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .build();
     }
 
-    // todo: DEV-015 might not create the SearchModelDto here
-
     @Bean
     public SearchModel getSearchModel() {
         return new SearchModel();

@@ -12,8 +12,9 @@ import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +26,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.TestUtils.CartUtils.*;
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyArchivedProductList;
 import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,7 +51,6 @@ public class SearchControllerTest {
     @MockBean
     private CartService cartService;
 
-    // todo: (DEV-015) might change
     @MockBean
     private SearchService searchService;
 
@@ -58,14 +60,14 @@ public class SearchControllerTest {
         final String searchRequest = "product";
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
-        final CartDto dummyCart = CartUtils.getCartWithOneDummyProduct();
+        final CartDto dummyCart = getCartWithOneDummyProduct();
         final SearchModel dummySearchModel = new SearchModel();
         dummySearchModel.setSearchRequest(searchRequest);
 
         when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
-        // todo: (DEV-015) might change
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 
@@ -79,5 +81,72 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("cart", dummyCart));
 
         verify(productListCacheService, times(1)).findBySearchRequest(any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/search/sortbyname", "/search/sortbyprice"})
+    public void canSortProductsTest(String url) throws Exception {
+
+        // given
+        final String searchRequest = "product";
+        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        final SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setSearchRequest(searchRequest);
+
+        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
+        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
+        when(cartService.getCart()).thenReturn(dummyCart);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get(url));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", dummyProducts))
+                .andExpect(model().attribute("cart", dummyCart))
+                .andExpect(model().attribute("searchModel", dummySearchModel));
+
+        verify(productListCacheService, times(1)).findBySearchRequest(any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/search/archived/sortbyname", "/search/archived/sortbyprice"})
+    public void canSortArchivedProductsTest(String url) throws Exception {
+
+        // given
+        final List<Product> dummyProducts = getDummyArchivedProductList();
+        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final CartDto dummyCart = getCartWithMultipleArchivedProducts();
+        final SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setArchivedView(true);
+
+        when(productService.findAllArchived()).thenReturn(dummyProductList);
+        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
+        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
+        when(cartService.getCart()).thenReturn(dummyCart);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get(url));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", dummyProducts))
+                .andExpect(model().attribute("cart", dummyCart))
+                .andExpect(model().attribute("searchModel", dummySearchModel));
+
+        verify(productService, times(1)).findAllArchived();
     }
 }

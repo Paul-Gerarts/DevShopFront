@@ -40,6 +40,7 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         List<Product> productList = productListCacheService.getProductListCache().getProducts();
+        searchService.resetSearchModel();
         model.addAttribute("products", productList);
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

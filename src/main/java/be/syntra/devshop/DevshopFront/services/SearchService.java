@@ -6,5 +6,13 @@ public interface SearchService {
 
     void setSearchRequest(String searchRequest);
 
+    void setArchivedView(boolean archivedView);
+
+    void setSearchResultView(boolean searchResultView);
+
+    void setSearchFailure(boolean searchFailure);
+
+    void resetSearchModel();
+
     SearchModel getSearchModel();
 }

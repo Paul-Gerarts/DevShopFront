@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,17 @@ import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.co
 public class AdminController {
 
     private final ProductService productService;
+    private final SearchService searchService;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
     private static final String PRODUCT = "product";
 
     @Autowired
-    public AdminController(ProductService productService) {
+    public AdminController(
+            ProductService productService,
+            SearchService searchService
+    ) {
         this.productService = productService;
+        this.searchService = searchService;
     }
 
     @GetMapping("/addproduct")
@@ -70,6 +76,9 @@ public class AdminController {
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
         List<Product> productList = productService.findAllArchived().getProducts();
+        searchService.setSearchResultView(false);
+        searchService.setArchivedView(true);
+        model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("products", productList);
         return "product/productOverview";
     }

@@ -35,10 +35,8 @@ public class TestWebConfig {
                 .build();
     }
 
-    // todo: DEV-015 might not create the SearchModelDto here
-
     @Bean
-    public SearchModel getSearchModelDto() {
+    public SearchModel getSearchModel() {
         return new SearchModel();
     }
 

@@ -15,19 +15,16 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title" id="title"></span>
-            <script th:inline="javascript">
-                const queryString = location.search;
-                const urlParams = new URLSearchParams(queryString);
-                const searchRequest = urlParams.get('searchRequest');
-                let title;
-                if (!!searchRequest) {
-                    title = 'You are now viewing your searchresults for ' + searchRequest.toUpperCase();
-                } else {
-                    title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
-                }
-                document.getElementById("title").innerHTML = title;
-            </script>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel == null || !searchModel.isArchivedView() && !searchModel.isSearchResultView()}">You are now viewing ALL products</span>
+            <span class="mdl-layout-title" th:if="${searchModel != null && searchModel.isArchivedView()}"
+                  th:text="'You are now viewing all ARCHIVED products'"></span>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure()}"
+                  th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()}"></span>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
+                  th:text="'We found nothing for ' + ${searchModel.getSearchRequest().toUpperCase()} + ', so we\'re showing ALL'"></span>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
@@ -36,7 +33,8 @@
                             style="width: 140px; height: 140px">photo</em>
                         </a>
                         <span th:text="${product.name}">Product Name</span>
-                        <span class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
+                        <span class="mdl-list__item-text-body"
+                              style="font-size: x-large; padding-top: 30px; line-height: 25px">
                             [[${product.description}]]
                         </span>
                     </span>
@@ -63,12 +61,24 @@
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <div class="sorting">
-                        <a th:href="@{/search/sortbyname}">
+                        <a th:if="${searchModel != null && !searchModel.isArchivedView() || searchModel == null}"
+                           th:href="@{/search/sortbyname}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Alfabetically">sort</em>
+                        </a>
+                        <a th:if="${searchModel != null && searchModel.isArchivedView()}"
+                           th:href="@{/search/archived/sortbyname}">
                             <em class="material-icons mdl-list__item-avatar mdl-color--blue"
                                 data-th-title="Alfabetically">sort</em>
                         </a>
                         <div class="sorting-text">sort by name</div>
-                        <a th:href="@{/search/sortbyprice}">
+                        <a th:if="${searchModel != null && !searchModel.isArchivedView() || searchModel == null}"
+                           th:href="@{/search/sortbyprice}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Price">sort</em>
+                        </a>
+                        <a th:if="${searchModel != null && searchModel.isArchivedView()}"
+                           th:href="@{/search/archived/sortbyprice}">
                             <em class="material-icons mdl-list__item-avatar mdl-color--blue"
                                 data-th-title="Price">sort</em>
                         </a>

@@ -2,18 +2,15 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SearchServiceImpl implements SearchService {
 
-    // todo DEV-015 might use other way of creation of the SearchModelDto , for now it's by @Bean in the config
-
-    private final SearchModel searchModel;
+    private SearchModel searchModel;
 
     @Autowired
-    public SearchServiceImpl(@Qualifier("getSearchModel") SearchModel searchModel) {
+    public SearchServiceImpl(SearchModel searchModel) {
         this.searchModel = searchModel;
     }
 
@@ -23,7 +20,27 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void setArchivedView(boolean archivedView) {
+        searchModel.setArchivedView(archivedView);
+    }
+
+    @Override
+    public void setSearchResultView(boolean searchResultView) {
+        searchModel.setSearchResultView(searchResultView);
+    }
+
+    @Override
+    public void setSearchFailure(boolean searchFailure) {
+        searchModel.setSearchFailure(searchFailure);
+    }
+
+    @Override
     public SearchModel getSearchModel() {
         return searchModel;
+    }
+
+    @Override
+    public void resetSearchModel() {
+        this.searchModel = new SearchModel();
     }
 }

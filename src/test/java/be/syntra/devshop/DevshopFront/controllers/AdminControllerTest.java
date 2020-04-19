@@ -10,6 +10,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.SearchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,6 +45,9 @@ class AdminControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private SearchService searchService;
 
     @Test
     @WithMockUser(roles = {"ADMIN"})

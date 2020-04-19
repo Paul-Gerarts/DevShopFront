@@ -15,5 +15,7 @@ public class SearchModel {
     private String priceHigh;
     private boolean sortAscendingName;
     private boolean sortAscendingPrice;
+    private boolean archivedView;
+    private boolean searchResultView;
     private boolean searchFailure;
 }

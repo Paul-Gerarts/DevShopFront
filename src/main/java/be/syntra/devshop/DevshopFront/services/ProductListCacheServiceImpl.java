@@ -18,12 +18,19 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     private final ProductListCache productListCache;
     private final ProductService productService;
+    private final SearchService searchService;
     private final DataStore dataStore;
 
     @Autowired
-    public ProductListCacheServiceImpl(ProductListCache productListCache, ProductService productService, DataStore dataStore) {
+    public ProductListCacheServiceImpl(
+            ProductListCache productListCache,
+            ProductService productService,
+            SearchService searchService,
+            DataStore dataStore
+    ) {
         this.productListCache = productListCache;
         this.productService = productService;
+        this.searchService = searchService;
         this.dataStore = dataStore;
     }
 
@@ -52,6 +59,7 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     @Override
     public ProductList findBySearchRequest(SearchModel searchModel) {
         List<Product> result = executeSearch(searchModel.getSearchRequest());
+        searchService.setSearchFailure(result.isEmpty());
         return result.isEmpty()
                 ? new ProductList(getProductListCache().getProducts())
                 : new ProductList(result);

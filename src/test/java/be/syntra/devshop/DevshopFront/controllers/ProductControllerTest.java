@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
+import be.syntra.devshop.DevshopFront.TestUtils.CartUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
@@ -8,10 +9,11 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
-import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
+import be.syntra.devshop.DevshopFront.services.SearchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,6 +48,9 @@ public class ProductControllerTest {
 
     @MockBean
     private CartService cartService;
+
+    @MockBean
+    private SearchService searchService;
 
     @MockBean
     private ProductListCacheService productListCacheService;
@@ -124,6 +129,9 @@ public class ProductControllerTest {
     void addSelectedProductToCart() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
+        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final ProductList productListDummy = new ProductList(dummyProducts);
+        when(productListCacheService.findBySearchRequest(any())).thenReturn(productListDummy);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")
@@ -134,10 +142,14 @@ public class ProductControllerTest {
 
         // then
         getResult
-                .andExpect(status().isFound())
-                .andExpect(view().name("redirect:/products"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", dummyProducts));
 
         verify(productService, times(1)).addToCart(any());
         verify(productListCacheService, times(1)).findById(dummyProduct.getId());
+        verify(productListCacheService, times(1)).findBySearchRequest(any());
     }
 }

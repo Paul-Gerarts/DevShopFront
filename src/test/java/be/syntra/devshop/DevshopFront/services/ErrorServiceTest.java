@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -27,9 +26,6 @@ public class ErrorServiceTest {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Value("${baseUrl}")
-    private String baseUrl;
 
     @Autowired
     private ErrorServiceImpl errorService;

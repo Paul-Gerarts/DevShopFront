@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.DataStore;
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
@@ -16,8 +16,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +39,9 @@ class ProductListCacheServiceImplTest {
     private ProductService productService;
 
     @MockBean
+    private SearchService searchService;
+
+    @MockBean
     private DataStore dataStore;
 
     @Autowired
@@ -44,7 +50,7 @@ class ProductListCacheServiceImplTest {
     @Test
     void updateProductListCache() {
         // given
-        when(productService.findAllNonArchived()).thenReturn(new ProductList(ProductUtils.getDummyNonArchivedProductList()));
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(getDummyNonArchivedProductList()));
 
         // when
         productListCacheService.updateProductListCache();
@@ -58,7 +64,7 @@ class ProductListCacheServiceImplTest {
         // given
         Map<String, Boolean> dummyMap = new HashMap<>();
         dummyMap.put("cacheNeedsUpdate", true);
-        when(productService.findAllNonArchived()).thenReturn(new ProductList(ProductUtils.getDummyNonArchivedProductList()));
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(getDummyNonArchivedProductList()));
         when(dataStore.getMap()).thenReturn(dummyMap);
 
         // when
@@ -74,7 +80,7 @@ class ProductListCacheServiceImplTest {
         // given
         Map<String, Boolean> dummyMap = new HashMap<>();
         dummyMap.put("cacheNeedsUpdate", true);
-        when(productService.findAllNonArchived()).thenReturn(new ProductList(ProductUtils.getDummyNonArchivedProductList()));
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(getDummyNonArchivedProductList()));
         when(dataStore.getMap()).thenReturn(dummyMap);
 
         // when
@@ -82,5 +88,33 @@ class ProductListCacheServiceImplTest {
 
         // then
         assertEquals(resultProductList.getProducts().size(), 0);
+    }
+
+    @Test
+    void canSortProductByNameTest() {
+        // given
+        List<Product> dummyProductList = getDummyNonArchivedProductList();
+        SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setSortAscendingName(true);
+
+        // when
+        ProductList resultProducts = productListCacheService.sortListByName(dummyProductList, dummySearchModel);
+
+        // then
+        assertThat(resultProducts.getProducts().get(0)).isEqualTo(dummyProductList.get(1));
+    }
+
+    @Test
+    void canSortProductByPriceTest() {
+        // given
+        List<Product> dummyProductList = getDummyNonArchivedProductList();
+        SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setSortAscendingPrice(true);
+
+        // when
+        ProductList resultProducts = productListCacheService.sortListByPrice(dummyProductList, dummySearchModel);
+
+        // then
+        assertThat(resultProducts.getProducts().get(0)).isEqualTo(dummyProductList.get(1));
     }
 }
