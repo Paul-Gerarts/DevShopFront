@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +21,19 @@ public class ProductController {
 
     private final ProductService productService;
     private final CartService cartService;
+    private final SearchService searchService;
     private final ProductListCacheService productListCacheService;
 
     @Autowired
     public ProductController(
             ProductService productService,
             CartService cartService,
+            SearchService searchService,
             ProductListCacheService productListCacheService
     ) {
         this.productService = productService;
         this.cartService = cartService;
+        this.searchService = searchService;
         this.productListCacheService = productListCacheService;
     }
 
@@ -63,10 +67,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public String addSelectedProductToCart(@ModelAttribute("id") Long id) {
+    public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productListCacheService.findById(id));
-        return "redirect:/products";
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        model.addAttribute("products", productList);
+        model.addAttribute("cart", cartService.getCart());
+        return "product/productOverview";
     }
 
     @PostMapping("/details/addtocart/{id}")

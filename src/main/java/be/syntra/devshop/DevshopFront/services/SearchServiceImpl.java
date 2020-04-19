@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,14 +13,12 @@ public class SearchServiceImpl implements SearchService {
     private final SearchModel searchModel;
 
     @Autowired
-    public SearchServiceImpl(SearchModel searchModel) {
+    public SearchServiceImpl(@Qualifier("getSearchModel") SearchModel searchModel) {
         this.searchModel = searchModel;
     }
 
-    // todo: DEV-015 impl's from interface might replace captureSearchRequest & getSearchModelDto
-
     @Override
-    public void captureSearchRequest(String searchRequest) {
+    public void setSearchRequest(String searchRequest) {
         searchModel.setSearchRequest(searchRequest);
     }
 

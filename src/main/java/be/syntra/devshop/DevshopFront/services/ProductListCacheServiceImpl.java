@@ -3,10 +3,13 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,14 +49,22 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     }
 
     @Override
-    public ProductList findBySearchRequest(String searchRequest) {
-        var result = getProductListCache().getProducts()
+    public ProductList findBySearchRequest(SearchModel searchModel) {
+        List<Product> result = executeSearch(searchModel.getSearchRequest());
+        return result.isEmpty()
+                ? new ProductList(getProductListCache().getProducts())
+                : new ProductList(result);
+    }
+
+    private List<Product> executeSearch(String searchRequest) {
+        return (null != searchRequest)
+                ? getProductListCache().getProducts()
                 .stream()
                 .filter(product -> product.getName()
                         .toLowerCase()
                         .contains(searchRequest.toLowerCase()))
-                .collect(Collectors.toUnmodifiableList());
-        return result.isEmpty() ? new ProductList(getProductListCache().getProducts()) : new ProductList(result);
+                .collect(Collectors.toUnmodifiableList())
+                : new ArrayList<>();
     }
 
     @Override

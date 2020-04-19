@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
 import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,7 +78,7 @@ class ProductListCacheServiceImplTest {
         when(dataStore.getMap()).thenReturn(dummyMap);
 
         // when
-        ProductList resultProductList = productListCacheService.findBySearchRequest("test");
+        ProductList resultProductList = productListCacheService.findBySearchRequest(new SearchModel());
 
         // then
         assertEquals(resultProductList.getProducts().size(), 0);

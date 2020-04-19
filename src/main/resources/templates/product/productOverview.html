@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>DevShop</title>
@@ -44,7 +44,7 @@
                         <span class="mdl-list__item-text-body"
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <form th:object="${product}" method="post">
+                            <form th:object="${product}" method="post" th:action="@{/products}">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
@@ -59,6 +59,24 @@
             </ul>
         </div>
     </main>
+</div>
+<!--search filters-->
+<div class="search-filters">
+    <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+        <li class="mdl-list__item mdl-list__item--three-line">
+            <div class="sorting">
+                <a th:href="@{/search/details/{id}(id=${1})}">
+                    <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                        data-th-title="Alfabetically">sort</em>
+                </a>
+                <div class="sorting-text">sort by name</div>
+                <a th:href="@{/search/details/{id}(id=${1})}">
+                    <em class="material-icons mdl-list__item-avatar mdl-color--blue" data-th-title="Price">sort</em>
+                </a>
+                <div class="sorting-text">sort by price</div>
+            </div>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

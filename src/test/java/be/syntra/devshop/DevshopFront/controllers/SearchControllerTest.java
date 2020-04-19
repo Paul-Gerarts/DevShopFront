@@ -62,7 +62,7 @@ public class SearchControllerTest {
         final SearchModel dummySearchModel = new SearchModel();
         dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productListCacheService.findBySearchRequest(anyString())).thenReturn(dummyProductList);
+        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         // todo: (DEV-015) might change
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
@@ -78,6 +78,6 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("products", dummyProducts))
                 .andExpect(model().attribute("cart", dummyCart));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(searchRequest);
+        verify(productListCacheService, times(1)).findBySearchRequest(any());
     }
 }
