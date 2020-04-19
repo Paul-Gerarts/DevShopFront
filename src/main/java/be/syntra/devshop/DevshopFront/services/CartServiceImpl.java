@@ -3,12 +3,14 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -45,5 +47,12 @@ public class CartServiceImpl implements CartService {
     public StatusNotification payCart(CartDto cartDto) {
         // cartDto is send to backend through rest template url with the users name which is the email.
         return StatusNotification.SUCCESS;
+    }
+
+    @Override
+    public void cartTotalPrice(PaymentDto paymentDto) {
+        paymentDto.setTotalPrice(getCart().getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 }
