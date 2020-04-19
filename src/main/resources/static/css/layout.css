@@ -125,8 +125,8 @@ html, body, .spinner {
     position: fixed;
     width: 30%;
     height: 80%;
-    padding-left: 65%;
-    padding-top: 125px;
+    left: 65%;
+    top: 125px;
     text-decoration: none;
 }
 

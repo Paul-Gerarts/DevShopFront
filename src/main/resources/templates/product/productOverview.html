@@ -58,25 +58,26 @@
                 </li>
             </ul>
         </div>
+        <!--search filters-->
+        <div class="search-filters">
+            <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <div class="sorting">
+                        <a th:href="@{/search/sortbyname}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Alfabetically">sort</em>
+                        </a>
+                        <div class="sorting-text">sort by name</div>
+                        <a th:href="@{/search/sortbyprice}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Price">sort</em>
+                        </a>
+                        <div class="sorting-text">sort by price</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </main>
-</div>
-<!--search filters-->
-<div class="search-filters">
-    <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
-        <li class="mdl-list__item mdl-list__item--three-line">
-            <div class="sorting">
-                <a th:href="@{/search/details/{id}(id=${1})}">
-                    <em class="material-icons mdl-list__item-avatar mdl-color--blue"
-                        data-th-title="Alfabetically">sort</em>
-                </a>
-                <div class="sorting-text">sort by name</div>
-                <a th:href="@{/search/details/{id}(id=${1})}">
-                    <em class="material-icons mdl-list__item-avatar mdl-color--blue" data-th-title="Price">sort</em>
-                </a>
-                <div class="sorting-text">sort by price</div>
-            </div>
-        </li>
-    </ul>
 </div>
 </body>
 </html>

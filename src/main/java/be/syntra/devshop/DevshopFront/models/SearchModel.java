@@ -13,5 +13,7 @@ public class SearchModel {
     private String description;
     private String priceLow;
     private String priceHigh;
+    private boolean sortAscendingName;
+    private boolean sortAscendingPrice;
     private boolean searchFailure;
 }
