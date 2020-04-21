@@ -41,7 +41,9 @@ public class ProductController {
     public String displayProductOverview(Model model) {
         List<Product> productList = productListCacheService.getProductListCache().getProducts();
         searchService.resetSearchModel();
+        productListCacheService.setPriceFilters(productList);
         model.addAttribute("products", productList);
+        model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
     }
@@ -71,8 +73,10 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productListCacheService.findById(id));
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        List<Product> products = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        List<Product> productList = productListCacheService.filterByPrice(products, searchService.getSearchModel()).getProducts();
         model.addAttribute("products", productList);
+        model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
     }

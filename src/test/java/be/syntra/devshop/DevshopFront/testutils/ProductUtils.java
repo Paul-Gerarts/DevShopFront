@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.TestUtils;
+package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;

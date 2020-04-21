@@ -20,11 +20,14 @@
             <span class="mdl-layout-title" th:if="${searchModel != null && searchModel.isArchivedView()}"
                   th:text="'You are now viewing all ARCHIVED products'"></span>
             <span class="mdl-layout-title"
-                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure()}"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure() && !searchModel.isActiveFilters()}"
                   th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()}"></span>
             <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure() && searchModel.isActiveFilters()}"
+                  th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()} + ${searchModel.getPriceFilters()}"></span>
+            <span class="mdl-layout-title"
                   th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
-                  th:text="'We found nothing for ' + ${searchModel.getSearchRequest().toUpperCase()} + ', so we\'re showing ALL'"></span>
+                  th:text="'We found nothing for ' + ${searchModel.getSearchRequest().toUpperCase()} + ' with the applied filters, so we\'re showing ALL'"></span>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
@@ -60,6 +63,7 @@
         <div class="search-filters">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
                 <li class="mdl-list__item mdl-list__item--three-line">
+                    <!--sort-icons-->
                     <div class="sorting">
                         <a th:if="${searchModel != null && !searchModel.isArchivedView() || searchModel == null}"
                            th:href="@{/search/sortbyname}">
@@ -84,6 +88,49 @@
                         </a>
                         <div class="sorting-text">sort by price</div>
                     </div>
+                    <!--price-sliders-->
+                    <div class="mdl-textfield__label sorting-text slider-low slider-low-title">select minimum price
+                    </div>
+                    <form class="search-filters slider-low" method="get" th:action="@{/search/pricelow/}"
+                          id="priceLowForm">
+                        <input class="mdl-slider mdl-js-slider trigger-submit-low" th:name="priceLow" type="range"
+                               name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
+                               value="0" step="10" style="width: 250px;">
+                        <p class="slider-low-input" id="sliderLowInput"
+                           style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                           th:text="'€ ' + ${searchModel.getPriceLow()}"></p>
+                    </form>
+                    <div class="mdl-textfield__label sorting-text slider-high slider-high-title">select maximum price
+                    </div>
+                    <form class="search-filters slider-high" method="get" th:action="@{/search/pricehigh/}"
+                          id="priceHighForm">
+                        <input class="mdl-slider mdl-js-slider trigger-submit-high" type="range" th:name="priceHigh"
+                               id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
+                               value="100000" step="10" style="width: 250px;">
+                        <p class="slider-high-input" id="sliderHighInput"
+                           style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                           th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
+                    </form>
+                    <script th:inline="javascript">
+                        document.getElementById("sliderLow").oninput = function () {
+                            document.getElementById("sliderLowInput").innerHTML = document.getElementById("sliderLow").value;
+                        }
+
+                        document.getElementById("sliderHigh").oninput = function () {
+                            document.getElementById("sliderHighInput").innerHTML = document.getElementById("sliderHigh").value;
+                        }
+
+                        const sliderTriggerLow = document.querySelector('.trigger-submit-low');
+                        const sliderTriggerHigh = document.querySelector('.trigger-submit-high');
+
+                        sliderTriggerLow.addEventListener('change', function () {
+                            document.getElementById("priceLowForm").submit();
+                        });
+
+                        sliderTriggerHigh.addEventListener('change', function () {
+                            document.getElementById("priceHighForm").submit();
+                        })
+                    </script>
                 </li>
             </ul>
         </div>

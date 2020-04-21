@@ -1,9 +1,9 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
+import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

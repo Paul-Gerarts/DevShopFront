@@ -1,12 +1,12 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,11 +15,12 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProductList;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProductList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -116,5 +117,44 @@ class ProductListCacheServiceImplTest {
 
         // then
         assertThat(resultProducts.getProducts().get(0)).isEqualTo(dummyProductList.get(1));
+    }
+
+    @Test
+    void canSetPriceFiltersTest() {
+        // given
+        List<Product> dummyProductList = getDummyNonArchivedProductList();
+        BigDecimal priceHigh = new BigDecimal("10000");
+        boolean originalSortAscendingPrice = false;
+        SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setSortAscendingPrice(originalSortAscendingPrice);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        productListCacheService.setPriceFilters(dummyProductList);
+
+        // then
+        assertThat(priceHigh).isNotEqualTo(dummySearchModel.getPriceHigh());
+        assertThat(originalSortAscendingPrice).isNotEqualTo(dummySearchModel.isSortAscendingPrice());
+    }
+
+    @Test
+    void canFilterByPriceTest() {
+        // given
+        List<Product> dummyProductList = getDummyNonArchivedProductList();
+        BigDecimal priceLow = BigDecimal.ZERO;
+        BigDecimal priceHigh = BigDecimal.TEN;
+        boolean originalSortAscendingPrice = false;
+        SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setPriceLow(priceLow);
+        dummySearchModel.setPriceHigh(priceHigh);
+        dummySearchModel.setSortAscendingPrice(originalSortAscendingPrice);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        ProductList result = productListCacheService.filterByPrice(dummyProductList, dummySearchModel);
+
+        // then
+        assertThat(dummyProductList.size()).isNotEqualTo(result.getProducts().size());
+        assertThat(result.getProducts().get(0).getPrice()).isBetween(priceLow, priceHigh);
     }
 }

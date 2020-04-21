@@ -4,6 +4,8 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class SearchServiceImpl implements SearchService {
 
@@ -32,6 +34,16 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public void setSearchFailure(boolean searchFailure) {
         searchModel.setSearchFailure(searchFailure);
+    }
+
+    @Override
+    public void setPriceLow(BigDecimal priceLow) {
+        searchModel.setPriceLow(priceLow);
+    }
+
+    @Override
+    public void setPriceHigh(BigDecimal priceHigh) {
+        searchModel.setPriceHigh(priceHigh);
     }
 
     @Override

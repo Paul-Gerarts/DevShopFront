@@ -2,6 +2,8 @@ package be.syntra.devshop.DevshopFront.models;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -11,11 +13,13 @@ public class SearchModel {
 
     private String searchRequest;
     private String description;
-    private String priceLow;
-    private String priceHigh;
+    private BigDecimal priceLow;
+    private BigDecimal priceHigh;
     private boolean sortAscendingName;
     private boolean sortAscendingPrice;
     private boolean archivedView;
     private boolean searchResultView;
     private boolean searchFailure;
+    private boolean activeFilters;
+    private String priceFilters;
 }

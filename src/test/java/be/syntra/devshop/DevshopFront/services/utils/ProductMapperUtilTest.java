@@ -4,7 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import org.junit.jupiter.api.Test;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.getDummyNonArchivedProduct;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProductMapperUtilTest {

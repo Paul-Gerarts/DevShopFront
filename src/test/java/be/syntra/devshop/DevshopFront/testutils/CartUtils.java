@@ -1,10 +1,10 @@
-package be.syntra.devshop.DevshopFront.TestUtils;
+package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 
 public class CartUtils {
 

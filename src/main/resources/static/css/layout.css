@@ -149,5 +149,42 @@ html, body, .spinner {
     font-size: x-large;
 }
 
+.slider-low {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    top: 270px;
+}
+
+.slider-high {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    top: 340px;
+}
+
+.slider-low-input {
+    max-height: 4%;
+}
+
+.slider-high-input {
+    max-height: 4%;
+}
+
+.slider-low-title {
+    display: block;
+    top: 100px;
+    color: black;
+    padding-left: 95px;
+}
+
+.slider-high-title {
+    display: block;
+    top: 170px;
+    color: black;
+    padding-left: 95px;
+}
+
+
 
 

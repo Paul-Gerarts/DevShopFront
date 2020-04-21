@@ -8,9 +8,11 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,10 +61,48 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     @Override
     public ProductList findBySearchRequest(SearchModel searchModel) {
         List<Product> result = executeSearch(searchModel.getSearchRequest());
+        return getSearchResultsOrAllProducts(result);
+    }
+
+    @Override
+    public void setPriceFilters(List<Product> products) {
+        searchService.getSearchModel().setSortAscendingPrice(true);
+        List<Product> sortedProducts = sortListByPrice(products, searchService.getSearchModel()).getProducts();
+        BigDecimal priceLow = new BigDecimal("0");
+        BigDecimal priceHigh = sortedProducts.get(sortedProducts.size() - 1).getPrice();
+        searchService.setPriceLow(priceLow);
+        searchService.setPriceHigh(priceHigh);
+    }
+
+    @Override
+    public ProductList filterByPrice(List<Product> products, SearchModel searchModel) {
+        setPriceFiltersToSearchModel(searchModel);
+        List<Product> result = products
+                .stream()
+                .filter(applyPriceFilter(searchModel))
+                .collect(Collectors.toUnmodifiableList());
+        return getSearchResultsOrAllProducts(result);
+    }
+
+    private ProductList getSearchResultsOrAllProducts(List<Product> result) {
         searchService.setSearchFailure(result.isEmpty());
         return result.isEmpty()
                 ? new ProductList(getProductListCache().getProducts())
                 : new ProductList(result);
+    }
+
+    private void setPriceFiltersToSearchModel(SearchModel searchModel) {
+        searchModel.setPriceFilters(" with the applied filters");
+        String searchRequest = (null != searchService.getSearchModel().getSearchRequest())
+                ? searchService.getSearchModel().getSearchRequest()
+                : "";
+        searchModel.setSearchRequest(searchRequest);
+        searchModel.setSearchFailure(false);
+        searchModel.setActiveFilters(true);
+    }
+
+    private Predicate<Product> applyPriceFilter(SearchModel searchModel) {
+        return product -> product.getPrice().compareTo(searchModel.getPriceLow()) >= 0 && product.getPrice().compareTo(searchModel.getPriceHigh()) <= 0;
     }
 
     @Override
@@ -75,10 +115,10 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     @Override
     public ProductList sortListByPrice(List<Product> products, SearchModel searchModel) {
-        final Comparator<Product> productNameComparator = (searchModel.isSortAscendingPrice())
+        final Comparator<Product> productPriceComparator = (searchModel.isSortAscendingPrice())
                 ? Comparator.comparing(Product::getPrice)
                 : Comparator.comparing(Product::getPrice).reversed();
-        return getSortedList(products, productNameComparator);
+        return getSortedList(products, productPriceComparator);
     }
 
     private ProductList getSortedList(List<Product> products, Comparator<Product> productComparator) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -44,26 +45,49 @@ public class SearchController {
     @GetMapping("/")
     public String showSearchBarResult(@RequestParam String searchRequest, Model model) {
         searchService.setSearchRequest(searchRequest);
-        searchService.setSearchResultView(true);
-        searchService.setArchivedView(false);
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        List<Product> productList = applySearch(true);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productList);
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
     }
 
+    @GetMapping("/pricelow/")
+    public String searchPriceLow(@RequestParam String priceLow, Model model) {
+        searchService.setPriceLow(new BigDecimal(priceLow));
+        List<Product> productList = applySearch(true);
+        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
+        model.addAttribute(PRODUCTS, productList);
+        model.addAttribute("cart", cartService.getCart());
+        return PRODUCT_OVERVIEW;
+    }
+
+    @GetMapping("/pricehigh/")
+    public String searchPriceHigh(@RequestParam String priceHigh, Model model) {
+        searchService.setPriceHigh(new BigDecimal(priceHigh));
+        List<Product> productList = applySearch(true);
+        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
+        model.addAttribute(PRODUCTS, productList);
+        model.addAttribute("cart", cartService.getCart());
+        return PRODUCT_OVERVIEW;
+    }
+
+    private List<Product> applySearch(boolean isSearchResultView) {
+        searchService.setSearchResultView(isSearchResultView);
+        searchService.setArchivedView(false);
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        return productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+    }
+
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        searchService.setArchivedView(false);
+        List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return getProductsSortedByName(model, productList);
     }
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        searchService.setArchivedView(false);
+        List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return getProductsSortedByPrice(model, productList);
     }
 
