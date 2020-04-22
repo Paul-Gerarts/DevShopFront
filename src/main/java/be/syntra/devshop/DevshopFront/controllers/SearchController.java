@@ -99,7 +99,9 @@ public class SearchController {
         searchService.setArchivedView(false);
         List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
         List<Product> filteredList = productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
-        return productListCacheService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts();
+        return (null != searchService.getSearchModel().getDescription())
+                ? productListCacheService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
+                : filteredList;
     }
 
     private String getProductsSortedByName(Model model, List<Product> productList) {
