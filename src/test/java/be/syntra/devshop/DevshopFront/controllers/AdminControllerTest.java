@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
@@ -177,6 +178,8 @@ class AdminControllerTest {
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
+        SearchModel searchModelDummy = new SearchModel();
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllArchived()).thenReturn(dummyProductList);
 
         // when

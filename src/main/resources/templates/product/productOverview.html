@@ -27,7 +27,7 @@
                   th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()} + ${searchModel.getPriceFilters()}"></span>
             <span class="mdl-layout-title"
                   th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
-                  th:text="'We found nothing for ' + ${searchModel.getSearchRequest().toUpperCase()} + ' with the applied filters, so we\'re showing ALL'"></span>
+                  th:text="'After searching ' + ${searchModel.getSearchRequest().toUpperCase()} + ' we found nothing with the applied filters, so we\'re showing ALL'"></span>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
@@ -93,9 +93,13 @@
                     </div>
                     <form class="search-filters slider-low" method="get" th:action="@{/search/pricelow/}"
                           id="priceLowForm">
-                        <input class="mdl-slider mdl-js-slider trigger-submit-low" th:name="priceLow" type="range"
-                               name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
-                               value="0" step="10" style="width: 250px;">
+                        <div class="range-wrap">
+                            <input class="mdl-slider mdl-js-slider range trigger-submit-low" th:name="priceLow"
+                                   type="range"
+                                   name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
+                                   value="0" step="10" style="width: 250px;">
+                            <output class="bubble"></output>
+                        </div>
                         <p class="slider-low-input" id="sliderLowInput"
                            style="font-size: x-large; color: dodgerblue; min-width: 150px"
                            th:text="'€ ' + ${searchModel.getPriceLow()}"></p>
@@ -104,9 +108,13 @@
                     </div>
                     <form class="search-filters slider-high" method="get" th:action="@{/search/pricehigh/}"
                           id="priceHighForm">
-                        <input class="mdl-slider mdl-js-slider trigger-submit-high" type="range" th:name="priceHigh"
-                               id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
-                               value="100000" step="10" style="width: 250px;">
+                        <div class="range-wrap">
+                            <input class="mdl-slider mdl-js-slider range trigger-submit-high" type="range"
+                                   th:name="priceHigh"
+                                   id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
+                                   value="100000" step="10" style="width: 250px;">
+                            <output class="bubble"></output>
+                        </div>
                         <p class="slider-high-input" id="sliderHighInput"
                            style="font-size: x-large; color: dodgerblue; min-width: 150px"
                            th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
@@ -130,6 +138,28 @@
                         sliderTriggerHigh.addEventListener('change', function () {
                             document.getElementById("priceHighForm").submit();
                         })
+
+                        const allRanges = document.querySelectorAll(".range-wrap");
+                        allRanges.forEach(wrap => {
+                            const range = wrap.querySelector(".range");
+                            const bubble = wrap.querySelector(".bubble");
+
+                            range.addEventListener("input", () => {
+                                setBubble(range, bubble);
+                            });
+                            setBubble(range, bubble);
+                        });
+
+                        function setBubble(range, bubble) {
+                            const val = range.value;
+                            const min = range.min ? range.min : 0;
+                            const max = range.max ? range.max : 100;
+                            const newVal = Number(((val - min) * 100) / (max - min));
+                            bubble.innerHTML = val;
+
+                            // Sorta magic numbers based on size of the native UI thumb
+                            bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+                        }
                     </script>
                 </li>
             </ul>

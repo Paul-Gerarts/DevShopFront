@@ -78,7 +78,7 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     public ProductList filterByPrice(List<Product> products, SearchModel searchModel) {
         setPriceFiltersToSearchModel(searchModel);
         List<Product> result = products
-                .stream()
+                .parallelStream()
                 .filter(applyPriceFilter(searchModel))
                 .collect(Collectors.toUnmodifiableList());
         return getSearchResultsOrAllProducts(result);

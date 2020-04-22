@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.ProductListCache;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
@@ -63,7 +64,9 @@ public class ProductControllerTest {
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         final ProductListCache productListCache = new ProductListCache();
         productListCache.setProducts(dummyProducts);
+        SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productListCacheService.getProductListCache()).thenReturn(productListCache);
 
         // when
@@ -131,7 +134,10 @@ public class ProductControllerTest {
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList productListDummy = new ProductList(dummyProducts);
+        SearchModel searchModelDummy = new SearchModel();
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productListCacheService.findBySearchRequest(any())).thenReturn(productListDummy);
+        when(productListCacheService.filterByPrice(any(), any())).thenReturn(productListDummy);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")
