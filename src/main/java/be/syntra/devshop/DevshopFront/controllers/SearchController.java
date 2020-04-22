@@ -67,8 +67,7 @@ public class SearchController {
     public String searchProductDescription(@RequestParam String description, Model model) {
         searchService.setDescription(description);
         List<Product> productList = applySearch(true);
-        List<Product> filteredList = productListCacheService.searchForProductDescription(productList, searchService.getSearchModel()).getProducts();
-        return setTemplateModel(model, filteredList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/sortbyname")
@@ -99,7 +98,8 @@ public class SearchController {
         searchService.setSearchResultView(isSearchResultView);
         searchService.setArchivedView(false);
         List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        return productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+        List<Product> filteredList = productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+        return productListCacheService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts();
     }
 
     private String getProductsSortedByName(Model model, List<Product> productList) {
