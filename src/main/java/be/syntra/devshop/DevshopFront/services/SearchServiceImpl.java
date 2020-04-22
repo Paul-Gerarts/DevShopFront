@@ -47,6 +47,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void setDescription(String description) {
+        searchModel.setDescription(description);
+    }
+
+    @Override
     public SearchModel getSearchModel() {
         return searchModel;
     }

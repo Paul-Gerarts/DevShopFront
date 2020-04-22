@@ -119,6 +119,20 @@ public class SearchServiceTest {
     }
 
     @Test
+    void canSetDescriptionTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        String description = "chair";
+
+        // when
+        searchModelDummy.setDescription(description);
+        String result = searchService.getSearchModel().getDescription();
+
+        // then
+        assertThat(result).isEqualTo(description);
+    }
+
+    @Test
     void canResetSearchModelTest() {
         // given
         SearchModel searchModelDummy = searchService.getSearchModel();

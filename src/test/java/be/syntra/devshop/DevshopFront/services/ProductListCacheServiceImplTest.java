@@ -157,4 +157,31 @@ class ProductListCacheServiceImplTest {
         assertThat(dummyProductList.size()).isNotEqualTo(result.getProducts().size());
         assertThat(result.getProducts().get(0).getPrice()).isBetween(priceLow, priceHigh);
     }
+
+    @Test
+    void canFilterByProductDescriptionTest() {
+        // given
+        Map<String, Boolean> dummyMap = new HashMap<>();
+        dummyMap.put("cacheNeedsUpdate", true);
+        List<Product> dummyProductList = getDummyNonArchivedProductList();
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(dummyProductList));
+        when(dataStore.getMap()).thenReturn(dummyMap);
+        BigDecimal priceLow = new BigDecimal("0");
+        BigDecimal priceHigh = new BigDecimal("100000");
+        boolean originalSortAscendingPrice = false;
+        String description = "another";
+        SearchModel dummySearchModel = new SearchModel();
+        dummySearchModel.setPriceLow(priceLow);
+        dummySearchModel.setPriceHigh(priceHigh);
+        dummySearchModel.setDescription(description);
+        dummySearchModel.setSortAscendingPrice(originalSortAscendingPrice);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        ProductList result = productListCacheService.searchForProductDescription(dummyProductList, dummySearchModel);
+
+        // then
+        assertThat(dummyProductList.size()).isNotEqualTo(result.getProducts().size());
+        assertThat(result.getProducts().get(0).getDescription()).contains(description);
+    }
 }

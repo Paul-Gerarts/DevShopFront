@@ -50,6 +50,7 @@ public class ProductUtils {
                 .id(2L)
                 .name("another product")
                 .price(new BigDecimal("0.99"))
+                .description("another description")
                 .archived(false)
                 .build();
     }
@@ -59,6 +60,7 @@ public class ProductUtils {
                 .id(2L)
                 .name("another product")
                 .price(new BigDecimal("0.99"))
+                .description("another description")
                 .archived(true)
                 .build();
     }

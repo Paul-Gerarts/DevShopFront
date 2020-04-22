@@ -21,6 +21,8 @@ public interface ProductListCacheService {
 
     ProductList filterByPrice(List<Product> products, SearchModel searchModel);
 
+    ProductList searchForProductDescription(List<Product> products, SearchModel searchModel);
+
     void setPriceFilters(List<Product> products);
 
     Product findById(Long id);

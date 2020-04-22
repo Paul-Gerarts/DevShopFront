@@ -21,5 +21,5 @@ public class SearchModel {
     private boolean searchResultView;
     private boolean searchFailure;
     private boolean activeFilters;
-    private String priceFilters;
+    private String appliedFiltersHeader;
 }

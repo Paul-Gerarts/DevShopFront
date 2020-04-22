@@ -46,37 +46,29 @@ public class SearchController {
     public String showSearchBarResult(@RequestParam String searchRequest, Model model) {
         searchService.setSearchRequest(searchRequest);
         List<Product> productList = applySearch(true);
-        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productList);
-        model.addAttribute("cart", cartService.getCart());
-        return PRODUCT_OVERVIEW;
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/pricelow/")
     public String searchPriceLow(@RequestParam String priceLow, Model model) {
         searchService.setPriceLow(new BigDecimal(priceLow));
         List<Product> productList = applySearch(true);
-        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productList);
-        model.addAttribute("cart", cartService.getCart());
-        return PRODUCT_OVERVIEW;
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/pricehigh/")
     public String searchPriceHigh(@RequestParam String priceHigh, Model model) {
         searchService.setPriceHigh(new BigDecimal(priceHigh));
         List<Product> productList = applySearch(true);
-        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productList);
-        model.addAttribute("cart", cartService.getCart());
-        return PRODUCT_OVERVIEW;
+        return setTemplateModel(model, productList);
     }
 
-    private List<Product> applySearch(boolean isSearchResultView) {
-        searchService.setSearchResultView(isSearchResultView);
-        searchService.setArchivedView(false);
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        return productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+    @GetMapping("/description/")
+    public String searchProductDescription(@RequestParam String description, Model model) {
+        searchService.setDescription(description);
+        List<Product> productList = applySearch(true);
+        List<Product> filteredList = productListCacheService.searchForProductDescription(productList, searchService.getSearchModel()).getProducts();
+        return setTemplateModel(model, filteredList);
     }
 
     @GetMapping("/sortbyname")
@@ -103,22 +95,23 @@ public class SearchController {
         return getProductsSortedByPrice(model, productList);
     }
 
+    private List<Product> applySearch(boolean isSearchResultView) {
+        searchService.setSearchResultView(isSearchResultView);
+        searchService.setArchivedView(false);
+        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        return productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+    }
+
     private String getProductsSortedByName(Model model, List<Product> productList) {
         List<Product> sortedProducts = productListCacheService.sortListByName(productList, searchService.getSearchModel()).getProducts();
         reverseNameSort();
-        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, sortedProducts);
-        model.addAttribute("cart", cartService.getCart());
-        return PRODUCT_OVERVIEW;
+        return setTemplateModel(model, sortedProducts);
     }
 
     private String getProductsSortedByPrice(Model model, List<Product> productList) {
         List<Product> sortedProducts = productListCacheService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
         reversePriceSort();
-        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, sortedProducts);
-        model.addAttribute("cart", cartService.getCart());
-        return PRODUCT_OVERVIEW;
+        return setTemplateModel(model, sortedProducts);
     }
 
     private void reverseNameSort() {
@@ -129,6 +122,13 @@ public class SearchController {
     private void reversePriceSort() {
         boolean sortAscending = searchService.getSearchModel().isSortAscendingPrice();
         searchService.getSearchModel().setSortAscendingPrice(!sortAscending);
+    }
+
+    private String setTemplateModel(Model model, List<Product> productList) {
+        model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
+        model.addAttribute(PRODUCTS, productList);
+        model.addAttribute("cart", cartService.getCart());
+        return PRODUCT_OVERVIEW;
     }
 
 }

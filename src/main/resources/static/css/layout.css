@@ -124,7 +124,7 @@ html, body, .spinner {
     justify-content: right;
     position: fixed;
     width: 30%;
-    height: 80%;
+    height: 85%;
     left: 65%;
     top: 125px;
     text-decoration: none;
@@ -208,6 +208,32 @@ html, body, .spinner {
     background: dodgerblue;
     top: -1px;
     left: 50%;
+}
+
+.description {
+    top: 420px;
+    border-color: dodgerblue;
+    border-style: solid;
+    left: 68%;
+    max-width: 450px;
+    max-height: 48px;
+}
+
+.description-icon {
+    padding-top: 9px;
+    font-size: 30px;
+    color: gray;
+}
+
+.description-search {
+    padding-top: 5px;
+    font-size: larger;
+}
+
+.reset-filters {
+    max-width: 210px;
+    top: 500px;
+    left: 75%;
 }
 
 

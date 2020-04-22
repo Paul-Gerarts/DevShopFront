@@ -86,6 +86,46 @@ public class SearchControllerTest {
         verify(productListCacheService, times(1)).filterByPrice(any(), any());
     }
 
+    @Test
+    void canSearchForDescriptionTest() throws Exception {
+        // given
+        final String searchRequest = "product";
+        final String description = "another";
+        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final CartDto dummyCart = getCartWithOneDummyProduct();
+        final SearchModel dummySearchModel = new SearchModel();
+        BigDecimal priceLow = new BigDecimal("0");
+        BigDecimal priceHigh = new BigDecimal("10000");
+        dummySearchModel.setPriceLow(priceLow);
+        dummySearchModel.setPriceHigh(priceHigh);
+        dummySearchModel.setDescription(description);
+        dummySearchModel.setSearchRequest(searchRequest);
+
+        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(cartService.getCart()).thenReturn(dummyCart);
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + description));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", dummyProducts))
+                .andExpect(model().attribute("cart", dummyCart))
+                .andExpect(model().attribute("searchModel", dummySearchModel));
+
+        verify(productListCacheService, times(1)).findBySearchRequest(any());
+        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(productListCacheService, times(1)).searchForProductDescription(any(), any());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"/search/sortbyname", "/search/sortbyprice"})
     public void canSortProductsTest(String url) throws Exception {

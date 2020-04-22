@@ -65,6 +65,13 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
     }
 
     @Override
+    public ProductList searchForProductDescription(List<Product> products, SearchModel searchModel) {
+        setAppliedFiltersToSearchModel(searchModel);
+        List<Product> result = executeDescriptionSearch(products, searchModel.getDescription());
+        return getSearchResultsOrAllProducts(result);
+    }
+
+    @Override
     public void setPriceFilters(List<Product> products) {
         searchService.getSearchModel().setSortAscendingPrice(true);
         List<Product> sortedProducts = sortListByPrice(products, searchService.getSearchModel()).getProducts();
@@ -76,7 +83,7 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     @Override
     public ProductList filterByPrice(List<Product> products, SearchModel searchModel) {
-        setPriceFiltersToSearchModel(searchModel);
+        setAppliedFiltersToSearchModel(searchModel);
         List<Product> result = products
                 .parallelStream()
                 .filter(applyPriceFilter(searchModel))
@@ -91,8 +98,8 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
                 : new ProductList(result);
     }
 
-    private void setPriceFiltersToSearchModel(SearchModel searchModel) {
-        searchModel.setPriceFilters(" with the applied filters");
+    private void setAppliedFiltersToSearchModel(SearchModel searchModel) {
+        searchModel.setAppliedFiltersHeader(" with the applied filters");
         String searchRequest = (null != searchService.getSearchModel().getSearchRequest())
                 ? searchService.getSearchModel().getSearchRequest()
                 : "";
@@ -136,6 +143,17 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
                 .filter(product -> product.getName()
                         .toLowerCase()
                         .contains(searchRequest.toLowerCase()))
+                .collect(Collectors.toUnmodifiableList())
+                : new ArrayList<>();
+    }
+
+    private List<Product> executeDescriptionSearch(List<Product> products, String description) {
+        return (null != description)
+                ? products
+                .parallelStream()
+                .filter(product -> product.getDescription()
+                        .toLowerCase()
+                        .contains(description.toLowerCase()))
                 .collect(Collectors.toUnmodifiableList())
                 : new ArrayList<>();
     }

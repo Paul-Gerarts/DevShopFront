@@ -18,6 +18,8 @@ public interface SearchService {
 
     void setPriceHigh(BigDecimal priceHigh);
 
+    void setDescription(String description);
+
     void resetSearchModel();
 
     SearchModel getSearchModel();
