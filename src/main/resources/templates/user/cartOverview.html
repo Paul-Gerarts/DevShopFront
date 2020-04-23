@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DevShop</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-red.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link type="text/css" href="../static/css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div th:replace="fragments/header :: header">...</div>
+    <main class="mdl-layout__content">
+        <div class="page-content" th:object="${cart}">
+            <span class="mdl-layout-title" id="title">Cart overview</span>
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                th:each="product : ${cart.getProducts()}">
+                <li class="mdl-list__item mdl-list__item--three-line product-tile">
+                    <span class="mdl-list__item-primary-content">
+                        <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
+                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details"
+                            style="width: 140px; height: 140px">photo</em>
+                        </a>
+                        <span th:text="${product.name}">Product Name</span>
+                        <span class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
+                            [[${product.description}]]
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <span class="mdl-list__item-text-body"
+                              style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
+                              th:text="'€ ' + ${product.price}">Product Price</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="page-content" th:object="${payment}">
+            <span class="mdl-layout-title" id="title">Payment</span>
+            <ul class="payment-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                th:each="paymentoption : ${payment.getPaymentOptions()}">
+                <label class="mdl-list__item-text-body"
+                       style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
+                       th:text="'€ ' + ${payment.getTotalPrice()}">Total Price</label>
+                <li class="mdl-list__item mdl-list__item--three-line product-tile">
+                    <span class="mdl-list__item-secondary-content">
+                       <a th:href="${paymentoption.getLink()}" style="text-decoration: none">
+                          <span class="mdl-layout-title"
+                                style="font-size: 20px; color: black; margin:auto; text-align: center"
+                                th:text="${paymentoption.description}">Payment option description</span></a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>

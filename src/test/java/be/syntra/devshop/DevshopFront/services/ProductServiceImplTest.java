@@ -7,6 +7,8 @@ import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
