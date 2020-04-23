@@ -14,4 +14,10 @@ public interface CartService {
     StatusNotification payCart(CartDto cartDto);
 
     void cartTotalPrice(PaymentDto paymentDto);
+
+    void addOneToProductInCart(Long productId);
+
+    void removeOneFromProductInCart(Long productId);
+
+    void removeProductFromCart(Long productId);
 }

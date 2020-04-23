@@ -55,4 +55,30 @@ public class CartServiceImpl implements CartService {
                 .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
+
+    @Override
+    public void addOneToProductInCart(Long productId) {
+        Product productToAlter = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        // todo: DEV-034: update in cachedProducts-replacement
+        productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
+    }
+
+    @Override
+    public void removeOneFromProductInCart(Long productId) {
+        Product productToAlter = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        // todo: DEV-034: update in cachedProducts-replacement
+        productToAlter.setTotalInCart(productToAlter.getTotalInCart() - 1);
+        if (productToAlter.getTotalInCart() == 0) {
+            // todo: DEV-034: update in cachedProducts-replacement
+            removeProductFromCart(productId);
+        }
+    }
+
+    @Override
+    public void removeProductFromCart(Long productId) {
+        Product productToRemove = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        // todo: DEV-034: update in cachedProducts-replacement
+        productToRemove.setTotalInCart(0);
+        currentCart.getProducts().remove(productToRemove);
+    }
 }
