@@ -100,12 +100,16 @@ public class ProductListCacheServiceImpl implements ProductListCacheService {
 
     private void setAppliedFiltersToSearchModel(SearchModel searchModel) {
         searchModel.setAppliedFiltersHeader(" with the applied filters");
-        String searchRequest = (null != searchService.getSearchModel().getSearchRequest())
+        String searchRequest = hasSearchRequest()
                 ? searchService.getSearchModel().getSearchRequest()
                 : "";
         searchModel.setSearchRequest(searchRequest);
         searchModel.setSearchFailure(false);
         searchModel.setActiveFilters(true);
+    }
+
+    private boolean hasSearchRequest() {
+        return null != searchService.getSearchModel().getSearchRequest();
     }
 
     private Predicate<Product> applyPriceFilter(SearchModel searchModel) {
