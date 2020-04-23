@@ -2,11 +2,25 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 
-// todo: replace or alter with DEV-015
+import java.math.BigDecimal;
 
 public interface SearchService {
 
-    void captureSearchRequest(String searchRequest);
+    void setSearchRequest(String searchRequest);
+
+    void setArchivedView(boolean archivedView);
+
+    void setSearchResultView(boolean searchResultView);
+
+    void setSearchFailure(boolean searchFailure);
+
+    void setPriceLow(BigDecimal priceLow);
+
+    void setPriceHigh(BigDecimal priceHigh);
+
+    void setDescription(String description);
+
+    void resetSearchModel();
 
     SearchModel getSearchModel();
 }

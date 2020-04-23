@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.TestUtils;
+package be.syntra.devshop.DevshopFront.testutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

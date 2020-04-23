@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.TestUtils;
+package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.factories.UserFactory;
 import be.syntra.devshop.DevshopFront.factories.UserRoleFactory;

@@ -1,12 +1,12 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
+import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -184,27 +184,5 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(StatusNotification.UPDATED, statusNotification);
-    }
-
-    @Test
-    void findBySearchRequestTest() {
-        // given
-        final String searchRequest = "product";
-        final List<Product> dummyProductList = List.of(getDummyNonArchivedProduct());
-        final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductList);
-        final String expectedEndpoint = baseUrl + endpoint + "/search/" + searchRequest;
-        mockServer
-                .expect(requestTo(expectedEndpoint))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(
-                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
-
-        // when
-        final ProductList receivedProductList = productService.findBySearchRequest(searchRequest);
-
-        // then
-        mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
     }
 }
