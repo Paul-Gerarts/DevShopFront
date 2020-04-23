@@ -1,15 +1,17 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.TestUtils.TestSecurityConfig;
-import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dto.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
+import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,8 +27,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.TestUtils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,6 +46,9 @@ class AdminControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private SearchService searchService;
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
@@ -173,6 +178,8 @@ class AdminControllerTest {
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductList dummyProductList = new ProductList(dummyProducts);
+        SearchModel searchModelDummy = new SearchModel();
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllArchived()).thenReturn(dummyProductList);
 
         // when

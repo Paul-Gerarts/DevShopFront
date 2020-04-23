@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.TestUtils;
+package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
@@ -35,10 +35,8 @@ public class TestWebConfig {
                 .build();
     }
 
-    // todo: DEV-015 might not create the SearchModelDto here
-
     @Bean
-    public SearchModel getSearchModelDto() {
+    public SearchModel getSearchModel() {
         return new SearchModel();
     }
 

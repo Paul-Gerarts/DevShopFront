@@ -30,8 +30,6 @@ public interface ProductService {
 
     ProductList findAllArchived();
 
-    ProductList findBySearchRequest(String searchRequest);
-
     Product findById(Long id);
 
     StatusNotification archiveProduct(Product product);

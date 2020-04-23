@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>DevShop</title>
@@ -15,19 +15,19 @@
     <div th:replace="fragments/header :: header">...</div>
     <main class="mdl-layout__content">
         <div class="page-content">
-            <span class="mdl-layout-title" id="title"></span>
-            <script th:inline="javascript">
-                const queryString = location.search;
-                const urlParams = new URLSearchParams(queryString);
-                const searchRequest = urlParams.get('searchRequest');
-                let title;
-                if (!!searchRequest) {
-                    title = 'You are now viewing your searchresults for ' + searchRequest.toUpperCase();
-                } else {
-                    title = !!location.href.match(/admin/) ? 'You are now viewing all ARCHIVED products' : 'You are now viewing ALL products';
-                }
-                document.getElementById("title").innerHTML = title;
-            </script>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel == null || !searchModel.isArchivedView() && !searchModel.isSearchResultView()}">You are now viewing ALL products</span>
+            <span class="mdl-layout-title" th:if="${searchModel != null && searchModel.isArchivedView()}"
+                  th:text="'You are now viewing all ARCHIVED products'"></span>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure() && !searchModel.isActiveFilters()}"
+                  th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()}"></span>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && !searchModel.isSearchFailure() && searchModel.isActiveFilters()}"
+                  th:text="'You are now viewing your searchresults for ' + ${searchModel.getSearchRequest().toUpperCase()} + ${searchModel.getAppliedFiltersHeader()}"></span>
+            <span class="mdl-layout-title"
+                  th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
+                  th:text="'After searching ' + ${searchModel.getSearchRequest().toUpperCase()} + ' we found nothing with the applied filters, so we\'re showing ALL'"></span>
             <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
@@ -36,7 +36,8 @@
                             style="width: 140px; height: 140px">photo</em>
                         </a>
                         <span th:text="${product.name}">Product Name</span>
-                        <span class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
+                        <span class="mdl-list__item-text-body"
+                              style="font-size: x-large; padding-top: 30px; line-height: 25px">
                             [[${product.description}]]
                         </span>
                     </span>
@@ -44,7 +45,7 @@
                         <span class="mdl-list__item-text-body"
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <form th:object="${product}" method="post">
+                            <form th:object="${product}" method="post" th:action="@{/products}">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
@@ -55,6 +56,134 @@
                                 </span>
                         </form>
                     </span>
+                </li>
+            </ul>
+        </div>
+        <!--search filters-->
+        <div class="search-filters">
+            <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <!--sort-icons-->
+                    <div class="sorting">
+                        <a th:if="${searchModel != null && !searchModel.isArchivedView() || searchModel == null}"
+                           th:href="@{/search/sortbyname}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Alfabetically">sort</em>
+                        </a>
+                        <a th:if="${searchModel != null && searchModel.isArchivedView()}"
+                           th:href="@{/search/archived/sortbyname}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Alfabetically">sort</em>
+                        </a>
+                        <div class="sorting-text">sort by name</div>
+                        <a th:if="${searchModel != null && !searchModel.isArchivedView() || searchModel == null}"
+                           th:href="@{/search/sortbyprice}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Price">sort</em>
+                        </a>
+                        <a th:if="${searchModel != null && searchModel.isArchivedView()}"
+                           th:href="@{/search/archived/sortbyprice}">
+                            <em class="material-icons mdl-list__item-avatar mdl-color--blue"
+                                data-th-title="Price">sort</em>
+                        </a>
+                        <div class="sorting-text">sort by price</div>
+                    </div>
+                    <!--price-sliders-->
+                    <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                        <div class="mdl-textfield__label sorting-text slider-low slider-low-title">select minimum price
+                        </div>
+                        <form class="search-filters slider-low" method="get" th:action="@{/search/pricelow/}"
+                              id="priceLowForm">
+                            <div class="range-wrap">
+                                <input class="mdl-slider mdl-js-slider range trigger-submit-low" th:name="priceLow"
+                                       type="range"
+                                       name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
+                                       value="0" step="10" style="width: 250px;">
+                                <output class="bubble"></output>
+                            </div>
+                            <p class="slider-low-input" id="sliderLowInput"
+                               style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                               th:text="'€ ' + ${searchModel.getPriceLow()}"></p>
+                        </form>
+                        <div class="mdl-textfield__label sorting-text slider-high slider-high-title">select maximum
+                            price
+                        </div>
+                        <form class="search-filters slider-high" method="get" th:action="@{/search/pricehigh/}"
+                              id="priceHighForm">
+                            <div class="range-wrap">
+                                <input class="mdl-slider mdl-js-slider range trigger-submit-high" type="range"
+                                       th:name="priceHigh"
+                                       id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
+                                       value="100000" step="10" style="width: 250px;">
+                                <output class="bubble"></output>
+                            </div>
+                            <p class="slider-high-input" id="sliderHighInput"
+                               style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                               th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
+                        </form>
+                        <script th:inline="javascript">
+                            document.getElementById("sliderLow").oninput = function () {
+                                document.getElementById("sliderLowInput").innerHTML = document.getElementById("sliderLow").value;
+                            }
+
+                            document.getElementById("sliderHigh").oninput = function () {
+                                document.getElementById("sliderHighInput").innerHTML = document.getElementById("sliderHigh").value;
+                            }
+
+                            const sliderTriggerLow = document.querySelector('.trigger-submit-low');
+                            const sliderTriggerHigh = document.querySelector('.trigger-submit-high');
+
+                            sliderTriggerLow.addEventListener('change', function () {
+                                document.getElementById("priceLowForm").submit();
+                            });
+
+                            sliderTriggerHigh.addEventListener('change', function () {
+                                document.getElementById("priceHighForm").submit();
+                            })
+
+                            const allRanges = document.querySelectorAll(".range-wrap");
+                            allRanges.forEach(wrap => {
+                                const range = wrap.querySelector(".range");
+                                const bubble = wrap.querySelector(".bubble");
+
+                                range.addEventListener("input", () => {
+                                    setBubble(range, bubble);
+                                });
+                                setBubble(range, bubble);
+                            });
+
+                            function setBubble(range, bubble) {
+                                const val = range.value;
+                                const min = range.min ? range.min : 0;
+                                const max = range.max ? range.max : 100;
+                                const newVal = Number(((val - min) * 100) / (max - min));
+                                bubble.innerHTML = val;
+
+                                // Sort of magic numbers based on size of the native UI thumb
+                                bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+                            }
+                        </script>
+                        <!--description-search-->
+                        <div class="searchbar description search-filters">
+                            <form class="searchbar" id="searchForm" method="get"
+                                  th:action="@{/search/description/}">
+                                <em class="material-icons description-icon">search</em>
+                                <input th:if="${searchModel.description == null}"
+                                       class="searchbar-input description-search" type="text" id="descriptionNull"
+                                       th:name="description"
+                                       placeholder="Search for a product description here...">
+                                <input th:if="${searchModel.description != null}"
+                                       class="searchbar-input description-search" type="text" id="descriptionEntered"
+                                       th:name="description"
+                                       th:placeholder="${searchModel.getDescription()}">
+                            </form>
+                        </div>
+                    </div>
+                    <form class="search-filters reset-filters" method="get" th:action="@{/products}">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                            <em class="material-icons">clear</em>Reset all filters
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>

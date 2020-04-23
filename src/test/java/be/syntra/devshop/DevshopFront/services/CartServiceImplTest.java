@@ -1,21 +1,14 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.TestUtils.JsonUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.ProductUtils;
-import be.syntra.devshop.DevshopFront.TestUtils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.services.utils.CartUtils;
-import org.junit.Ignore;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
+import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 
