@@ -31,6 +31,7 @@ public class UserController {
 
     @GetMapping("/cart/overview")
     public String displayCartOverview(Model model) {
+        log.info("displayCartOverview()");
         PaymentDto paymentDto = new PaymentDto();
         cartService.cartTotalPrice(paymentDto);
         model.addAttribute("cart", cartService.getCart());
@@ -40,6 +41,7 @@ public class UserController {
 
     @PostMapping("/cart/overview/paycart")
     public String payCart(Model model) {
+        log.info("payCart()");
         StatusNotification statusNotification = cartService.payCart(cartService.getCart());
         model.addAttribute("status", statusNotification);
         return "redirect:/products";
