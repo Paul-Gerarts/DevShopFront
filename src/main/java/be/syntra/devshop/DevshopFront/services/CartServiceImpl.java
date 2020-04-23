@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
@@ -58,14 +59,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addOneToProductInCart(Long productId) {
-        Product productToAlter = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        Product productToAlter = getProductById(productId);
         // todo: DEV-034: update in cachedProducts-replacement
         productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
     }
 
     @Override
     public void removeOneFromProductInCart(Long productId) {
-        Product productToAlter = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        Product productToAlter = getProductById(productId);
         // todo: DEV-034: update in cachedProducts-replacement
         productToAlter.setTotalInCart(productToAlter.getTotalInCart() - 1);
         if (productToAlter.getTotalInCart() == 0) {
@@ -76,9 +77,16 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeProductFromCart(Long productId) {
-        Product productToRemove = currentCart.getProducts().stream().filter(product -> product.getId() == productId).findFirst().get();
+        Product productToRemove = getProductById(productId);
         // todo: DEV-034: update in cachedProducts-replacement
         productToRemove.setTotalInCart(0);
         currentCart.getProducts().remove(productToRemove);
+    }
+
+    private Product getProductById(Long productId) {
+        return currentCart.getProducts().stream()
+                .filter(product -> product.getId() == productId)
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
 }
