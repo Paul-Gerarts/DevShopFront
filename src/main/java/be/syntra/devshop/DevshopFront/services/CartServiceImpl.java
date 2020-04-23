@@ -53,8 +53,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public void cartTotalPrice(PaymentDto paymentDto) {
         paymentDto.setTotalPrice(getCart().getProducts().stream()
-                .map(Product::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
+                .map(this::getTotalPerProduct)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+    }
+
+    private BigDecimal getTotalPerProduct(Product product) {
+        return product.getPrice().multiply(new BigDecimal(product.getTotalInCart()));
     }
 
     @Override
