@@ -12,7 +12,8 @@ public enum StatusNotification {
     UPDATED("The update was successful!"),
     SUCCESS("Success"),
     SAVED("Saved"),
-    ERROR("Error: make sure you fill in the form correctly");
+    ERROR("Error: make sure you fill in the form correctly"),
+    PAYMENT_FAIL("Payment cart failed.");
 
     private final String label;
 

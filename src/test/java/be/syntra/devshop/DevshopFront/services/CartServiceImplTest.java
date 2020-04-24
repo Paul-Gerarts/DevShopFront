@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;

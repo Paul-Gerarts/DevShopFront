@@ -11,8 +11,8 @@ public class ProductUtils {
     public static ProductDto getDummyProductDto() {
         return ProductDto.builder()
                 .id(1L)
-                .name("name")
-                .price(new BigDecimal("55"))
+                .name("product")
+                .price(new BigDecimal("88"))
                 .description("description")
                 .archived(false)
                 .build();
@@ -63,10 +63,6 @@ public class ProductUtils {
                 .description("another description")
                 .archived(true)
                 .build();
-    }
-
-    public static List<ProductDto> getDummyProductDtoList() {
-        return List.of(getDummyProductDto(), getOtherDummyProductDto());
     }
 
     public static List<Product> getDummyNonArchivedProductList() {
