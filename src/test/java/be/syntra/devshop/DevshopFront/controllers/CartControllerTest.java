@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = CartController.class,
@@ -39,7 +40,8 @@ class CartControllerTest {
 
         // then
         resultActions
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/users/cart/overview"));
 
         verify(dataStore, times(1)).getMap();
     }

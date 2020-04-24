@@ -6,15 +6,18 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
+
 public class ProductUtils {
 
     public static ProductDto getDummyProductDto() {
         return ProductDto.builder()
                 .id(1L)
-                .name("name")
-                .price(new BigDecimal("55"))
+                .name("product")
+                .price(new BigDecimal("88"))
                 .description("description")
                 .archived(false)
+                .categoryNames(List.of("Headphones"))
                 .build();
     }
 
@@ -22,6 +25,7 @@ public class ProductUtils {
         return ProductDto.builder()
                 .name("name of prod")
                 .price(new BigDecimal("1.86"))
+                .categoryNames(List.of("Headphones"))
                 .build();
     }
 
@@ -32,6 +36,7 @@ public class ProductUtils {
                 .price(new BigDecimal("88"))
                 .description("description")
                 .archived(false)
+                .categories(createCategoryList())
                 .build();
     }
 
@@ -42,6 +47,7 @@ public class ProductUtils {
                 .price(new BigDecimal("88"))
                 .description("description")
                 .archived(true)
+                .categories(createCategoryList())
                 .build();
     }
 
@@ -52,6 +58,7 @@ public class ProductUtils {
                 .price(new BigDecimal("0.99"))
                 .description("another description")
                 .archived(false)
+                .categories(createCategoryList())
                 .build();
     }
 
@@ -62,11 +69,8 @@ public class ProductUtils {
                 .price(new BigDecimal("0.99"))
                 .description("another description")
                 .archived(true)
+                .categories(createCategoryList())
                 .build();
-    }
-
-    public static List<ProductDto> getDummyProductDtoList() {
-        return List.of(getDummyProductDto(), getOtherDummyProductDto());
     }
 
     public static List<Product> getDummyNonArchivedProductList() {

@@ -1,11 +1,14 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dto.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Collections;
-
-import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
 
 @Service
 @Slf4j
@@ -35,14 +36,20 @@ public class ProductServiceImpl implements ProductService {
 
     private final CartService cartService;
     private final DataStore dataStore;
+    private final ProductMapperUtil productMapperUtil;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    public ProductServiceImpl(CartService cartService, DataStore dataStore) {
+    public ProductServiceImpl(
+            CartService cartService,
+            DataStore dataStore,
+            ProductMapperUtil productMapperUtil
+    ) {
         this.cartService = cartService;
         this.dataStore = dataStore;
+        this.productMapperUtil = productMapperUtil;
     }
 
     @PostConstruct
@@ -91,9 +98,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public CategoryList findAllCategories() {
+        ResponseEntity<CategoryList> categoryListResponseEntity = restTemplate.getForEntity(resourceUrl + "/categories", CategoryList.class);
+        if (HttpStatus.OK.equals(categoryListResponseEntity.getStatusCode())) {
+            log.info("findAllCategories() -> {}", categoryListResponseEntity.getBody());
+            return categoryListResponseEntity.getBody();
+        } else if (HttpStatus.NOT_FOUND.equals(categoryListResponseEntity.getStatusCode())) {
+            throw new CategoryNotFoundException("No categories found");
+        }
+        return new CategoryList();
+    }
+
+    @Override
     public StatusNotification archiveProduct(Product product) {
         product.setArchived(true);
-        ProductDto productDto = convertToProductDto(product);
+        ProductDto productDto = productMapperUtil.convertToProductDto(product);
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {

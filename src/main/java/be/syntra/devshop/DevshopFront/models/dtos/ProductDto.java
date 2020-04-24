@@ -5,11 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -28,7 +26,11 @@ public class ProductDto {
 
     @NotBlank(message = "This is a required field")
     private String description;
+
     private boolean archived;
+
+    @NotEmpty(message = "You must select at least one")
+    private List<String> categoryNames;
 
     @Builder.Default
     private int totalInCart = 0;
