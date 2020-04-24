@@ -16,103 +16,57 @@
     <main class="mdl-layout__content">
         <div class="page-content" th:object="${cart}">
             <span class="mdl-layout-title" id="title">Cart overview</span>
-            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
-                th:each="product : ${cart.getProducts()}">
-                <li class="mdl-list__item mdl-list__item--three-line product-tile">
-                    <span class="mdl-list__item-primary-content">
-                        <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
-                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details"
-                            style="width: 140px; height: 140px">photo</em>
-                        </a>
-                        <span th:text="${product.name}">Product Name</span>
-                        <span class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
-                            [[${product.description}]]
-                            <!--<a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}">
-                                <em class="material-icons" style="font-size: 36px; padding-top: 9px">delete_outline</em>
-                            </a>
-                            <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}">
-                                <em class="material-icons"
-                                    style="font-size: 36px; padding-top: 9px">add_circle_outline</em>
-                            </a>
-                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}">
-                                <em class="material-icons" style="font-size: 36px; padding-top: 9px">remove_circle_outline</em>
-                            </a>
-                            <label class="mdl-layout-title" th:text="${product.totalInCart}">
-                                # in cart
-                            </label>-->
 
-                        </span>
-                    </span>
-                    <span class="mdl-list__item-secondary-content">
-                        <!--<span class="mdl-list__item-text-body"
-                              style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
-                              th:text="'€ ' + ${product.price}">Product Price
-                        </span>
-                        <span>
-                            <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}">
-                                <em class="material-icons" style="font-size: 26px; padding-top: 9px">delete_outline</em>
-                            </a>
-                            <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}">
-                                <em class="material-icons"
-                                    style="font-size: 20px; padding-top: 9px">add_circle_outline</em>
-                            </a>
-                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}">
-                                <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
-                            </a>
-                            <label class="mdl-layout-title" th:text="${product.totalInCart}">
-                                # in cart
-                            </label>
-                            <label class="mdl-layout-title" th:text="'€ ' + ${product.totalInCart*product.price}">
-                                total per product
-                            </label>
-                        </span>-->
-                        <span class="mdl-list__item-text-body">
-                            <ul>
-                                <li>
-                                    <span style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
-                                          th:text="'€ ' + ${product.price}">Product Price</span>
-                                </li>
-                                <li>
-                                    <label class="mdl-layout-title" th:text="${product.totalInCart}">
-                                    # in cart
+
+            <ul class='mdl-list'>
+                <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item cart-item-display-override"
+                    th:each="product : ${cart.getProducts()}">
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--7-col"><label class="cart-product-item-title"
+                                                                     th:text="${product.name}">Product Name</label>
+                        </div>
+                        <div class="mdl-cell mdl-cell--1-col"><label class="cart-product-item-content"
+                                                                     th:text="'€ ' + ${product.price}">€ 999.99</label>
+                        </div>
+                        <div class="mdl-cell mdl-cell--2-col">
+                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}"
+                               style="text-decoration:none;">
+                                <label class="cart-product-item-content">
+                                    <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
                                 </label>
-                                </li>
-                                <li>
-                                    <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}">
+                            </a>
+                            <label class="cart-product-item-content"
+                                   th:text="${product.totalInCart}">99</label>
+                            <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}"
+                               style="text-decoration:none;">
+                                <label class="cart-product-item-content">
                                     <em class="material-icons"
                                         style="font-size: 20px; padding-top: 9px">add_circle_outline</em>
-                                    </a>
-                                    <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}">
-                                        <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
-                                    </a>
-                                </li>
-                                <li>
-                                    <label class="mdl-layout-title"
-                                           th:text="'€ ' + ${product.totalInCart*product.price}">
-                                    total per product
                                 </label>
-                                </li>
-                                <li>
-                                    <span> <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}">
+                            </a>
+                            <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}"
+                               style="text-decoration:none;">
+                                <label class="cart-product-item-content">
                                     <em class="material-icons"
                                         style="font-size: 26px; padding-top: 9px">delete_outline</em>
-                                </a>
-                               </span>
-                                </li>
+                                </label>
+                            </a>
+                        </div>
+                        <div class="mdl-cell mdl-cell--2-col"><label class="cart-product-item-title"
+                                                                     th:text="'€ ' + ${product.totalInCart*product.price}">€
+                            999.99</label></div>
+                    </div>
+                    <!--<div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell&#45;&#45;6-col">6</div>
+                        <div class="mdl-cell mdl-cell&#45;&#45;4-col">4</div>
+                        <div class="mdl-cell mdl-cell&#45;&#45;2-col">2</div>
+                    </div>-->
 
-                            </ul>
-                    </span>
-                        <!-- <span class="mdl-list__item-secondary-content">
-                             <a th:href="@{/cart/details}">
-                                 &lt;!&ndash;<em class="material-icons home-logo" style="font-size: 36px; padding-top: 9px">delete_outline</em>&ndash;&gt;
-                                 <em class="material-icons" style="font-size: 36px; padding-top: 9px">delete_outline</em>
-                              </a>
-                         </span>-->
                 </li>
             </ul>
         </div>
         <div class="page-content" th:object="${payment}">
-            <span class="mdl-layout-title" id="title">Payment</span>
+            <span class="mdl-layout-title">Payment</span>
             <ul class="payment-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
                 th:each="paymentoption : ${payment.getPaymentOptions()}">
                 <label class="mdl-list__item-text-body"
