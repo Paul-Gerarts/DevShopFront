@@ -10,6 +10,8 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil.convertToProductDto;
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
@@ -50,12 +52,20 @@ class AdminControllerTest {
     @MockBean
     private SearchService searchService;
 
+    @MockBean
+    private ProductMapperUtil productMapperUtil;
+
+    @MockBean
+    private CategoryMapperUtil categoryMapperUtil;
+
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void displayAddProductsFrom() throws Exception {
 
         //given
+        List<Category> categories = createCategoryList();
         when(productService.createEmptyProduct()).thenReturn(new ProductDto());
+        when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
 
         //when
         final ResultActions getResult = mockMvc.perform(get("/admin/addproduct"));
@@ -78,6 +88,9 @@ class AdminControllerTest {
 
         // given
         ProductDto dummyProductDto = getDummyProductDto();
+        List<Category> categories = createCategoryList();
+        String[] categoryNames = {"Headphones"};
+        when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
         when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
 
         // when
@@ -85,10 +98,11 @@ class AdminControllerTest {
                 post("/admin/addproduct")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("id", String.valueOf(1))
-                        .param("name", "name")
-                        .param("price", "55")
+                        .param("name", "product")
+                        .param("price", "88")
                         .param("description", "description")
-                        .param("archived", String.valueOf(false)));
+                        .param("archived", String.valueOf(false))
+                        .param("categoryNames", categoryNames));
 
         // then
         postRestult
@@ -126,8 +140,13 @@ class AdminControllerTest {
     void displayAddProductFormWhenEditingTest() throws Exception {
         //given
         Product dummyProduct = getDummyNonArchivedProduct();
-        ProductDto dummyProductDto = convertToProductDto(dummyProduct);
+        ProductDto dummyProductDto = getDummyProductDto();
+        List<Category> categories = createCategoryList();
+        List<String> categoryNames = List.of("Headphones");
+        when(categoryMapperUtil.mapToCategoryNames(categories)).thenReturn(categoryNames);
+        when(productMapperUtil.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
 
         //when
         final ResultActions getResult = mockMvc.perform(get("/admin/product/" + dummyProduct.getId() + "/edit"));
@@ -149,16 +168,20 @@ class AdminControllerTest {
     void getUpdatedProductTest() throws Exception {
         // given
         ProductDto dummyProductDto = getDummyProductDto();
+        List<Category> categories = createCategoryList();
+        String[] categoryNames = {"Headphones"};
+        when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
         when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
 
         // when
         final ResultActions postRestult = mockMvc.perform(
                 post("/admin/product/" + dummyProductDto.getId() + "/edit")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .param("name", "name")
-                        .param("price", "55")
+                        .param("name", "product")
+                        .param("price", "88")
                         .param("description", "description")
-                        .param("archived", String.valueOf(false)));
+                        .param("archived", String.valueOf(false))
+                        .param("categoryNames", categoryNames));
 
         // then
         postRestult

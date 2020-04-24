@@ -54,6 +54,18 @@
                             <label class="mdl-checkbox__label">Product archived</label>
                         </label>
                     </div>
+                    <div class="mdl-cell mdl-cell--2-col checkbox_layout" style="padding-top: initial">
+                        <h5 style="color: black">Select categories</h5>
+                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
+                               th:each="category: ${categories}">
+                            <input class="mdl-checkbox__input" type="checkbox" th:field="*{categoryNames}"
+                                   th:value="${category.name}"/>
+                            <label class="mdl-checkbox__label" th:for="${#ids.next('categoryNames')}"
+                                   th:text="${category.name}"></label>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('categoryNames')}"
+                                   th:errors="*{categoryNames}"></small>
+                        </label>
+                    </div>
                 </div>
                 <button class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         th:disabled="${status != null && status.label.equals('Saved')}">

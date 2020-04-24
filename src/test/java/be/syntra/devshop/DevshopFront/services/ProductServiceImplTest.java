@@ -1,10 +1,14 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
+import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +39,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RestClientTest(ProductServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
-@Import({TestWebConfig.class, JsonUtils.class})
+@Import({TestWebConfig.class, JsonUtils.class, ProductMapperUtil.class})
 class ProductServiceImplTest {
 
     @Autowired
@@ -51,6 +56,12 @@ class ProductServiceImplTest {
 
     @Autowired
     ProductServiceImpl productService;
+
+    @MockBean
+    ProductMapperUtil productMapperUtil;
+
+    @MockBean
+    CategoryMapperUtil categoryMapperUtil;
 
     @MockBean
     CartService service;
@@ -184,5 +195,30 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(StatusNotification.UPDATED, statusNotification);
+    }
+
+    @Test
+    void canGetAllCategoriesTest() {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryListDummy = new CategoryList(categories);
+        final String categoriesAsJson = jsonUtils.asJsonString(categoryListDummy);
+        final String expectedEndpoint = baseUrl + endpoint + "/categories";
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(categoriesAsJson));
+
+        // when
+        CategoryList result = productService.findAllCategories();
+
+        // then
+        mockServer.verify();
+        assertThat(result.getCategories().size()).isEqualTo(categories.size());
     }
 }
