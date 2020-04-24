@@ -32,4 +32,13 @@
     </main>
 </div>
 </body>
+<script th:inline="javascript">
+    const regex = new RegExp('admin/overview');
+    const adminButton = document.getElementById("adminButton");
+    const isOnPage = !!location.href.match(regex);
+    if (isOnPage) {
+        adminButton.disabled = isOnPage;
+        adminButton.style.display = "none";
+    }
+</script>
 </html>
