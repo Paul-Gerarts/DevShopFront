@@ -67,7 +67,7 @@
                                                                      th:text="'€ ' + ${product.totalInCart*product.price}">€
                             999.99</label></div>
                     </div>
-                    <dialog th:if="${product.totalInCart > 1}" th:id="${'dialogid'+index.count}" class="mdl-dialog">
+                    <dialog th:if="${product.totalInCart == 1}" th:id="${'dialogid'+index.count}" class="mdl-dialog">
                         <h4 class="mdl-dialog__title">Remove this product from the Cart?</h4>
                         <div class="mdl-dialog__content">
                             <p>
@@ -111,29 +111,23 @@
         </div>
     </main>
 </div>
-
-<!--logic for showing popup-->
 <script>
-    var allDialogs = document.querySelectorAll('dialog');
-    var allActiveMinusButtons = document.querySelectorAll('.show-modal');
+    const allApplicableDialogs = document.querySelectorAll('dialog');
+    const allActiveMinusButtons = document.getElementsByClassName("show-modal");
 
-    for (var a = 0; a < allDialogs.length; a++) {
-        if (!allDialogs[a].showModal) {
-            dialogPolyfill.registerDialog(allDialogs[a]);
+    for(let a = 0 ; a < allApplicableDialogs.length; a++) {
+        if (!allApplicableDialogs[a].showModal) {
+            dialogPolyfill.registerDialog(allApplicableDialogs[a]);
         }
     }
-
-    function addEventListenerAddModalAddCloseToModal(button, dialog) {
-        button.addEventListener('click', function () {
-            dialog.showModal();
+    for (let i = 0; i < allActiveMinusButtons.length; i++) {
+        allActiveMinusButtons[i].addEventListener('click', function () {
+            let number = i + 1;
+            const correspondingDialog = document.getElementById('dialogid' + number);
+            correspondingDialog.showModal();
+            correspondingDialog.querySelector('.close').addEventListener('click', function () {
+                correspondingDialog.close();})
         });
-        dialog.querySelector('.close').addEventListener('click', function f() {
-            dialog.close();
-        });
-    }
-
-    for (var b = 0; b < allActiveMinusButtons; b++) {
-        addEventListenerAddModalAddCloseToModal(allActiveMinusButtons[b], allDialogs[b]);
     }
 </script>
 </body>
