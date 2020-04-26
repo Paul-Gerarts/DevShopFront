@@ -59,7 +59,7 @@ public class ProductController {
         return "product/productDetails";
     }
 
-    private boolean isProductListCacheEmpty(@PathVariable Long id) {
+    private boolean isProductListCacheEmpty(Long id) {
         return null == productListCacheService.findById(id);
     }
 

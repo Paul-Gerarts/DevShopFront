@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
-import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
@@ -34,9 +33,6 @@ class UserControllerTest {
     @MockBean
     CartService cartService;
 
-    @MockBean
-    PaymentDto paymentDto;
-
     @Test
     @WithMockUser(roles = {"USER"})
     void displayCartWhenLoggedIn() throws Exception {
@@ -49,7 +45,6 @@ class UserControllerTest {
         // then
         getResult.andExpect(status().isOk())
                 .andExpect(model().attributeExists("cart"))
-                .andExpect(model().attributeExists("payment"))
                 .andExpect(view().name("user/cartOverview"));
 
         verify(cartService, times(1)).getCart();

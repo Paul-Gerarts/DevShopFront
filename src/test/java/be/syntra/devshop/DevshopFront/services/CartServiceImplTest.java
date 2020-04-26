@@ -59,7 +59,7 @@ class CartServiceImplTest {
         cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
 
         // when
-        cartService.addOneToProductInCart(1l);
+        cartService.addOneToProductInCart(1L);
 
         // then
         assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 2);
@@ -72,7 +72,7 @@ class CartServiceImplTest {
         currentCart.getProducts().get(0).setTotalInCart(3);
 
         // when
-        cartService.removeOneFromProductInCart(1l);
+        cartService.removeOneFromProductInCart(1L);
 
         // then
         assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 2);
@@ -84,7 +84,7 @@ class CartServiceImplTest {
         cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
 
         // when
-        cartService.removeProductFromCart(1l);
+        cartService.removeProductFromCart(1L);
 
         // then
         assertEquals(currentCart.getProducts().size(), 0);

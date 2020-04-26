@@ -1,3 +1,5 @@
+/*file specific styling*/
+
 .mdl-dialog {
     top: 45%;
     width: 33%;
@@ -80,7 +82,7 @@
     order: 5;
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 0%;
+    flex-basis: 0;
 }
 
 .cart-product-item-flex-product-total {

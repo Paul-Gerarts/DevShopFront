@@ -2,16 +2,13 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -45,36 +42,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public StatusNotification payCart(CartDto cartDto) {
-        // cartDto is send to backend through rest template url with the users name which is the email.
-        return StatusNotification.SUCCESS;
-    }
-
-    @Override
-    public void cartTotalPrice(PaymentDto paymentDto) {
-        paymentDto.setTotalPrice(getCart().getProducts().stream()
-                .map(this::getTotalPerProduct)
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
-    }
-
-    private BigDecimal getTotalPerProduct(Product product) {
-        return product.getPrice().multiply(new BigDecimal(product.getTotalInCart()));
-    }
-
-    @Override
     public void addOneToProductInCart(Long productId) {
-        Product productToAlter = getProductById(productId);
+        Product productToAlter = getProductFromCartById(productId);
         // todo: DEV-034: update in cachedProducts-replacement
         productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
     }
 
     @Override
     public void removeOneFromProductInCart(Long productId) {
-        Product productToAlter = getProductById(productId);
+        Product productToAlter = getProductFromCartById(productId);
+        final int totalInCart = productToAlter.getTotalInCart();
         // todo: DEV-034: update in cachedProducts-replacement
-        productToAlter.setTotalInCart(productToAlter.getTotalInCart() - 1);
-        if (productToAlter.getTotalInCart() == 0) {
+        productToAlter.setTotalInCart(totalInCart - 1);
+        if (totalInCart == 1) {
             // todo: DEV-034: update in cachedProducts-replacement
             removeProductFromCart(productId);
         }
@@ -82,15 +62,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeProductFromCart(Long productId) {
-        Product productToRemove = getProductById(productId);
+        Product productToRemove = getProductFromCartById(productId);
         // todo: DEV-034: update in cachedProducts-replacement
         productToRemove.setTotalInCart(0);
         currentCart.getProducts().remove(productToRemove);
     }
 
-    private Product getProductById(Long productId) {
+    private Product getProductFromCartById(Long productId) {
         return currentCart.getProducts().stream()
-                .filter(product -> product.getId() == productId)
+                .filter(product -> product.getId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
