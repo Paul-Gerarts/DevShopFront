@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.exceptions.UserNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
@@ -62,10 +63,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public StatusNotification payCart(CartDto cartDto, Principal user) {
-        setUserName(cartDto, user.getName());
+    public StatusNotification payCart(CartDto cartDto, Principal userName) {
+        setUserName(cartDto, getUsername(userName));
+        log.info("username() -> {}", cartDto.getUser());
         setCartToFinalized(cartDto);
         HttpEntity<CartDto> requestDto = new HttpEntity<>(cartDto);
+        log.info("cart() -> {}", cartDto.toString());
 
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, requestDto, CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
@@ -73,6 +76,12 @@ public class CartServiceImpl implements CartService {
             return StatusNotification.SUCCESS;
         }
         return StatusNotification.PAYMENT_FAIL;
+    }
+
+    private String getUsername(Principal user) {
+        return userRepository.findByUserName(user.getName())
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with name %s could not be found", user.getName())))
+                .getUsername();
     }
 
     private void setUserName(CartDto cartDto, String user) {
