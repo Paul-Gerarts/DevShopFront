@@ -17,55 +17,66 @@
     <main class="mdl-layout__content">
         <div class="page-content" th:object="${cart}">
             <span class="mdl-layout-title" id="title">Cart overview</span>
-            <ul class='mdl-list'>
-                <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item cart-item-display-override"
+            <label th:if="${cart.getProducts().size() < 1}">No products in your cart, please use the overview or search
+                to discover products to add to your cart.</label>
+            <ul class="mdl-list">
+                <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item-flex"
                     th:each="product,index : ${cart.getProducts()}">
-                    <div class="mdl-grid">
-                        <div class="mdl-cell mdl-cell--7-col"><label class="cart-product-item-title"
-                                                                     th:text="${product.name}">Product Name</label>
-                        </div>
-                        <div class="mdl-cell mdl-cell--1-col"><label class="cart-product-item-content"
-                                                                     th:text="'€ ' + ${product.price}">€ 999.99</label>
-                        </div>
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <!-- show the regular link when numberInCart is > 1 -->
-                            <span th:if="${product.totalInCart > 1}">
-                                <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}"
-                                   style="text-decoration: none;">
-                                    <label class="cart-product-item-content cart-detail-href">
-                                        <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
-                                    </label>
-                                </a>
-                            </span>
-                            <!-- if above is not true show this link that just links to the modal by the css class name -->
-                            <span th:unless="${product.totalInCart > 1}">
-                                <a th:id="${'minusid'+index.count}" style="text-decoration: none;">
-                                    <label class="cart-product-item-content cart-detail-href ">
-                                        <em class="material-icons show-modal" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
-                                    </label>
-                                </a>
-                            </span>
-                            <label class="cart-product-item-content"
-                                   th:text="${product.totalInCart}">99</label>
-                            <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}"
+                    <a th:href="@{/products/details/{id}(id=${product.id})}"
+                       class="cart-detail-href cart-product-item-flex-product-title" style="color: black;">
+                        <label class="cart-product-item-title cart-detail-href"
+                               th:text="${product.name}">Product Name</label>
+                    </a>
+                    <div class="cart-product-item-flex-product-price">
+                        <label class="cart-product-item-content"
+                               th:text="'€ ' + ${product.price}">€ 999.99</label>
+                    </div>
+                    <div class="cart-product-item-flex-product-minus">
+                        <!-- show the regular link when numberInCart is > 1 -->
+                        <span th:if="${product.totalInCart > 1}">
+                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}"
                                style="text-decoration: none;">
                                 <label class="cart-product-item-content cart-detail-href">
-                                    <em class="material-icons"
-                                        style="font-size: 20px; padding-top: 9px">add_circle_outline</em>
+                                    <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
                                 </label>
                             </a>
-                            <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}"
-                               style="text-decoration: none;">
-                                <label class="cart-product-item-content cart-detail-href">
-                                    <em class="material-icons"
-                                        style="font-size: 26px; padding-top: 9px">delete_outline</em>
+                        </span>
+                        <!-- if above is not true show this link that just links to the modal by the css class name -->
+                        <span th:unless="${product.totalInCart > 1}">
+                            <a style="text-decoration: none;">
+                                <label class="cart-product-item-content cart-detail-href ">
+                                    <em th:id="${'minusid'+index.count}" class="material-icons show-modal"
+                                        style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
                                 </label>
                             </a>
-
-                        </div>
-                        <div class="mdl-cell mdl-cell--2-col"><label class="cart-product-item-title"
-                                                                     th:text="'€ ' + ${product.totalInCart*product.price}">€
-                            999.99</label></div>
+                        </span>
+                    </div>
+                    <div class="cart-product-item-flex-product-count">
+                        <label class="cart-product-item-content"
+                               th:text="${product.totalInCart}">99</label>
+                    </div>
+                    <div class="cart-product-item-flex-product-plus">
+                        <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}"
+                           style="text-decoration: none;">
+                            <label class="cart-product-item-content cart-detail-href">
+                                <em class="material-icons"
+                                    style="font-size: 20px; padding-top: 9px">add_circle_outline</em>
+                            </label>
+                        </a>
+                    </div>
+                    <div class="cart-product-item-flex-product-total">
+                        <label class="cart-product-item-title"
+                               th:text="'€ ' + ${product.totalInCart*product.price}">€
+                            999.99</label>
+                    </div>
+                    <div class="cart-product-item-flex-product-delete">
+                        <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}"
+                           style="text-decoration: none;">
+                            <label class="cart-product-item-content cart-detail-href">
+                                <em class="material-icons"
+                                    style="font-size: 26px; padding-top: 9px">delete_outline</em>
+                            </label>
+                        </a>
                     </div>
                     <dialog th:if="${product.totalInCart == 1}" th:id="${'dialogid'+index.count}" class="mdl-dialog">
                         <h4 class="mdl-dialog__title">Remove this product from the Cart?</h4>
@@ -92,23 +103,6 @@
                 </li>
             </ul>
         </div>
-        <div class="page-content" th:object="${payment}">
-            <span class="mdl-layout-title">Payment</span>
-            <ul class="payment-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
-                th:each="paymentoption : ${payment.getPaymentOptions()}">
-                <label class="mdl-list__item-text-body"
-                       style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
-                       th:text="'€ ' + ${payment.getTotalPrice()}">Total Price</label>
-                <li class="mdl-list__item mdl-list__item--three-line product-tile">
-                    <span class="mdl-list__item-secondary-content">
-                       <a class="cart-detail-href" th:href="${paymentoption.getLink()}">
-                          <span class="mdl-layout-title"
-                                style="font-size: 20px; color: black; margin:auto; text-align: center"
-                                th:text="${paymentoption.description}">Payment option description</span></a>
-                    </span>
-                </li>
-            </ul>
-        </div>
     </main>
 </div>
 <script>
@@ -122,12 +116,10 @@
     }
 
     for (let i = 0; i < allActiveMinusButtons.length; i++) {
-        const number = i + 1;
+        const number = allActiveMinusButtons[i].getAttribute('id').replace('minusid', '');
         const correspondingDialog = document.getElementById('dialogid' + number);
-
         allActiveMinusButtons[i].addEventListener('click', function () {
             correspondingDialog.showModal();
-
         });
         correspondingDialog.querySelector('.close').addEventListener('click', function () {
             correspondingDialog.close();
