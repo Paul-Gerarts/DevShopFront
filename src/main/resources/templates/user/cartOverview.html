@@ -118,7 +118,7 @@
     var allActiveMinusButtons = document.querySelectorAll('.show-modal');
 
     for (var a = 0; a < allDialogs.length; a++) {
-        if (!allDialogs[a].showModal()) {
+        if (!allDialogs[a].showModal) {
             dialogPolyfill.registerDialog(allDialogs[a]);
         }
     }
