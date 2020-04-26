@@ -115,18 +115,22 @@
     const allApplicableDialogs = document.querySelectorAll('dialog');
     const allActiveMinusButtons = document.getElementsByClassName("show-modal");
 
-    for(let a = 0 ; a < allApplicableDialogs.length; a++) {
-        if (!allApplicableDialogs[a].showModal) {
-            dialogPolyfill.registerDialog(allApplicableDialogs[a]);
+    for (applicableDialog of allApplicableDialogs) {
+        if (!applicableDialog.showModal) {
+            dialogPolyfill.registerDialog(applicableDialog);
         }
     }
+
     for (let i = 0; i < allActiveMinusButtons.length; i++) {
+        const number = i + 1;
+        const correspondingDialog = document.getElementById('dialogid' + number);
+
         allActiveMinusButtons[i].addEventListener('click', function () {
-            let number = i + 1;
-            const correspondingDialog = document.getElementById('dialogid' + number);
             correspondingDialog.showModal();
-            correspondingDialog.querySelector('.close').addEventListener('click', function () {
-                correspondingDialog.close();})
+
+        });
+        correspondingDialog.querySelector('.close').addEventListener('click', function () {
+            correspondingDialog.close();
         });
     }
 </script>
