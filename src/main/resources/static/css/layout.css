@@ -236,3 +236,9 @@ html, body, .spinner {
     top: 500px;
     left: 75%;
 }
+
+.category-dropdown {
+    height: 35px;
+    font-size: 18px;
+    width: 270px;
+}

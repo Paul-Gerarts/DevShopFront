@@ -85,6 +85,12 @@ public class AdminController {
         return "product/productOverview";
     }
 
+    @GetMapping("/manage_category")
+    public String displayCategoryForm(Model model) {
+        addCategoriesModel(model);
+        return "admin/product/addCategory";
+    }
+
     private String handleChangedProductForm(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         addCategoriesModel(model);
         return (!bindingResult.hasErrors())
