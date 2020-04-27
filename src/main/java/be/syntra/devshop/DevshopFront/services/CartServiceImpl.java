@@ -53,10 +53,10 @@ public class CartServiceImpl implements CartService {
         Product productToAlter = getProductFromCartById(productId);
         final int totalInCart = productToAlter.getTotalInCart();
         // todo: DEV-034: update in cachedProducts-replacement
-        productToAlter.setTotalInCart(totalInCart - 1);
         if (totalInCart == 1) {
-            // todo: DEV-034: update in cachedProducts-replacement
             removeProductFromCart(productId);
+        } else {
+            productToAlter.setTotalInCart(totalInCart - 1);
         }
     }
 
