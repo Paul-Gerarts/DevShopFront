@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.factories.UserFactory;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dto.RegisterUserDto;
+import be.syntra.devshop.DevshopFront.models.dtos.RegisterUserDto;
 import be.syntra.devshop.DevshopFront.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 
 import static be.syntra.devshop.DevshopFront.models.UserRoles.ROLE_USER;
 

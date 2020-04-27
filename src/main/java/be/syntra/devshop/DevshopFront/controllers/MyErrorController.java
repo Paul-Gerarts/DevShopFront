@@ -1,6 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
-import be.syntra.devshop.DevshopFront.models.dto.ErrorDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ErrorDto;
 import be.syntra.devshop.DevshopFront.services.ErrorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

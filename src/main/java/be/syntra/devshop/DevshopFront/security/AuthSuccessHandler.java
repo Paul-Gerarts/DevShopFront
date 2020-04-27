@@ -47,7 +47,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 if (checkDataStoreForRedirectStrategyAfterLogin()) {
                     log.info("determineTargetUrl()");
                     disableDataStoreRedirectStrategyAfterLogin();
-                    return "/users/cart";
+                    return "/users/cart/overview";
                 }
                 return "/products";
             } else {

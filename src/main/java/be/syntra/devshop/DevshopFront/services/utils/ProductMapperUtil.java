@@ -1,7 +1,7 @@
 package be.syntra.devshop.DevshopFront.services.utils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.dto.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,21 +1,16 @@
-package be.syntra.devshop.DevshopFront.models.dto;
+package be.syntra.devshop.DevshopFront.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class LogInDto {
 
-    private String token;
     private String userName;
-    private List<String> authorities;
-    private Long userId;
     private String password;
 }

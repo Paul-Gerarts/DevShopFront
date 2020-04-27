@@ -1,4 +1,4 @@
-package be.syntra.devshop.DevshopFront.models.dto;
+package be.syntra.devshop.DevshopFront.models.dtos;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import lombok.*;
