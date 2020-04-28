@@ -1,16 +1,14 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
 import be.syntra.devshop.DevshopFront.models.PaymentOption;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Builder
 public class PaymentDto {

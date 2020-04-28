@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.UserNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
@@ -94,6 +95,7 @@ public class CartServiceImpl implements CartService {
                 .filter(product -> product.getId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
+    }
     @Override
     public StatusNotification payCart(CartDto cartDto, Principal userName) {
         setUserName(cartDto, getUsername(userName));
@@ -128,7 +130,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void cartTotalPrice(PaymentDto paymentDto) {
-        paymentDto.setTotalPrice(getCart().getProducts().stream()
+        paymentDto.setTotalCartPrice(getCart().getProducts().stream()
                 .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
