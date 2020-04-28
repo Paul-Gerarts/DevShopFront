@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -62,6 +62,8 @@ public class UserController {
     public String removeCartProduct(@PathVariable Long id) {
         cartService.removeProductFromCart(id);
         return "redirect:/users/cart/overview";
+    }
+
     @PostMapping("/cart/overview")
     public String payCart(Model model, Principal user) {
         log.info(user.getName());
