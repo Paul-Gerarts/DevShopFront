@@ -1,7 +1,6 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,38 +32,42 @@ public class UserController {
         return "redirect:/users/cart/detail";
     }
 
-    @GetMapping("/cart/overview")
+    @GetMapping("/cart/detail")
     public String displayCartOverview(Model model) {
         log.info("displayCartOverview()");
         model.addAttribute("cart", cartService.getCart());
         PaymentDto paymentDto = new PaymentDto();
         cartService.cartTotalPrice(paymentDto);
-        CartDto cartDto = cartService.getCart();
-        model.addAttribute("cart", cartDto);
         model.addAttribute("payment", paymentDto);
-        log.info("displayCartOverview() -> {}", cartDto.isActiveCart());
         return "user/cartOverview";
     }
 
     @GetMapping("/cart/details/plus_one/{id}")
-    public String increaseCartProduct(@PathVariable Long id) {
+    public String increaseCartProduct(@PathVariable Long id, Model model) {
         cartService.addOneToProductInCart(id);
-        return "redirect:/users/cart/overview";
+        PaymentDto paymentDto = new PaymentDto();
+        cartService.cartTotalPrice(paymentDto);
+        model.addAttribute("payment", paymentDto);
+        return "redirect:/users/cart/detail";
     }
 
     @GetMapping("/cart/details/minus_one/{id}")
     public String decreaseCartProduct(@PathVariable Long id) {
         cartService.removeOneFromProductInCart(id);
-        return "redirect:/users/cart/overview";
+        PaymentDto paymentDto = new PaymentDto();
+        cartService.cartTotalPrice(paymentDto);
+        return "redirect:/users/cart/detail";
     }
 
     @GetMapping("/cart/details/delete/{id}")
     public String removeCartProduct(@PathVariable Long id) {
         cartService.removeProductFromCart(id);
-        return "redirect:/users/cart/overview";
+        PaymentDto paymentDto = new PaymentDto();
+        cartService.cartTotalPrice(paymentDto);
+        return "redirect:/users/cart/detail";
     }
 
-    @PostMapping("/cart/overview")
+    @PostMapping("/cart/detail")
     public String payCart(Model model, Principal user) {
         log.info(user.getName());
         PaymentDto paymentDto = new PaymentDto();

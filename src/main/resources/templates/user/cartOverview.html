@@ -102,58 +102,33 @@
                     </dialog>
                 </li>
             </ul>
-        <div class="page-content">
-            <div class="payment-content" th:object="${cart}">
-                <span class="mdl-layout-title" id="title">Cart overview</span>
-                <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
-                    th:each="product : ${cart.getProducts()}">
-                    <li class="mdl-list__item mdl-list__item--three-line product-tile">
-                    <span class="mdl-list__item-primary-content">
-                        <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
-                        <em class="material-icons mdl-list__item-avatar" data-th-title="Details"
-                            style="width: 140px; height: 140px">photo</em>
-                        </a>
-                        <em th:text="${product.name}">Product Name</em>
-                        <em class="mdl-list__item-text-body" style="font-size: x-large; padding-top: 30px">
-                            [[${product.description}]]
-                        </em>
-                    </span>
-                        <span class="mdl-list__item-secondary-content">
-                        <em class="mdl-list__item-text-body"
-                            style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
-                            th:text="'€ ' + ${product.price}">Product Price</em>
-                    </span>
-                    </li>
-                </ul>
-            </div>
-            <div class="search-filters">
-                <span class="mdl-layout-title">Payment</span>
-                <a class="mdl-layout-title "
-                   th:text="'Total price: € ' + ${payment.getTotalPrice()}">Total Price
-                </a>
-                <ul class="mdl-list mdl-color--grey-100 mdl-shadow--8dp" style="padding-right: 10%"
-                    th:each="paymentoption : ${payment.getPaymentOptions()}">
-                    <span class="mdl-list__item-primary-content">
-                       <input type="radio"><em
-                            style="font-size: 25px; color: black; margin:auto; "
-                            th:text="${paymentoption.getDescription()}"></em>
-                    </span>
-                </ul>
-                <form method="post" th:object="${cart}">
-                    <button type="submit"
-                            class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                            th:disabled="${status != null && status.label.equals('Saved')  }">
-                        Checkout
-                    </button>
-                </form>
-            </div>
-            <div th:if="${status != null}">
-                <br>
-                <span class="mdl-chip mdl-chip--deletable">
+        </div>
+        <div class="search-filters" th:object="${payment}">
+            <span class="mdl-layout-title">Payment</span>
+            <label class="mdl-layout-title "
+                   th:text="'Total price: € ' + ${payment.getTotalCartPrice()}">Total Price
+            </label>
+            <ul class="payment-list-item" th:object="${payment}"
+                th:each="paymentoption : ${payment.getPaymentOptions()}">
+                <input type="radio">
+                <em
+                        style="font-size: 25px; color: black; margin:auto "
+                        th:text="${paymentoption.getDescription()}"></em>
+            </ul>
+            <form method="post" th:object="${cart}">
+                <button type="submit"
+                        class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                        th:disabled="${status != null && status.label.equals('Saved')  }">
+                    Checkout
+                </button>
+            </form>
+        </div>
+        <div th:if="${status != null}">
+            <br>
+            <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
                 </span>
-            </div>
         </div>
     </main>
 </div>
