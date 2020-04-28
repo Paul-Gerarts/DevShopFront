@@ -8,7 +8,7 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,12 +86,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findAllNonArchived() {
+    public ProductListDto findAllNonArchived() {
         return retrieveProductListFrom(resourceUrl);
     }
 
     @Override
-    public ProductList findAllArchived() {
+    public ProductListDto findAllArchived() {
         return retrieveProductListFrom(resourceUrl + "/archived");
     }
 
@@ -132,13 +132,13 @@ public class ProductServiceImpl implements ProductService {
         return StatusNotification.ERROR;
     }
 
-    private ProductList retrieveProductListFrom(String resourceUrl) {
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductList.class);
+    private ProductListDto retrieveProductListFrom(String resourceUrl) {
+        ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductListDto.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findProductList() -> products retrieved from backEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return new ProductListDto(Collections.emptyList());
     }
 
     @Override
@@ -147,13 +147,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findBySearchRequest(SearchModel searchModel) {
+    public ProductListDto findBySearchRequest(SearchModel searchModel) {
         List<Product> result = executeSearch(searchModel.getSearchRequest());
         return getSearchResultsOrAllProducts(result);
     }
 
     @Override
-    public ProductList sortListByName(List<Product> products, SearchModel searchModel) {
+    public ProductListDto sortListByName(List<Product> products, SearchModel searchModel) {
         final Comparator<Product> productNameComparator = (searchModel.isSortAscendingName())
                 ? Comparator.comparing(Product::getName)
                 : Comparator.comparing(Product::getName).reversed();
@@ -161,15 +161,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList sortListByPrice(List<Product> products, SearchModel searchModel) {
+    public ProductListDto sortListByPrice(List<Product> products, SearchModel searchModel) {
         final Comparator<Product> productPriceComparator = (searchModel.isSortAscendingPrice())
                 ? Comparator.comparing(Product::getPrice)
                 : Comparator.comparing(Product::getPrice).reversed();
         return getSortedList(products, productPriceComparator);
     }
 
-    private ProductList getSortedList(List<Product> products, Comparator<Product> productComparator) {
-        return new ProductList(
+    private ProductListDto getSortedList(List<Product> products, Comparator<Product> productComparator) {
+        return new ProductListDto(
                 products
                         .stream()
                         .sorted(productComparator)
@@ -199,7 +199,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList filterByPrice(List<Product> products, SearchModel searchModel) {
+    public ProductListDto filterByPrice(List<Product> products, SearchModel searchModel) {
         setAppliedFiltersToSearchModel(searchModel);
         List<Product> result = products
                 .parallelStream()
@@ -209,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList searchForProductDescription(List<Product> products, SearchModel searchModel) {
+    public ProductListDto searchForProductDescription(List<Product> products, SearchModel searchModel) {
         setAppliedFiltersToSearchModel(searchModel);
         List<Product> result = executeDescriptionSearch(products, searchModel.getDescription());
         return getSearchResultsOrAllProducts(result);
@@ -225,11 +225,11 @@ public class ProductServiceImpl implements ProductService {
         searchService.setPriceHigh(priceHigh);
     }
 
-    private ProductList getSearchResultsOrAllProducts(List<Product> result) {
+    private ProductListDto getSearchResultsOrAllProducts(List<Product> result) {
         searchService.setSearchFailure(result.isEmpty());
         return result.isEmpty()
-                ? new ProductList(findAllNonArchived().getProducts())
-                : new ProductList(result);
+                ? new ProductListDto(findAllNonArchived().getProducts())
+                : new ProductListDto(result);
     }
 
     private void setAppliedFiltersToSearchModel(SearchModel searchModel) {

@@ -1,6 +1,5 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
-import be.syntra.devshop.DevshopFront.models.Product;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ProductList {
+public class ProductDtoListDto {
 
-    private List<Product> products;
+    private List<ProductDto> products;
 }

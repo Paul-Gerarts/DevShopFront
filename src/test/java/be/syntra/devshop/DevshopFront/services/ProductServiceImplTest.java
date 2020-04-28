@@ -6,7 +6,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -116,8 +116,8 @@ class ProductServiceImplTest {
     void findAllNonArchivedTest() {
         // given
         final List<Product> dummyProductList = getDummyNonArchivedProductList();
-        final ProductList expectedProductList = new ProductList(dummyProductList);
-        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductList);
+        final ProductListDto expectedProductListDto = new ProductListDto(dummyProductList);
+        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductListDto);
         final String expectedEndpoint = baseUrl + endpoint;
         mockServer
                 .expect(requestTo(expectedEndpoint))
@@ -126,19 +126,19 @@ class ProductServiceImplTest {
                         withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        final ProductList receivedProductList = productService.findAllNonArchived();
+        final ProductListDto receivedProductListDto = productService.findAllNonArchived();
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
+        assertEquals(expectedProductListDto.getProducts().size(), receivedProductListDto.getProducts().size());
     }
 
     @Test
     void findAllArchivedTest() {
         // given
         final List<Product> dummyArchivedProductList = getDummyArchivedProductList();
-        final ProductList expectedProductList = new ProductList(dummyArchivedProductList);
-        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(expectedProductList);
+        final ProductListDto expectedProductListDto = new ProductListDto(dummyArchivedProductList);
+        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(expectedProductListDto);
         final String expectedEndpoint = baseUrl + endpoint + "/archived";
         mockServer
                 .expect(requestTo(expectedEndpoint))
@@ -147,11 +147,11 @@ class ProductServiceImplTest {
                         withSuccess(dummyArchivedProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        final ProductList receivedProductList = productService.findAllArchived();
+        final ProductListDto receivedProductListDto = productService.findAllArchived();
 
         // then
         mockServer.verify();
-        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
+        assertEquals(expectedProductListDto.getProducts().size(), receivedProductListDto.getProducts().size());
     }
 
     @Test

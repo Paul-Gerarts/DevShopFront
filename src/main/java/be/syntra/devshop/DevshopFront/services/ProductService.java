@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 
 import java.util.List;
 
@@ -27,12 +27,12 @@ public interface ProductService {
 
     /***
      * to retrieve all products present from the backend
-     * returns a ProductList object
-     * @return ProductList
+     * returns a ProductListDto object
+     * @return ProductListDto
      */
-    ProductList findAllNonArchived();
+    ProductListDto findAllNonArchived();
 
-    ProductList findAllArchived();
+    ProductListDto findAllArchived();
 
     Product findById(Long id);
 
@@ -46,15 +46,15 @@ public interface ProductService {
 
     CategoryList findAllCategories();
 
-    ProductList findBySearchRequest(SearchModel searchModel);
+    ProductListDto findBySearchRequest(SearchModel searchModel);
 
-    ProductList sortListByName(List<Product> products, SearchModel searchModel);
+    ProductListDto sortListByName(List<Product> products, SearchModel searchModel);
 
-    ProductList sortListByPrice(List<Product> products, SearchModel searchModel);
+    ProductListDto sortListByPrice(List<Product> products, SearchModel searchModel);
 
-    ProductList filterByPrice(List<Product> products, SearchModel searchModel);
+    ProductListDto filterByPrice(List<Product> products, SearchModel searchModel);
 
-    ProductList searchForProductDescription(List<Product> products, SearchModel searchModel);
+    ProductListDto searchForProductDescription(List<Product> products, SearchModel searchModel);
 
     void setPriceFilters(List<Product> products);
 

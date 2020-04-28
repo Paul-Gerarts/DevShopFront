@@ -2,9 +2,12 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,24 +24,28 @@ public class ProductController {
     private final ProductService productService;
     private final CartService cartService;
     private final SearchService searchService;
+    private final ProductMapperUtil productMapperUtil;
 
     @Autowired
     public ProductController(
             ProductService productService,
             CartService cartService,
-            SearchService searchService
+            SearchService searchService,
+            ProductMapperUtil productMapperUtil
     ) {
         this.productService = productService;
         this.cartService = cartService;
         this.searchService = searchService;
+        this.productMapperUtil = productMapperUtil;
     }
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        List<Product> productList = productService.findAllNonArchived().getProducts();
+        ProductListDto productListDto = productService.findAllNonArchived();
+        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductListDto(productListDto);
         searchService.resetSearchModel();
-        productService.setPriceFilters(productList);
-        model.addAttribute("products", productList);
+        productService.setPriceFilters(productListDto.getProducts());
+        model.addAttribute("productlist", productDtoListDto);
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -66,8 +73,9 @@ public class ProductController {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        List<Product> productList = productService.filterByPrice(products, searchService.getSearchModel()).getProducts();
-        model.addAttribute("products", productList);
+        final ProductListDto productListDto = productService.filterByPrice(products, searchService.getSearchModel());
+        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductListDto(productListDto);
+        model.addAttribute("productlist", productDtoListDto);
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

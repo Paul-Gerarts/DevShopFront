@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dto.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
@@ -198,10 +198,10 @@ class AdminControllerTest {
     public void displayProductArchivedOverViewTest() throws Exception {
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final ProductListDto dummyProductListDto = new ProductListDto(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllArchived()).thenReturn(dummyProductList);
+        when(productService.findAllArchived()).thenReturn(dummyProductListDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));

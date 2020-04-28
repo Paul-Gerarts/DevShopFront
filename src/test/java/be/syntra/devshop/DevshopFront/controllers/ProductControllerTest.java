@@ -6,7 +6,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -60,7 +60,7 @@ class ProductControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllNonArchived()).thenReturn(new ProductList(dummyProducts));
+        when(productService.findAllNonArchived()).thenReturn(new ProductListDto(dummyProducts));
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -126,11 +126,11 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList productListDummy = new ProductList(dummyProducts);
+        final ProductListDto productListDtoDummy = new ProductListDto(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findBySearchRequest(any())).thenReturn(productListDummy);
-        when(productService.filterByPrice(any(), any())).thenReturn(productListDummy);
+        when(productService.findBySearchRequest(any())).thenReturn(productListDtoDummy);
+        when(productService.filterByPrice(any(), any())).thenReturn(productListDtoDummy);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")

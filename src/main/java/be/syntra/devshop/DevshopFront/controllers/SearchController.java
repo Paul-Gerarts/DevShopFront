@@ -1,9 +1,12 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +26,8 @@ public class SearchController {
     private final CartService cartService;
     private final SearchService searchService;
     private final ProductService productService;
-    private static final String PRODUCTS = "products";
+    private final ProductMapperUtil productMapperUtil;
+    private static final String PRODUCTS = "productlist";
     private static final String SEARCH_MODEL = "searchModel";
     private static final String PRODUCT_OVERVIEW = "product/productOverview";
 
@@ -31,11 +35,13 @@ public class SearchController {
     public SearchController(
             CartService cartService,
             SearchService searchService,
-            ProductService productService
+            ProductService productService,
+            ProductMapperUtil productMapperUtil
     ) {
         this.cartService = cartService;
         this.searchService = searchService;
         this.productService = productService;
+        this.productMapperUtil = productMapperUtil;
     }
 
     @GetMapping("/")
@@ -127,8 +133,10 @@ public class SearchController {
     }
 
     private String setTemplateModel(Model model, List<Product> productList) {
+        ProductListDto productListDto = new ProductListDto(productList);
+        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductListDto(productListDto);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productList);
+        model.addAttribute(PRODUCTS, productDtoListDto);
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
     }
