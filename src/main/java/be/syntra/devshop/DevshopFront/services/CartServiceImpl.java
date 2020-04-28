@@ -63,6 +63,38 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public void addOneToProductInCart(Long productId) {
+        Product productToAlter = getProductFromCartById(productId);
+        // todo: DEV-034: update in cachedProducts-replacement
+        productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
+    }
+
+    @Override
+    public void removeOneFromProductInCart(Long productId) {
+        Product productToAlter = getProductFromCartById(productId);
+        final int totalInCart = productToAlter.getTotalInCart();
+        // todo: DEV-034: update in cachedProducts-replacement
+        if (totalInCart == 1) {
+            removeProductFromCart(productId);
+        } else {
+            productToAlter.setTotalInCart(totalInCart - 1);
+        }
+    }
+
+    @Override
+    public void removeProductFromCart(Long productId) {
+        Product productToRemove = getProductFromCartById(productId);
+        // todo: DEV-034: update in cachedProducts-replacement
+        productToRemove.setTotalInCart(0);
+        currentCart.getProducts().remove(productToRemove);
+    }
+
+    private Product getProductFromCartById(Long productId) {
+        return currentCart.getProducts().stream()
+                .filter(product -> product.getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
+    @Override
     public StatusNotification payCart(CartDto cartDto, Principal userName) {
         setUserName(cartDto, getUsername(userName));
         log.info("username() -> {}", cartDto.getUser());

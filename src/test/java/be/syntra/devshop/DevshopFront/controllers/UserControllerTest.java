@@ -6,6 +6,8 @@ import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
+import be.syntra.devshop.DevshopFront.services.CartService;
+import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -14,12 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -28,19 +32,65 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
 class UserControllerTest {
-    @MockBean
-    private CartService cartService;
 
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    CartService cartService;
+
     @Test
+    @WithMockUser(roles = {"USER"})
     void displayCartWhenLoggedIn() throws Exception {
+        // given
+        when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
+
         // when
-        final ResultActions getResult = mockMvc.perform(get("/users/cart"));
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/overview"));
 
         // then
-        getResult.andExpect(status().isFound());
+        getResult.andExpect(status().isOk())
+                .andExpect(model().attributeExists("cart"))
+                .andExpect(view().name("user/cartOverview"));
+
+        verify(cartService, times(1)).getCart();
+    }
+
+    @Test
+    void displayLoginWhenRequestingCartAndNotLoggedIn() throws Exception {
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/overview"));
+
+        // then
+        getResult
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void canDoAddOneToProductTotalInCart() throws Exception {
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/details/plus_one/1"));
+
+        // then
+        getResult
+                .andExpect(redirectedUrl("/users/cart/overview"));
+
+        verify(cartService).addOneToProductInCart(1L);
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void canDoRemoveOneFromProductTotalInCart() throws Exception {
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/details/minus_one/2"));
+
+        // then
+        getResult
+                .andExpect(redirectedUrl("/users/cart/overview"));
+
+        verify(cartService).removeOneFromProductInCart(2L);
     }
 
     @Test
@@ -61,5 +111,18 @@ class UserControllerTest {
                 .andExpect(model().attribute("payment", paymentDto))
                 .andExpect(model().attribute("cart", dummyCartDto));
 
+    }
+
+    @Test
+    @WithMockUser(roles = {"USER"})
+    void canRemoveProductFromCart() throws Exception {
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/details/delete/3"));
+
+        // then
+        getResult
+                .andExpect(redirectedUrl("/users/cart/overview"));
+
+        verify(cartService).removeProductFromCart(3L);
     }
 }

@@ -236,6 +236,17 @@ html, body, .spinner {
     left: 75%;
 }
 
+.payment-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    position: fixed;
+    width: 30%;
+    height: 80%;
+    padding-left: 65%;
+    padding-top: 125px;
+    text-decoration: none;
+}
 
 
 

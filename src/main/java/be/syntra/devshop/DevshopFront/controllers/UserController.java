@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -34,6 +35,8 @@ public class UserController {
 
     @GetMapping("/cart/overview")
     public String displayCartOverview(Model model) {
+        log.info("displayCartOverview()");
+        model.addAttribute("cart", cartService.getCart());
         PaymentDto paymentDto = new PaymentDto();
         cartService.cartTotalPrice(paymentDto);
         CartDto cartDto = cartService.getCart();
@@ -43,6 +46,22 @@ public class UserController {
         return "user/cartOverview";
     }
 
+    @GetMapping("/cart/details/plus_one/{id}")
+    public String increaseCartProduct(@PathVariable Long id) {
+        cartService.addOneToProductInCart(id);
+        return "redirect:/users/cart/overview";
+    }
+
+    @GetMapping("/cart/details/minus_one/{id}")
+    public String decreaseCartProduct(@PathVariable Long id) {
+        cartService.removeOneFromProductInCart(id);
+        return "redirect:/users/cart/overview";
+    }
+
+    @GetMapping("/cart/details/delete/{id}")
+    public String removeCartProduct(@PathVariable Long id) {
+        cartService.removeProductFromCart(id);
+        return "redirect:/users/cart/overview";
     @PostMapping("/cart/overview")
     public String payCart(Model model, Principal user) {
         log.info(user.getName());

@@ -14,6 +14,11 @@ public interface CartService {
 
     void addToCart(Product product);
 
+    void addOneToProductInCart(Long productId);
+
+    void removeOneFromProductInCart(Long productId);
+
+    void removeProductFromCart(Long productId);
     StatusNotification payCart(CartDto cartDto, Principal user);
 
     void cartTotalPrice(PaymentDto paymentDto);
