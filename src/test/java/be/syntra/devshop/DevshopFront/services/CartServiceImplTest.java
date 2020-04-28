@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
+import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
@@ -52,5 +53,13 @@ class CartServiceImplTest {
         assertEquals(getCart.isActiveCart(), true);
         assertEquals(getCart.isFinalizedCart(), false);
         assertEquals(getCart.isPaidCart(), false);
+    }
+
+    @Test
+    public void payCartTest() {
+        //given
+        CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+        String username = "name";
+
     }
 }
