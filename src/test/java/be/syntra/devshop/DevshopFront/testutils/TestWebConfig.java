@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -38,11 +37,6 @@ public class TestWebConfig {
     @Bean
     public SearchModel getSearchModel() {
         return new SearchModel();
-    }
-
-    @Bean
-    public ProductListCache getProductListCache() {
-        return new ProductListCache();
     }
 
     @Bean

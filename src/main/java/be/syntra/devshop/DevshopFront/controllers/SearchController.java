@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ public class SearchController {
     private final CartService cartService;
     private final SearchService searchService;
     private final ProductService productService;
-    private final ProductListCacheService productListCacheService;
     private static final String PRODUCTS = "products";
     private static final String SEARCH_MODEL = "searchModel";
     private static final String PRODUCT_OVERVIEW = "product/productOverview";
@@ -33,13 +31,11 @@ public class SearchController {
     public SearchController(
             CartService cartService,
             SearchService searchService,
-            ProductService productService,
-            ProductListCacheService productListCacheService
+            ProductService productService
     ) {
         this.cartService = cartService;
         this.searchService = searchService;
         this.productService = productService;
-        this.productListCacheService = productListCacheService;
     }
 
     @GetMapping("/")
