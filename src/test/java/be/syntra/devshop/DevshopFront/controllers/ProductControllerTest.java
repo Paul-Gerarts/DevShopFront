@@ -3,13 +3,11 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.ProductListCache;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
@@ -53,8 +51,8 @@ public class ProductControllerTest {
     @MockBean
     private SearchService searchService;
 
-    @MockBean
-    private ProductListCacheService productListCacheService;
+    /*@MockBean
+    private ProductListCacheService productListCacheService;*/
 
     @Test
     public void displayProductOverViewTest() throws Exception {
@@ -62,12 +60,12 @@ public class ProductControllerTest {
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
-        final ProductListCache productListCache = new ProductListCache();
-        productListCache.setProducts(dummyProducts);
+        //final ProductListCache productListCache = new ProductListCache();
+        //productListCache.setProducts(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productListCacheService.getProductListCache()).thenReturn(productListCache);
+        when(productService.findAllNonArchived()).thenReturn(new ProductList(dummyProducts));
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -82,14 +80,15 @@ public class ProductControllerTest {
                 .andExpect(model().attribute("cart", dummyCartDto));
 
 
-        verify(productListCacheService, times(1)).getProductListCache();
+        verify(productService, times(1)).findAllNonArchived();
     }
 
     @Test
     void displayProductDetailsTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        when(productListCacheService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        //when(productListCacheService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -102,7 +101,7 @@ public class ProductControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProduct));
 
-        verify(productListCacheService, times(2)).findById(dummyProduct.getId());
+        verify(productService, times(1)).findById(dummyProduct.getId());
     }
 
     @Test
@@ -136,8 +135,10 @@ public class ProductControllerTest {
         final ProductList productListDummy = new ProductList(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(productListDummy);
-        when(productListCacheService.filterByPrice(any(), any())).thenReturn(productListDummy);
+        /*when(productListCacheService.findBySearchRequest(any())).thenReturn(productListDummy);
+        when(productListCacheService.filterByPrice(any(), any())).thenReturn(productListDummy);*/
+        when(productService.findBySearchRequest(any())).thenReturn(productListDummy);
+        when(productService.filterByPrice(any(), any())).thenReturn(productListDummy);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")
@@ -155,7 +156,7 @@ public class ProductControllerTest {
                 .andExpect(model().attribute("products", dummyProducts));
 
         verify(productService, times(1)).addToCart(any());
-        verify(productListCacheService, times(1)).findById(dummyProduct.getId());
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(productService, times(1)).findBySearchRequest(any());
     }
 }

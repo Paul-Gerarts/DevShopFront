@@ -1,17 +1,11 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.ProductListCache;
-import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-
-import java.util.List;
-
 public interface ProductListCacheService {
 
     void updateProductListCache();
 
-    ProductListCache getProductListCache();
+    // todo: DEV-034
+/*    ProductListCache getProductListCache();
 
     ProductList findBySearchRequest(SearchModel searchModel);
 
@@ -25,5 +19,5 @@ public interface ProductListCacheService {
 
     void setPriceFilters(List<Product> products);
 
-    Product findById(Long id);
+    Product findById(Long id);*/
 }

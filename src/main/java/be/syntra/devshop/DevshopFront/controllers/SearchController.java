@@ -97,10 +97,13 @@ public class SearchController {
     private List<Product> applySearch(boolean isSearchResultView) {
         searchService.setSearchResultView(isSearchResultView);
         searchService.setArchivedView(false);
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        List<Product> filteredList = productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
+        // todo: DEV-034
+        /*List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        List<Product> filteredList = productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();*/
+        List<Product> productList = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        List<Product> filteredList = productService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
         return hasDescription()
-                ? productListCacheService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
+                ? productService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
                 : filteredList;
     }
 
@@ -109,13 +112,17 @@ public class SearchController {
     }
 
     private String getProductsSortedByName(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productListCacheService.sortListByName(productList, searchService.getSearchModel()).getProducts();
+        // todo: DEV-034
+        //List<Product> sortedProducts = productListCacheService.sortListByName(productList, searchService.getSearchModel()).getProducts();
+        List<Product> sortedProducts = productService.sortListByName(productList, searchService.getSearchModel()).getProducts();
         reverseNameSort();
         return setTemplateModel(model, sortedProducts);
     }
 
     private String getProductsSortedByPrice(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productListCacheService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
+        // todo: DEV-034
+        //List<Product> sortedProducts = productListCacheService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
+        List<Product> sortedProducts = productService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
         reversePriceSort();
         return setTemplateModel(model, sortedProducts);
     }

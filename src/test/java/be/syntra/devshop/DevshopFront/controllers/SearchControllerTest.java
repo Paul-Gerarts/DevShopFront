@@ -7,7 +7,6 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dto.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
@@ -46,8 +45,8 @@ public class SearchControllerTest {
     @MockBean
     private ProductService productService;
 
-    @MockBean
-    private ProductListCacheService productListCacheService;
+    /*@MockBean
+    private ProductListCacheService productListCacheService;*/
 
     @MockBean
     private CartService cartService;
@@ -67,9 +66,9 @@ public class SearchControllerTest {
         dummySearchModel.setSearchRequest(searchRequest);
         dummySearchModel.setDescription(description);
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
@@ -85,8 +84,8 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("products", dummyProducts))
                 .andExpect(model().attribute("cart", dummyCart));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(productService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).filterByPrice(any(), any());
     }
 
     @Test
@@ -105,9 +104,9 @@ public class SearchControllerTest {
         dummySearchModel.setDescription(description);
         dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
@@ -124,9 +123,9 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("cart", dummyCart))
                 .andExpect(model().attribute("searchModel", dummySearchModel));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
-        verify(productListCacheService, times(1)).searchForProductDescription(any(), any());
+        verify(productService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).filterByPrice(any(), any());
+        verify(productService, times(1)).searchForProductDescription(any(), any());
     }
 
     @ParameterizedTest
@@ -147,11 +146,11 @@ public class SearchControllerTest {
         dummySearchModel.setPriceHigh(priceHigh);
         dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productService.sortListByName(any(), any())).thenReturn(dummyProductList);
+        when(productService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
+        when(productService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
@@ -168,8 +167,8 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("cart", dummyCart))
                 .andExpect(model().attribute("searchModel", dummySearchModel));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(productService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).filterByPrice(any(), any());
     }
 
     @ParameterizedTest
@@ -184,8 +183,8 @@ public class SearchControllerTest {
         dummySearchModel.setArchivedView(true);
 
         when(productService.findAllArchived()).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
+        when(productService.sortListByName(any(), any())).thenReturn(dummyProductList);
+        when(productService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
@@ -223,9 +222,9 @@ public class SearchControllerTest {
         dummySearchModel.setPriceHigh(priceHigh);
         dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.findBySearchRequest(any())).thenReturn(dummyProductList);
+        when(productService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
@@ -242,7 +241,7 @@ public class SearchControllerTest {
                 .andExpect(model().attribute("cart", dummyCart))
                 .andExpect(model().attribute("searchModel", dummySearchModel));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(productService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).filterByPrice(any(), any());
     }
 }
