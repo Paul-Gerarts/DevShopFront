@@ -32,7 +32,7 @@ public class ProductMapperUtil {
                 .build();
     }
 
-    public ProductDtoListDto convertToProductListDto(ProductListDto productListDto) {
+    public ProductDtoListDto convertToProductDtoListDto(ProductListDto productListDto) {
         List<ProductDto> productDtoList = productListDto.getProducts().stream()
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)
