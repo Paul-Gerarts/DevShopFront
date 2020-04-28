@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, JWTTokenExceptionHandler.class})
 )
 @ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
-public class ProductControllerTest {
+class ProductControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -51,17 +51,12 @@ public class ProductControllerTest {
     @MockBean
     private SearchService searchService;
 
-    /*@MockBean
-    private ProductListCacheService productListCacheService;*/
-
     @Test
-    public void displayProductOverViewTest() throws Exception {
+    void displayProductOverViewTest() throws Exception {
 
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
-        //final ProductListCache productListCache = new ProductListCache();
-        //productListCache.setProducts(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
@@ -87,7 +82,6 @@ public class ProductControllerTest {
     void displayProductDetailsTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        //when(productListCacheService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
 
         // when
@@ -135,8 +129,6 @@ public class ProductControllerTest {
         final ProductList productListDummy = new ProductList(dummyProducts);
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        /*when(productListCacheService.findBySearchRequest(any())).thenReturn(productListDummy);
-        when(productListCacheService.filterByPrice(any(), any())).thenReturn(productListDummy);*/
         when(productService.findBySearchRequest(any())).thenReturn(productListDummy);
         when(productService.filterByPrice(any(), any())).thenReturn(productListDummy);
 

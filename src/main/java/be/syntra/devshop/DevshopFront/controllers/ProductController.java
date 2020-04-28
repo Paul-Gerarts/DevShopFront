@@ -35,12 +35,8 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        // todo: DEV-034
-        //List<Product> productList = productListCacheService.getProductListCache().getProducts();
         List<Product> productList = productService.findAllNonArchived().getProducts();
         searchService.resetSearchModel();
-        // todo: DEV-034
-        //productListCacheService.setPriceFilters(productList);
         productService.setPriceFilters(productList);
         model.addAttribute("products", productList);
         model.addAttribute("searchModel", searchService.getSearchModel());
@@ -50,28 +46,16 @@ public class ProductController {
 
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model) {
-        // todo: DEV-034
-        /*Product product =
-                isProductListCacheEmpty(id)
-                        ? productService.findById(id)
-                        : productListCacheService.findById(id);*/
         Product product = productService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
     }
 
-    // todo: DEV-034
-    /*private boolean isProductListCacheEmpty(Long id) {
-        return null == productListCacheService.findById(id);
-    }*/
-
     @PostMapping("/details/{id}")
     public String archiveProduct(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         StatusNotification statusNotification = productService.archiveProduct(product);
-        // todo: DEV-034
-        //productListCacheService.updateProductListCache();
         model.addAttribute("product", product);
         model.addAttribute("status", statusNotification);
         return "product/productDetails";
@@ -80,12 +64,7 @@ public class ProductController {
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
-        // todo: DEV-034
-        //productService.addToCart(productListCacheService.findById(id));
         productService.addToCart(productService.findById(id));
-        // todo: DEV-034
-        //List<Product> products = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        //List<Product> productList = productListCacheService.filterByPrice(products, searchService.getSearchModel()).getProducts();
         List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
         List<Product> productList = productService.filterByPrice(products, searchService.getSearchModel()).getProducts();
         model.addAttribute("products", productList);
@@ -97,8 +76,6 @@ public class ProductController {
     @PostMapping("/details/addtocart/{id}")
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
         log.info("addSelectedProductFromDetailToCart()-> {}", id);
-        // todo: DEV-034
-        //productService.addToCart(productListCacheService.findById(id));
         productService.addToCart(productService.findById(id));
         return "redirect:/products/details/" + id;
     }

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -23,9 +22,6 @@ public class CartServiceImpl implements CartService {
     private CartServiceImpl(CartDto currentCart) {
         this.currentCart = currentCart;
     }
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Override
     public CartDto getCart() {
@@ -44,7 +40,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addOneToProductInCart(Long productId) {
         Product productToAlter = getProductFromCartById(productId);
-        // todo: DEV-034: update in cachedProducts-replacement
         productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
     }
 
@@ -52,7 +47,6 @@ public class CartServiceImpl implements CartService {
     public void removeOneFromProductInCart(Long productId) {
         Product productToAlter = getProductFromCartById(productId);
         final int totalInCart = productToAlter.getTotalInCart();
-        // todo: DEV-034: update in cachedProducts-replacement
         if (totalInCart == 1) {
             removeProductFromCart(productId);
         } else {
@@ -63,7 +57,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeProductFromCart(Long productId) {
         Product productToRemove = getProductFromCartById(productId);
-        // todo: DEV-034: update in cachedProducts-replacement
         productToRemove.setTotalInCart(0);
         currentCart.getProducts().remove(productToRemove);
     }
