@@ -1,7 +1,7 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -134,7 +134,7 @@ public class SearchController {
 
     private String setTemplateModel(Model model, List<Product> productList) {
         ProductListDto productListDto = new ProductListDto(productList);
-        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
+        ProductDtoList productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productDtoListDto);
         model.addAttribute("cart", cartService.getCart());

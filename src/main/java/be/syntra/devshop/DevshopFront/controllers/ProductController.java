@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -42,7 +42,7 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         ProductListDto productListDto = productService.findAllNonArchived();
-        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
+        ProductDtoList productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
         searchService.resetSearchModel();
         productService.setPriceFilters(productListDto.getProducts());
         model.addAttribute("productlist", productDtoListDto);
@@ -74,7 +74,7 @@ public class ProductController {
         productService.addToCart(productService.findById(id));
         List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
         final ProductListDto productListDto = productService.filterByPrice(products, searchService.getSearchModel());
-        ProductDtoListDto productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
+        ProductDtoList productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
         model.addAttribute("productlist", productDtoListDto);
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());

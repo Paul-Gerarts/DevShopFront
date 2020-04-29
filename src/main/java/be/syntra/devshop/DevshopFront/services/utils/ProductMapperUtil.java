@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.services.utils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,25 +32,24 @@ public class ProductMapperUtil {
                 .build();
     }
 
-    public ProductDtoListDto convertToProductDtoListDto(ProductListDto productListDto) {
+    public ProductDtoList convertToProductDtoListDto(ProductListDto productListDto) {
         List<ProductDto> productDtoList = productListDto.getProducts().stream()
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)
                 .collect(Collectors.toList());
-        return new ProductDtoListDto(productDtoList);
+        return new ProductDtoList(productDtoList);
     }
 
     private ProductDto setProductCountInProductDto(ProductDto productDto) {
-        productDto.setTotalInCart(getProductCountFormCart(productDto.getName()));
+        productDto.setTotalInCart(getCountFormProductInCart(productDto.getId()));
         return productDto;
     }
 
-    private int getProductCountFormCart(String productName) {
+    private int getCountFormProductInCart(Long id) {
         return cartService.getCart().getProducts()
-                .stream().filter(p -> p.getName().equals(productName))
+                .parallelStream().filter(p -> p.getId().equals(id))
                 .findFirst()
                 .map(Product::getTotalInCart)
                 .orElse(0);
     }
-
 }
