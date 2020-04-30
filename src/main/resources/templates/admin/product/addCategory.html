@@ -16,14 +16,79 @@
     <main class="mdl-layout__content">
         <div class="page-content">
             <span class="mdl-layout-title" id="title">Manage Categories</span>
-            <div class="mdl-cell mdl-cell--2-col" style="padding-top: initial">
-                <h5 style="color: black">Select a category to edit</h5>
-                <select class="category-dropdown" th:field="${categories}">
+            <div class="mdl-cell mdl-cell--2-col category-page-elements">
+                <select class="category-dropdown" id="categoryDropdown" name="categoryDropdown">
+                    <option disabled selected value="none">Select a category to edit</option>
                     <option th:each="category : ${categories}"
                             th:value="${category}"
                             th:text="${category.name}">
                     </option>
                 </select>
+                <em class="material-icons" id="arrow" style="font-size: 36px; padding-left: 60px; visibility: hidden">trending_flat</em>
+                <div class="category-update-field">
+                    <input class="category-dropdown" style="visibility: hidden; height: 27px; padding-left: 5px"
+                           type="text" th:field="${categories}" id="categoryToUpdate">
+                </div>
+                <div style="padding-left: 30px; display: flex; flex-direction: column">
+                    <a id="updateButton"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--gray mdl-color-text--white"
+                       style="padding-left: 10px; width: 200px; visibility: hidden;" disabled>
+                        <em class="material-icons">sync_alt</em>Update category
+                    </a>
+                    <a id="deleteButton" th:href=""
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white"
+                       style="padding-left: 10px; width: 200px; top: 10px; visibility: hidden">
+                        <em class="material-icons">delete_outline</em>Delete category
+                    </a>
+                </div>
+                <script th:inline="javascript">
+                    const categoryDropdown = document.getElementById('categoryDropdown');
+                    const categoryToUpdate = document.getElementById('categoryToUpdate');
+                    const transitionArrow = document.getElementById('arrow');
+                    const updateButton = document.getElementById('updateButton');
+                    const deleteButton = document.getElementById('deleteButton');
+
+                    categoryDropdown.addEventListener('change', () => {
+                        // retrieve categoryName
+                        const categoryObject = categoryDropdown.value;
+                        const subStringStart = categoryObject.lastIndexOf('=') + 1;
+                        categoryToUpdate.value = categoryObject.substring(subStringStart, categoryObject.length - 1);
+
+                        makeVisible(categoryToUpdate);
+                        makeVisible(transitionArrow);
+                        makeVisible(deleteButton);
+                        makeVisible(updateButton);
+
+                        if (deleteButton.classList.contains('mdl-color--grey-500')) {
+                            enableButton(deleteButton, 'mdl-color--red')
+                        }
+
+                        if (updateButton.classList.contains('mdl-color--green')) {
+                            disableButton(updateButton, 'mdl-color--green')
+                        }
+                    })
+
+                    categoryToUpdate.addEventListener('input', () => {
+                        enableButton(updateButton, 'mdl-color--green')
+                        disableButton(deleteButton, 'mdl-color--red')
+                    })
+
+                    function enableButton(button, color) {
+                        button.removeAttribute("disabled");
+                        button.classList.remove('mdl-color--grey-500');
+                        button.classList.add(color);
+                    }
+
+                    function disableButton(button, color) {
+                        button.setAttribute('disabled', true);
+                        button.classList.remove(color)
+                        button.classList.add('mdl-color--grey-500')
+                    }
+
+                    function makeVisible(element) {
+                        element.style.visibility = 'visible';
+                    }
+                </script>
             </div>
         </div>
     </main>

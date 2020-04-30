@@ -241,4 +241,15 @@ html, body, .spinner {
     height: 35px;
     font-size: 18px;
     width: 270px;
+    border: solid;
+}
+
+.category-update-field {
+    padding-left: 60px;
+}
+
+.category-page-elements {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
 }
