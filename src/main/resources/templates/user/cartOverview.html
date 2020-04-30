@@ -103,34 +103,34 @@
                 </li>
             </ul>
         </div>
-        <div class="search-filters" th:object="${payment}">
-            <span class="mdl-layout-title">Payment</span>
-            <label class="mdl-layout-title "
+        <div class="search-filters search-filters-list-box md-list__item-mdl-color--grey-100 mdl-shadow--8dp"
+             th:object="${payment}">
+            <span class="mdl-layout-title mdl-title__margin">Payment</span>
+            <label class="mdl-layout-title mdl-title__margin"
                    th:text="'Total price: € ' + ${payment.getTotalCartPrice()}">Total Price
             </label>
-            <div class="mdl-cell mdl-cell--2-col checkbox_layout" style="padding-top: initial">
-                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
-                       th:each="paymentoption: ${payment.getPaymentOptions()}">
-                    <input class="mdl-checkbox__input" type="checkbox"
-                           th:value="${paymentoption.description}"/>
-                    <label class="mdl-checkbox__label"
-                           th:text="${paymentoption.description}"></label>
-                </label>
+            <div class="mdl-cell mdl-cell--2-col checkbox_layout  mdl-checkbox__field">
+                <select class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect ">
+                    <option class="mdl-checkbox__input" th:each="paymentoption: ${payment.getPaymentOptions()}">
+                        <label class="mdl-checkbox__label" th:text="${paymentoption.description}">
+                        </label>
+                    </option>
+                </select>
             </div>
             <form method="post" th:object="${cart}">
                 <button type="submit"
-                        class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                        th:disabled="${status != null && status.label.equals('Saved')  }|| ">
+                        class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button mdl-color--blue"
+                        th:disabled="${status != null && status.label.equals('Success') && cart.getProducts().isEmpty() }">
                     Checkout
                 </button>
             </form>
-        </div>
-        <div th:if="${status != null}">
-            <br>
-            <span class="mdl-chip mdl-chip--deletable">
+            <div th:if="${status != null}">
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
                 </span>
+            </div>
         </div>
     </main>
 </div>

@@ -118,3 +118,14 @@
     padding-top: 25px;
 }
 
+.mdl-checkbox__field {
+    margin: 3%;
+    height: 9%;
+    width: unset;
+}
+
+.mdl-title__margin {
+    margin: 3%;
+}
+
+

@@ -3,9 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
@@ -23,7 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -96,7 +92,7 @@ class UserControllerTest {
     @Test
     void testDisplayCartOverview() throws Exception {
         //given
-        PaymentDto paymentDto = new PaymentDto();
+
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
@@ -108,7 +104,6 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/cartOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attribute("payment", paymentDto))
                 .andExpect(model().attribute("cart", dummyCartDto));
 
     }
