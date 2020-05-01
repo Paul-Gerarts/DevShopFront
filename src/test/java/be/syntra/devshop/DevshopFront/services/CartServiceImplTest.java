@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RestClientTest(CartService.class)
 @ExtendWith(MockitoExtension.class)
@@ -122,6 +122,22 @@ class CartServiceImplTest {
         cartService.cartTotalPrice(paymentDto);
 
         //then
-        assertEquals("0", paymentDto.getTotalCartPrice().toString());
+        assertEquals("196", paymentDto.getTotalCartPrice().toString());
+    }
+
+    @Test
+    void setCartToFinalizedTest() {
+        //given
+        CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+
+        //when
+        cartDto.setActiveCart(false);
+        cartDto.setFinalizedCart(true);
+        cartDto.setPaidCart(false);
+
+        //then
+        assertTrue(cartDto.isFinalizedCart());
+        assertFalse(cartDto.isActiveCart());
+        assertFalse(cartDto.isPaidCart());
     }
 }
