@@ -142,7 +142,7 @@ class UserControllerTest {
         //given
         final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
         StatusNotification statusNotification;
-        when(statusNotification = cartService.payCart(cartDto, principal)).thenReturn(statusNotification);
+        when(statusNotification = cartService.payCart(principal.getName())).thenReturn(statusNotification);
         when(cartService.getCart()).thenReturn(cartDto);
 
         //when
@@ -159,6 +159,6 @@ class UserControllerTest {
                 .andExpect(model().attribute("cart", cartDto))
                 .andExpect(model().attribute("status", statusNotification));
 
-        verify(cartService, times(1)).payCart(cartDto, principal);
+        verify(cartService, times(1)).payCart(principal.getName());
     }
 }

@@ -40,9 +40,10 @@ public class UserController {
     public String displayCartOverview(Model model) {
         log.info("displayCartOverview()");
         model.addAttribute("cart", cartService.getCart());
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setPaymentOptions(Arrays.asList(PaymentOption.values()));
-        cartService.cartTotalPrice(paymentDto);
+        PaymentDto paymentDto = PaymentDto.builder()
+                .totalCartPrice(cartService.getCartTotalPrice())
+                .paymentOptions(Arrays.asList(PaymentOption.values()))
+                .build();
         model.addAttribute(PAYMENT, paymentDto);
         return "user/cartOverview";
     }
@@ -68,10 +69,11 @@ public class UserController {
     @PostMapping("/cart/detail")
     public String payCart(Model model, Principal user) {
         log.info(user.getName());
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setPaymentOptions(Arrays.asList(PaymentOption.values()));
-        cartService.cartTotalPrice(paymentDto);
         StatusNotification statusNotification = cartService.payCart(user.getName());
+        PaymentDto paymentDto = PaymentDto.builder()
+                .totalCartPrice(cartService.getCartTotalPrice())
+                .paymentOptions(Arrays.asList(PaymentOption.values()))
+                .build();
         model.addAttribute("cart", cartService.getCart());
         model.addAttribute("status", statusNotification);
         model.addAttribute(PAYMENT, paymentDto);

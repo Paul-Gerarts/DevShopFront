@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -119,13 +118,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void cartTotalPrice(PaymentDto paymentDto) {
-        paymentDto.setTotalCartPrice(getCart().getProducts().stream()
+    public BigDecimal getCartTotalPrice() {
+        return getCart().getProducts().stream()
                 .map(product -> {
                     BigDecimal pricePerProduct = product.getPrice();
                     int totalInCart = product.getTotalInCart();
                     return pricePerProduct.multiply(new BigDecimal(totalInCart));
                 })
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
