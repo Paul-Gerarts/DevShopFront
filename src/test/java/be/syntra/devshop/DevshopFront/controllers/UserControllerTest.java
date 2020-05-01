@@ -141,7 +141,7 @@ class UserControllerTest {
 
         //when
         final ResultActions postResult = mockMvc.perform(
-                post("/cart")
+                post("/users/cart/detail")
                         .contentType(MediaType.MULTIPART_FORM_DATA));
 
         // then

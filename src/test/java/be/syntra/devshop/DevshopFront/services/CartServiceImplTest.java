@@ -106,7 +106,7 @@ class CartServiceImplTest {
     void payCartTest() {
         //given
         CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
-        String username = "name";
+
 
     }
 
@@ -119,6 +119,7 @@ class CartServiceImplTest {
 
         //when
         cartService.cartTotalPrice(paymentDto);
+
         //then
         assertEquals("196", paymentDto.getTotalCartPrice().toString());
     }
