@@ -1,10 +1,8 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.testutils.CartUtils;
-import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
-import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
-import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
+import be.syntra.devshop.DevshopFront.testutils.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -105,10 +103,23 @@ class CartServiceImplTest {
     }
 
     @Test
-    public void payCartTest() {
+    void payCartTest() {
         //given
         CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
         String username = "name";
 
+    }
+
+    @Test
+    void getTotalCartPriceTest() {
+        //given
+        CartDto cartDto = CartUtils.getCartWithMultipleNonArchivedProducts();
+        PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithoutTotalCartPrice();
+        currentCart.setProducts(cartDto.getProducts());
+
+        //when
+        cartService.cartTotalPrice(paymentDto);
+        //then
+        assertEquals("196", paymentDto.getTotalCartPrice().toString());
     }
 }

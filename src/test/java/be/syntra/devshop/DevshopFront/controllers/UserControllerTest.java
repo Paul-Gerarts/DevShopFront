@@ -2,24 +2,30 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.security.Principal;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -31,6 +37,9 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Mock
+    private Principal principal;
 
     @MockBean
     CartService cartService;
@@ -119,5 +128,31 @@ class UserControllerTest {
                 .andExpect(redirectedUrl("/users/cart/overview"));
 
         verify(cartService).removeProductFromCart(3L);
+    }
+
+    @Test
+    @WithMockUser(roles = {"User"})
+    void canPayCart() throws Exception {
+        //given
+        final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+        StatusNotification statusNotification;
+        when(statusNotification = cartService.payCart(cartDto, principal)).thenReturn(statusNotification);
+        when(cartService.getCart()).thenReturn(cartDto);
+
+        //when
+        final ResultActions postResult = mockMvc.perform(
+                post("/cart")
+                        .contentType(MediaType.MULTIPART_FORM_DATA));
+
+        // then
+        postResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/cartOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("payment"))
+                .andExpect(model().attribute("cart", cartDto))
+                .andExpect(model().attribute("status", statusNotification));
+
+        verify(cartService, times(1)).payCart(cartDto, principal);
     }
 }
