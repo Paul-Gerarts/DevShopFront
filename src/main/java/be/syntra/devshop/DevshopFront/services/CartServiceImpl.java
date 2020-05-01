@@ -1,12 +1,10 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
-import be.syntra.devshop.DevshopFront.exceptions.UserNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
-import be.syntra.devshop.DevshopFront.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,15 +23,13 @@ import java.util.List;
 @Service
 public class CartServiceImpl implements CartService {
     private CartDto currentCart;
-    private UserRepository userRepository;
 
     @Value("${baseUrl}")
     private String baseUrl;
 
     @Autowired
-    private CartServiceImpl(CartDto currentCart, UserRepository userRepository) {
+    private CartServiceImpl(CartDto currentCart) {
         this.currentCart = currentCart;
-        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -98,7 +94,7 @@ public class CartServiceImpl implements CartService {
     }
     @Override
     public StatusNotification payCart(CartDto cartDto, Principal userName) {
-        setUserName(cartDto, getUsername(userName));
+        setUserName(cartDto, userName.getName());
         log.info("username() -> {}", cartDto.getUser());
         setCartToFinalized(cartDto);
         HttpEntity<CartDto> requestDto = new HttpEntity<>(cartDto);
@@ -111,12 +107,6 @@ public class CartServiceImpl implements CartService {
             return StatusNotification.SUCCESS;
         }
         return StatusNotification.PAYMENT_FAIL;
-    }
-
-    private String getUsername(Principal user) {
-        return userRepository.findByUserName(user.getName())
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with name %s could not be found", user.getName())))
-                .getUsername();
     }
 
     private void setUserName(CartDto cartDto, String user) {

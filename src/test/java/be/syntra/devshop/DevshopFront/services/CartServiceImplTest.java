@@ -25,6 +25,7 @@ class CartServiceImplTest {
     @Autowired
     CartServiceImpl cartService;
 
+
     @Test
     public void getNewCartTest() {
         // when
@@ -114,7 +115,7 @@ class CartServiceImplTest {
     void getTotalCartPriceTest() {
         //given
         CartDto cartDto = CartUtils.getCartWithMultipleNonArchivedProducts();
-        PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithoutTotalCartPrice();
+        PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithTotalCartPrice();
         currentCart.setProducts(cartDto.getProducts());
 
         //when
