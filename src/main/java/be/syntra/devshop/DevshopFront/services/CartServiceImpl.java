@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -93,8 +92,8 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
     @Override
-    public StatusNotification payCart(Principal userName) {
-        setUserName(currentCart, userName.getName());
+    public StatusNotification payCart(String userName) {
+        setUserName(currentCart, userName);
         log.info("username() -> {}", currentCart.getUser());
         setCartToFinalized(currentCart);
         HttpEntity<CartDto> requestDto = new HttpEntity<>(currentCart);

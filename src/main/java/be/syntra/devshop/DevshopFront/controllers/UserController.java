@@ -71,8 +71,8 @@ public class UserController {
         PaymentDto paymentDto = new PaymentDto();
         paymentDto.setPaymentOptions(Arrays.asList(PaymentOption.values()));
         cartService.cartTotalPrice(paymentDto);
+        StatusNotification statusNotification = cartService.payCart(user.getName());
         model.addAttribute("cart", cartService.getCart());
-        StatusNotification statusNotification = cartService.payCart(user);
         model.addAttribute("status", statusNotification);
         model.addAttribute(PAYMENT, paymentDto);
         return "user/cartOverview";

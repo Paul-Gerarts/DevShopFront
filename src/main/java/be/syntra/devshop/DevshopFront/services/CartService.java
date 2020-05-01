@@ -5,8 +5,6 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 
-import java.security.Principal;
-
 
 public interface CartService {
 
@@ -20,7 +18,7 @@ public interface CartService {
 
     void removeProductFromCart(Long productId);
 
-    StatusNotification payCart(Principal user);
+    StatusNotification payCart(String username);
 
     void cartTotalPrice(PaymentDto paymentDto);
 }
