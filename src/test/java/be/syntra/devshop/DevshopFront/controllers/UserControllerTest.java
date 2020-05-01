@@ -106,7 +106,6 @@ class UserControllerTest {
 
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         final PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithTotalCartPrice();
-        cartService.cartTotalPrice(paymentDto);
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         //when

@@ -115,14 +115,13 @@ class CartServiceImplTest {
     void getTotalCartPriceTest() {
         //given
         CartDto cartDto = CartUtils.getCartWithMultipleNonArchivedProducts();
+        currentCart = cartDto;
         PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithTotalCartPrice();
+        paymentDto.setTotalCartPrice(cartService.getCartTotalPrice());
         currentCart.setProducts(cartDto.getProducts());
 
-        //when
-        cartService.cartTotalPrice(paymentDto);
-
         //then
-        assertEquals("196", paymentDto.getTotalCartPrice().toString());
+        assertEquals(cartService.getCartTotalPrice(), paymentDto.getTotalCartPrice());
     }
 
     @Test
