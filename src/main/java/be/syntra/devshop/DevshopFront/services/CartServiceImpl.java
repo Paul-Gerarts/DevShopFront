@@ -93,16 +93,16 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
     @Override
-    public StatusNotification payCart(CartDto cartDto, Principal userName) {
-        setUserName(cartDto, userName.getName());
-        log.info("username() -> {}", cartDto.getUser());
-        setCartToFinalized(cartDto);
-        HttpEntity<CartDto> requestDto = new HttpEntity<>(cartDto);
-        log.info("cart() -> {}", cartDto.toString());
+    public StatusNotification payCart(Principal userName) {
+        setUserName(currentCart, userName.getName());
+        log.info("username() -> {}", currentCart.getUser());
+        setCartToFinalized(currentCart);
+        HttpEntity<CartDto> requestDto = new HttpEntity<>(currentCart);
+        log.info("cart() -> {}", currentCart.toString());
 
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, requestDto, CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
-            log.info("payCart() -> successful {}", cartDto.getClass());
+            log.info("payCart() -> successful {}", currentCart.getClass());
             currentCart.getProducts().clear();
             return StatusNotification.SUCCESS;
         }
