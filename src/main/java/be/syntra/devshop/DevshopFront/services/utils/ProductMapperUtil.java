@@ -32,7 +32,20 @@ public class ProductMapperUtil {
                 .build();
     }
 
-    public ProductDtoList convertToProductDtoListDto(ProductListDto productListDto) {
+    public Product convertToProduct(ProductDto productDto) {
+        return Product.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .price(productDto.getPrice())
+                .description(productDto.getDescription())
+                .archived(productDto.isArchived())
+                .totalInCart(0)
+                .categories(categoryMapperUtil.mapToCategories(productDto.getCategoryNames()))
+                .build();
+
+    }
+
+    public ProductDtoList convertToProductDtoList(ProductListDto productListDto) {
         List<ProductDto> productDtoList = productListDto.getProducts().stream()
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)

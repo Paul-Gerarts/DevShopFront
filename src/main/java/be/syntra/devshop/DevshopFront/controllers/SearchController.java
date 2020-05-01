@@ -134,7 +134,7 @@ public class SearchController {
 
     private String setTemplateModel(Model model, List<Product> productList) {
         ProductListDto productListDto = new ProductListDto(productList);
-        ProductDtoList productDtoListDto = productMapperUtil.convertToProductDtoListDto(productListDto);
+        ProductDtoList productDtoListDto = productMapperUtil.convertToProductDtoList(productListDto);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productDtoListDto);
         model.addAttribute("cart", cartService.getCart());
