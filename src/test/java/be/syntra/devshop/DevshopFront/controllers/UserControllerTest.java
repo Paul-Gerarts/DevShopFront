@@ -4,10 +4,8 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
-import be.syntra.devshop.DevshopFront.testutils.PaymentUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -101,24 +99,21 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     void testDisplayCartOverview() throws Exception {
         //given
-
-        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
-        final PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithTotalCartPrice();
-        when(cartService.getCart()).thenReturn(dummyCartDto);
+        when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
 
         //when
-        final ResultActions getResult = mockMvc.perform(get("/users/cart/overview"));
-
+        final ResultActions getResult = mockMvc.perform(get("/users/cart/detail"));
 
         //then
         getResult
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/cartOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attribute("payment", paymentDto))
-                .andExpect(model().attribute("cart", dummyCartDto));
+                .andExpect(model().attributeExists("payment"))
+                .andExpect(model().attributeExists("cart"));
 
     }
 
@@ -136,7 +131,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"User"})
+    @WithMockUser(roles = {"USER"})
     void canPayCart() throws Exception {
         //given
         final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
@@ -154,9 +149,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/cartOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("payment", "cart", "status"))
-                .andExpect(model().attribute("cart", cartDto))
-                .andExpect(model().attribute("status", statusNotification));
+                .andExpect(model().attributeExists("payment", "cart"));
 
         verify(cartService, times(1)).payCart(principal.getName());
     }
