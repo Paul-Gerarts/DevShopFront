@@ -135,8 +135,8 @@ class UserControllerTest {
     void canPayCart() throws Exception {
         //given
         final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
-        StatusNotification statusNotification;
-        when(statusNotification = cartService.payCart(principal.getName())).thenReturn(statusNotification);
+        when(principal.getName()).thenReturn("user");
+        when(cartService.payCart(anyString())).thenReturn(StatusNotification.SUCCESS);
         when(cartService.getCart()).thenReturn(cartDto);
 
         //when
@@ -149,8 +149,10 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/cartOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("payment", "cart"));
+                .andExpect(model().attributeExists("payment", "cart", "status"));
 
         verify(cartService, times(1)).payCart(principal.getName());
+        verify(cartService, times(1)).getCartTotalPrice();
+        verify(cartService, times(1)).getCart();
     }
 }
