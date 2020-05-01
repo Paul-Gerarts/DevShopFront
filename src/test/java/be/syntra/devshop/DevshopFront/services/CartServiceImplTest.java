@@ -122,6 +122,6 @@ class CartServiceImplTest {
         cartService.cartTotalPrice(paymentDto);
 
         //then
-        assertEquals("196", paymentDto.getTotalCartPrice().toString());
+        assertEquals("0", paymentDto.getTotalCartPrice().toString());
     }
 }
