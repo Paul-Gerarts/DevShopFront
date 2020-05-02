@@ -1,7 +1,7 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 
-import static be.syntra.devshop.DevshopFront.models.StatusNotification.DELETED;
-import static be.syntra.devshop.DevshopFront.models.StatusNotification.PERSISTANCE_ERROR;
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.*;
 
 @Slf4j
 @Service
@@ -37,12 +36,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public StatusNotification delete(Long id) {
-        ResponseEntity<Long> categoryResponseEntity = restTemplate.postForEntity(resourceUrl + "/categories/", id, Long.class);
-        if (HttpStatus.OK.equals(categoryResponseEntity.getStatusCode())) {
+        restTemplate.delete(resourceUrl + "/categories/" + id);
+        ResponseEntity<CategoryDto> categoryResponseEntity = restTemplate.getForEntity(resourceUrl + "/categories/" + id, CategoryDto.class);
+        if (HttpStatus.NOT_FOUND.equals(categoryResponseEntity.getStatusCode())) {
             log.info("findById() -> category successful removed from database");
             return DELETED;
-        } else if (HttpStatus.NOT_FOUND.equals(categoryResponseEntity.getStatusCode())) {
-            throw new CategoryNotFoundException("Category with id = " + id + " was not found");
+        } else if (HttpStatus.OK.equals(categoryResponseEntity.getStatusCode())) {
+            return DELETE_FAIL;
         }
         return PERSISTANCE_ERROR;
     }
