@@ -1,23 +1,48 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.testutils.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.web.client.RestTemplate;
+
+import java.security.Principal;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 
 @RestClientTest(CartService.class)
 @ExtendWith(MockitoExtension.class)
 @Import({TestWebConfig.class, JsonUtils.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CartServiceImplTest {
+    @Autowired
+    RestTemplate restTemplate;
+
+    @Value("${baseUrl}")
+    private String baseUrl;
+
+    @Value("${cartEndpoint}")
+    private String endpoint;
+
+    @Mock
+    private Principal principal;
 
     @Autowired
     CartDto currentCart;
@@ -25,6 +50,15 @@ class CartServiceImplTest {
     @Autowired
     CartServiceImpl cartService;
 
+    @Autowired
+    private JsonUtils jsonUtils;
+
+    private MockRestServiceServer mockServer;
+
+    @BeforeEach
+    public void setUp() {
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+    }
 
     @Test
     public void getNewCartTest() {
@@ -106,9 +140,26 @@ class CartServiceImplTest {
     @Test
     void payCartTest() {
         //given
-        CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+        currentCart = CartUtils.getCartWithOneDummyProduct();
+        final String cartDtoAsJson = jsonUtils.asJsonString(currentCart);
+        final String expectedEndpoint = baseUrl + endpoint;
+        currentCart.setUser(principal.getName());
 
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.CREATED)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(cartDtoAsJson));
 
+        // when
+        StatusNotification statusNotification = cartService.payCart(principal.getName());
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.SUCCESS, statusNotification);
     }
 
     @Test

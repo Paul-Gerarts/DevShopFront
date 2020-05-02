@@ -1,10 +1,7 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class CartDto {
     private String user;
