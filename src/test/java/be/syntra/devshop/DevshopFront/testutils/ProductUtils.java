@@ -37,6 +37,7 @@ public class ProductUtils {
                 .description("description")
                 .archived(false)
                 .categories(createCategoryList())
+                .totalInCart(1)
                 .build();
     }
 
@@ -59,6 +60,7 @@ public class ProductUtils {
                 .description("another description")
                 .archived(false)
                 .categories(createCategoryList())
+                .totalInCart(1)
                 .build();
     }
 
