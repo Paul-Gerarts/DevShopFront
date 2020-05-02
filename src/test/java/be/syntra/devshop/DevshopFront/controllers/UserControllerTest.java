@@ -45,7 +45,7 @@ class UserControllerTest {
     CartService cartService;
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void displayCartWhenLoggedIn() throws Exception {
         // given
         when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
@@ -73,7 +73,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void canDoAddOneToProductTotalInCart() throws Exception {
         // when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/details/plus_one/1"));
@@ -86,7 +86,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void canDoRemoveOneFromProductTotalInCart() throws Exception {
         // when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/details/minus_one/2"));
@@ -99,7 +99,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void testDisplayCartOverview() throws Exception {
         //given
         when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
@@ -118,7 +118,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void canRemoveProductFromCart() throws Exception {
         // when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/details/delete/3"));
@@ -131,7 +131,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
+    @WithMockUser
     void canPayCart() throws Exception {
         //given
         final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();

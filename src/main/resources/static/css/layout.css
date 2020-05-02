@@ -110,6 +110,7 @@ html, body, .spinner {
 /*file-specific CSS*/
 
 .checkbox_layout {
+    padding-top: 22px;
     background-color: white;
 }
 

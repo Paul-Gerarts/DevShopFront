@@ -171,8 +171,12 @@ class CartServiceImplTest {
         paymentDto.setTotalCartPrice(cartService.getCartTotalPrice());
         currentCart.setProducts(cartDto.getProducts());
 
+        //when
+        PaymentDto result = PaymentUtils.createPaymentDtoWithTotalCartPrice();
+        result.setTotalCartPrice(cartService.getCartTotalPrice());
+
         //then
-        assertEquals(cartService.getCartTotalPrice(), paymentDto.getTotalCartPrice());
+        assertEquals(result.getTotalCartPrice(), paymentDto.getTotalCartPrice());
     }
 
     @Test

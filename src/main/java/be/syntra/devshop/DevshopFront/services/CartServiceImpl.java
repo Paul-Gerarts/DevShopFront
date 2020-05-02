@@ -7,7 +7,6 @@ import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -94,11 +93,10 @@ public class CartServiceImpl implements CartService {
     public StatusNotification payCart(String userName) {
         setUserName(currentCart, userName);
         setCartToFinalized(currentCart);
-        HttpEntity<CartDto> requestDto = new HttpEntity<>(currentCart);
-
-        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, requestDto, CartDto.class);
+        log.info("cart() -> {}", currentCart);
+        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, currentCart, CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
-            log.info("payCart() -> successful {}", currentCart.getClass());
+            log.info("payCart() -> successful {}", currentCart);
             currentCart.getProducts().forEach(product -> product.setTotalInCart(0));
             currentCart.getProducts().clear();
             return StatusNotification.SUCCESS;

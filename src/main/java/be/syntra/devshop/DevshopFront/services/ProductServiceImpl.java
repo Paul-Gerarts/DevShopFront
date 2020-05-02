@@ -5,9 +5,9 @@ import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("findById() -> product retrieved from backEnd");
             return productResponseEntity.getBody();
         } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
-            throw new ProductNotFoundException("Product with" + id + "was not found");
+            throw new ProductNotFoundException("Product with id =" + id + "was not found");
         }
         return new Product();
     }
