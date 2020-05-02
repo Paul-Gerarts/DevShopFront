@@ -124,7 +124,7 @@
                     Checkout
                 </button>
             </form>
-            <div th:if="${status != null}">
+            <div th:if="${status != null}" class="mdl-title__margin">
                 <br>
                 <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
