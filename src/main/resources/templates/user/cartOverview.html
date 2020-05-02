@@ -121,7 +121,7 @@
                 <button type="submit"
                         class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button mdl-color--blue mdl-title__margin"
                         th:disabled="${status != null && status.label.equals('Success') && cart.getProducts().isEmpty() }">
-                    Checkout
+                    <label style="color: white" th:text="CHECKOUT"></label>
                 </button>
             </form>
             <div th:if="${status != null}" style="margin: 3%">

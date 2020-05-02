@@ -93,14 +93,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public StatusNotification payCart(String userName) {
         setUserName(currentCart, userName);
-        log.info("username() -> {}", currentCart.getUser());
         setCartToFinalized(currentCart);
         HttpEntity<CartDto> requestDto = new HttpEntity<>(currentCart);
-        log.info("cart() -> {}", currentCart.toString());
 
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, requestDto, CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart.getClass());
+            currentCart.getProducts().forEach(product -> product.setTotalInCart(0));
             currentCart.getProducts().clear();
             return StatusNotification.SUCCESS;
         }

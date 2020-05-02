@@ -20,7 +20,6 @@ import java.util.Arrays;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final String PAYMENT = "payment";
     private static final String REDIRECT_CART_DETAIL_URL = "redirect:/users/cart/detail";
 
     private CartService cartService;
@@ -39,12 +38,7 @@ public class UserController {
     @GetMapping("/cart/detail")
     public String displayCartOverview(Model model) {
         log.info("displayCartOverview()");
-        model.addAttribute("cart", cartService.getCart());
-        PaymentDto paymentDto = PaymentDto.builder()
-                .totalCartPrice(cartService.getCartTotalPrice())
-                .paymentOptions(Arrays.asList(PaymentOption.values()))
-                .build();
-        model.addAttribute(PAYMENT, paymentDto);
+        addModelAttributesOfCartAndPayment(model);
         return "user/cartOverview";
     }
 
@@ -70,13 +64,17 @@ public class UserController {
     public String payCart(Model model, Principal user) {
         log.info(user.getName());
         StatusNotification statusNotification = cartService.payCart(user.getName());
+        addModelAttributesOfCartAndPayment(model);
+        model.addAttribute("status", statusNotification);
+        return "user/cartOverview";
+    }
+
+    private void addModelAttributesOfCartAndPayment(Model model) {
         PaymentDto paymentDto = PaymentDto.builder()
                 .totalCartPrice(cartService.getCartTotalPrice())
                 .paymentOptions(Arrays.asList(PaymentOption.values()))
                 .build();
         model.addAttribute("cart", cartService.getCart());
-        model.addAttribute("status", statusNotification);
-        model.addAttribute(PAYMENT, paymentDto);
-        return "user/cartOverview";
+        model.addAttribute("payment", paymentDto);
     }
 }
