@@ -21,5 +21,5 @@ public interface CartService {
 
     StatusNotification payCart(String username);
 
-    BigDecimal getCartTotalPrice();
+    BigDecimal getCartTotalPrice(CartDto currentCart);
 }

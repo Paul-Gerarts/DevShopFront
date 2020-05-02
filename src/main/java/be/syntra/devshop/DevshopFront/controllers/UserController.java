@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.PaymentOption;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import lombok.extern.slf4j.Slf4j;
@@ -70,11 +71,12 @@ public class UserController {
     }
 
     private void addModelAttributesOfCartAndPayment(Model model) {
+        CartDto currentCart = cartService.getCart();
         PaymentDto paymentDto = PaymentDto.builder()
-                .totalCartPrice(cartService.getCartTotalPrice())
+                .totalCartPrice(cartService.getCartTotalPrice(currentCart))
                 .paymentOptions(Arrays.asList(PaymentOption.values()))
                 .build();
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("cart", currentCart);
         model.addAttribute("payment", paymentDto);
     }
 }

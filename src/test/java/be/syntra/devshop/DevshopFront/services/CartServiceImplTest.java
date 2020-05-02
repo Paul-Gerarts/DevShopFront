@@ -3,7 +3,10 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
-import be.syntra.devshop.DevshopFront.testutils.*;
+import be.syntra.devshop.DevshopFront.testutils.CartUtils;
+import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
+import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
+import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +24,11 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
+import static be.syntra.devshop.DevshopFront.testutils.PaymentUtils.createPaymentDtoWithTotalCartPrice;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -32,6 +38,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @Import({TestWebConfig.class, JsonUtils.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CartServiceImplTest {
+
     @Autowired
     RestTemplate restTemplate;
 
@@ -96,7 +103,7 @@ class CartServiceImplTest {
         cartService.addOneToProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 2);
+        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 3);
     }
 
     @Test
@@ -165,18 +172,14 @@ class CartServiceImplTest {
     @Test
     void getTotalCartPriceTest() {
         //given
-        CartDto cartDto = CartUtils.getCartWithMultipleNonArchivedProducts();
-        currentCart = cartDto;
-        PaymentDto paymentDto = PaymentUtils.createPaymentDtoWithTotalCartPrice();
-        paymentDto.setTotalCartPrice(cartService.getCartTotalPrice());
-        currentCart.setProducts(cartDto.getProducts());
+        currentCart = getCartWithMultipleNonArchivedProducts();
+        PaymentDto paymentDto = createPaymentDtoWithTotalCartPrice();
 
         //when
-        PaymentDto result = PaymentUtils.createPaymentDtoWithTotalCartPrice();
-        result.setTotalCartPrice(cartService.getCartTotalPrice());
+        BigDecimal result = cartService.getCartTotalPrice(currentCart);
 
         //then
-        assertEquals(result.getTotalCartPrice(), paymentDto.getTotalCartPrice());
+        assertEquals(result, paymentDto.getTotalCartPrice());
     }
 
     @Test

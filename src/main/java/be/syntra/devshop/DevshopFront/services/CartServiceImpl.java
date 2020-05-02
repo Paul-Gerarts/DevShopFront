@@ -115,8 +115,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public BigDecimal getCartTotalPrice() {
-        return getCart().getProducts().stream()
+    public BigDecimal getCartTotalPrice(CartDto currentCart) {
+        return currentCart.getProducts().stream()
                 .map(product -> {
                     BigDecimal pricePerProduct = product.getPrice();
                     int totalInCart = product.getTotalInCart();

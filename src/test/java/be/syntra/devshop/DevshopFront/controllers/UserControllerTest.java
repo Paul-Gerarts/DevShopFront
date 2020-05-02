@@ -152,7 +152,7 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("payment", "cart", "status"));
 
         verify(cartService, times(1)).payCart(principal.getName());
-        verify(cartService, times(1)).getCartTotalPrice();
+        verify(cartService, times(1)).getCartTotalPrice(cartDto);
         verify(cartService, times(1)).getCart();
     }
 }
