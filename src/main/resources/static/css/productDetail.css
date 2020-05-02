@@ -109,12 +109,6 @@ html, body, .spinner {
     min-height: 200px;
 }
 
-/*file-specific CSS*/
-
-.mdl-list__item-text-body {
-    font-size: 40px;
-}
-
 .mdl-dialog {
     top: 45%;
     width: 30%;;
@@ -124,6 +118,12 @@ html, body, .spinner {
     display: flex;
     flex-direction: row;
     justify-content: space-between
+}
+
+/*file-specific CSS*/
+
+.mdl-list__item-text-body {
+    font-size: 40px;
 }
 
 .logo {

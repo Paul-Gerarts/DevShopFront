@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;
         }
-        return StatusNotification.ERROR;
+        return StatusNotification.FORM_ERROR;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("updateProduct() -> saved > {} ", product);
             return StatusNotification.UPDATED;
         }
-        return StatusNotification.ERROR;
+        return StatusNotification.FORM_ERROR;
     }
 
     private ProductList retrieveProductListFrom(String resourceUrl) {

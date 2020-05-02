@@ -107,6 +107,16 @@ html, body, .spinner {
     min-height: 200px;
 }
 
+.mdl-dialog {
+    top: 45%;
+    width: 30%;;
+}
+
+.mdl-dialog__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
 
 /*file-specific CSS*/
 

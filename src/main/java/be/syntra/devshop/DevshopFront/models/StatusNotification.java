@@ -12,7 +12,9 @@ public enum StatusNotification {
     UPDATED("The update was successful!"),
     SUCCESS("Success"),
     SAVED("Saved"),
-    ERROR("Error: make sure you fill in the form correctly");
+    FORM_ERROR("Error: make sure you fill in the form correctly"),
+    PERSISTANCE_ERROR("Error: something went wrong while persisting the desired object"),
+    DELETED("delete successful");
 
     private final String label;
 

@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
@@ -27,6 +28,7 @@ public class AdminController {
 
     private final ProductService productService;
     private final SearchService searchService;
+    private final CategoryService categoryService;
     private final ProductMapperUtil productMapperUtil;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
     private static final String PRODUCT = "product";
@@ -35,11 +37,13 @@ public class AdminController {
     public AdminController(
             ProductService productService,
             SearchService searchService,
-            ProductMapperUtil productMapperUtil
+            ProductMapperUtil productMapperUtil,
+            CategoryService categoryService
     ) {
         this.productService = productService;
         this.searchService = searchService;
         this.productMapperUtil = productMapperUtil;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/addproduct")
@@ -88,6 +92,14 @@ public class AdminController {
     @GetMapping("/manage_category")
     public String displayCategoryForm(Model model) {
         addCategoriesModel(model);
+        return "admin/product/addCategory";
+    }
+
+    @PostMapping("/manage_category/delete/{id}")
+    public String removeCategory(@PathVariable Long id, Model model) {
+        StatusNotification deletedCategory = categoryService.delete(id);
+        addCategoriesModel(model);
+        model.addAttribute("status", deletedCategory);
         return "admin/product/addCategory";
     }
 

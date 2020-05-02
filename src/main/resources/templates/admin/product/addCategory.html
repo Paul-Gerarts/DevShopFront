@@ -23,11 +23,12 @@
                             th:value="${category}"
                             th:text="${category.name}">
                     </option>
+                    <input hidden id="selectedCategoryID">
                 </select>
                 <em class="material-icons" id="arrow" style="font-size: 36px; padding-left: 60px; visibility: hidden">trending_flat</em>
                 <div class="category-update-field">
                     <input class="category-dropdown" style="visibility: hidden; height: 27px; padding-left: 5px"
-                           type="text" th:field="${categories}" id="categoryToUpdate">
+                           type="text" id="categoryToUpdate">
                 </div>
                 <div style="padding-left: 30px; display: flex; flex-direction: column">
                     <a id="updateButton"
@@ -35,8 +36,8 @@
                        style="padding-left: 10px; width: 200px; visibility: hidden;" disabled>
                         <em class="material-icons">sync_alt</em>Update category
                     </a>
-                    <a id="deleteButton" th:href=""
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white"
+                    <a id="deleteButton"
+                       class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white"
                        style="padding-left: 10px; width: 200px; top: 10px; visibility: hidden">
                         <em class="material-icons">delete_outline</em>Delete category
                     </a>
@@ -47,12 +48,17 @@
                     const transitionArrow = document.getElementById('arrow');
                     const updateButton = document.getElementById('updateButton');
                     const deleteButton = document.getElementById('deleteButton');
+                    const selectedCategoryID = document.getElementById('selectedCategoryID');
 
                     categoryDropdown.addEventListener('change', () => {
                         // retrieve categoryName
                         const categoryObject = categoryDropdown.value;
-                        const subStringStart = categoryObject.lastIndexOf('=') + 1;
-                        categoryToUpdate.value = categoryObject.substring(subStringStart, categoryObject.length - 1);
+                        const subStringOfNameStart = categoryObject.lastIndexOf('=') + 1;
+                        categoryToUpdate.value = categoryObject.substring(subStringOfNameStart, categoryObject.length - 1);
+
+                        // retrieve categoryID
+                        const subStringOfIDStart = categoryObject.indexOf('=') + 1;
+                        selectedCategoryID.value = categoryObject.substring(subStringOfIDStart, subStringOfNameStart - 7);
 
                         makeVisible(categoryToUpdate);
                         makeVisible(transitionArrow);
@@ -88,10 +94,59 @@
                     function makeVisible(element) {
                         element.style.visibility = 'visible';
                     }
+
+                    function deleteCategory() {
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = "/admin/manage_category/delete/" + selectedCategoryID.value;
+                        form.appendChild(selectedCategoryID);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
                 </script>
+            </div>
+            <div th:if="${status != null}">
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
+                    <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
+                    <button type="button" class="mdl-chip__action"><i class="material-icons">info</i></button>
+                </span>
             </div>
         </div>
     </main>
 </div>
+<!--popup for delete button-->
+<dialog class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Delete this category?</h4>
+    <div class="mdl-dialog__content">
+        <p>
+            It will be gone FOREVER, that's a long, long time. Are you sure?
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button"
+                class="mdl-button close  mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey mdl-color-text--white">
+            <em class="material-icons">undo</em>Back
+        </button>
+        <button onclick="deleteCategory()"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+            <em class="material-icons">archive</em>Delete Category
+        </button>
+    </div>
+</dialog>
+<!--logic for showing popup-->
+<script>
+    var dialog = document.querySelector('dialog');
+    var showModalButton = document.querySelector('.show-modal');
+    if (!dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+    showModalButton.addEventListener('click', function () {
+        dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function () {
+        dialog.close();
+    });
+</script>
 </body>
 </html>
