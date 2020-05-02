@@ -23,6 +23,6 @@ public class CartController {
     public String goToCartAfterLogin() {
         log.info("goToCartAfterLogin() -> redirect user to cart-details page after login/loginCheck");
         dataStore.getMap().put("redirectToCartAfterUserSuccessfulLogin", true);
-        return "redirect:/users/cart/overview";
+        return "redirect:/users/cart";
     }
 }

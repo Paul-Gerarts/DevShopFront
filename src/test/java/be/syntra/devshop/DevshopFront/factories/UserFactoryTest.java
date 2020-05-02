@@ -27,7 +27,7 @@ public class UserFactoryTest {
 
         // then
         assertThat(securityUserResult.getClass()).isEqualTo(SecurityUser.class);
-        assertThat(securityUserResult.getUsername()).isEqualTo(fullName);
+        assertThat(securityUserResult.getUsername()).isEqualTo(userName);
         assertThat(securityUserResult.getPassword()).isEqualTo(password);
         // assert that there are as much granted authorities as there are userRoles
         assertThat(userRoles.size()).isEqualTo(securityUserResult.getAuthorities()

@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("findById() -> product retrieved from backEnd");
             return productResponseEntity.getBody();
         } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
-            throw new ProductNotFoundException("Product with id = " + id + " was not found");
+            throw new ProductNotFoundException("Product with id: " + id + " was not found");
         }
         return new Product();
     }

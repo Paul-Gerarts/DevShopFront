@@ -41,7 +41,7 @@ class CartControllerTest {
         // then
         resultActions
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users/cart/overview"));
+                .andExpect(redirectedUrl("/users/cart"));
 
         verify(dataStore, times(1)).getMap();
     }

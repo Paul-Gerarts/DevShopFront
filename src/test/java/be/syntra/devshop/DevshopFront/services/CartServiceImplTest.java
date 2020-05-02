@@ -1,18 +1,37 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
+import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.math.BigDecimal;
+import java.security.Principal;
+
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
+import static be.syntra.devshop.DevshopFront.testutils.PaymentUtils.createPaymentDtoWithTotalCartPrice;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 
 @RestClientTest(CartService.class)
 @ExtendWith(MockitoExtension.class)
@@ -21,10 +40,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CartServiceImplTest {
 
     @Autowired
+    RestTemplate restTemplate;
+
+    @Value("${baseUrl}")
+    private String baseUrl;
+
+    @Value("${cartEndpoint}")
+    private String endpoint;
+
+    @Mock
+    private Principal principal;
+
+    @Autowired
     CartDto currentCart;
 
     @Autowired
     CartServiceImpl cartService;
+
+    @Autowired
+    private JsonUtils jsonUtils;
+
+    private MockRestServiceServer mockServer;
+
+    @BeforeEach
+    public void setUp() {
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+    }
 
     @Test
     public void getNewCartTest() {
@@ -62,7 +103,7 @@ class CartServiceImplTest {
         cartService.addOneToProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 2);
+        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 3);
     }
 
     @Test
@@ -101,5 +142,59 @@ class CartServiceImplTest {
 
         // then
         assertEquals(currentCart.getProducts().size(), 0);
+    }
+
+    @Test
+    void payCartTest() {
+        //given
+        currentCart = CartUtils.getCartWithOneDummyProduct();
+        final String cartDtoAsJson = jsonUtils.asJsonString(currentCart);
+        final String expectedEndpoint = baseUrl + endpoint;
+        currentCart.setUser(principal.getName());
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.CREATED)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(cartDtoAsJson));
+
+        // when
+        StatusNotification statusNotification = cartService.payCart(principal.getName());
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.SUCCESS, statusNotification);
+    }
+
+    @Test
+    void getTotalCartPriceTest() {
+        //given
+        currentCart = getCartWithMultipleNonArchivedProducts();
+        PaymentDto paymentDto = createPaymentDtoWithTotalCartPrice();
+
+        //when
+        BigDecimal result = cartService.getCartTotalPrice(currentCart);
+
+        //then
+        assertEquals(result, paymentDto.getTotalCartPrice());
+    }
+
+    @Test
+    void setCartToFinalizedTest() {
+        //given
+        CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+
+        //when
+        cartDto.setActiveCart(false);
+        cartDto.setFinalizedCart(true);
+        cartDto.setPaidCart(false);
+
+        //then
+        assertTrue(cartDto.isFinalizedCart());
+        assertFalse(cartDto.isActiveCart());
+        assertFalse(cartDto.isPaidCart());
     }
 }

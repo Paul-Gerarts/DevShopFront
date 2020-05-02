@@ -2,13 +2,18 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +31,16 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${cartEndpoint}")
+    private String endpoint;
+
+    private String resourceUrl = null;
+
+    @PostConstruct
+    private void init() {
+        resourceUrl = baseUrl.concat(endpoint);
+    }
 
     @Override
     public CartDto getCart() {
@@ -73,5 +88,40 @@ public class CartServiceImpl implements CartService {
                 .filter(product -> product.getId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
+    }
+    @Override
+    public StatusNotification payCart(String userName) {
+        setUserName(currentCart, userName);
+        setCartToFinalized(currentCart);
+        log.info("cart() -> {}", currentCart);
+        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, currentCart, CartDto.class);
+        if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
+            log.info("payCart() -> successful {}", currentCart);
+            currentCart.getProducts().forEach(product -> product.setTotalInCart(0));
+            currentCart.getProducts().clear();
+            return StatusNotification.SUCCESS;
+        }
+        return StatusNotification.PAYMENT_FAIL;
+    }
+
+    private void setUserName(CartDto cartDto, String user) {
+        cartDto.setUser(user);
+    }
+
+    private void setCartToFinalized(CartDto cartDto) {
+        cartDto.setActiveCart(false);
+        cartDto.setFinalizedCart(true);
+        cartDto.setPaidCart(false);
+    }
+
+    @Override
+    public BigDecimal getCartTotalPrice(CartDto currentCart) {
+        return currentCart.getProducts().stream()
+                .map(product -> {
+                    BigDecimal pricePerProduct = product.getPrice();
+                    int totalInCart = product.getTotalInCart();
+                    return pricePerProduct.multiply(new BigDecimal(totalInCart));
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
