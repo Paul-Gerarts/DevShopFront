@@ -77,6 +77,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
+        // todo: DEV-34
         dataStore.getMap().put("cacheNeedsUpdate", true);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
@@ -93,6 +94,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductListDto findAllArchived() {
         return retrieveProductListFrom(resourceUrl + "/archived");
+    }
+
+    @Override
+    public ProductListDto findAllProductsBySearchModel() {
+        //SearchModel searchModel = searchService.getSearchModel();
+        HttpEntity<SearchModel> request = new HttpEntity<>(searchService.getSearchModel());
+        ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductListDto.class);
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            //log.info("findProductList() -> products retrieved from backEnd with search : #{}", productListResponseEntity.getBody().getProducts().size());
+            return productListResponseEntity.getBody();
+        }
+        return new ProductListDto(Collections.emptyList());
     }
 
     @Override

@@ -41,9 +41,11 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        ProductListDto productListDto = productService.findAllNonArchived();
-        ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
+        //ProductListDto productListDto = productService.findAllNonArchived();
         searchService.resetSearchModel();
+        ProductListDto productListDto = productService.findAllProductsBySearchModel();
+        ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
+        //searchService.resetSearchModel();
         productService.setPriceFilters(productListDto.getProducts());
         model.addAttribute("productlist", productDtoList);
         model.addAttribute("searchModel", searchService.getSearchModel());

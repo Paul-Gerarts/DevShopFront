@@ -59,6 +59,17 @@ public class WebConfig implements WebMvcConfigurer {
     @SessionScope
     public SearchModel getSearchModel() {
         return new SearchModel();
+        /*return SearchModel.builder()
+                .searchFailure(false)
+                .searchRequest("")
+                .searchResultView(false)
+                .activeFilters(false)
+                .appliedFiltersHeader("")
+                .archivedView(false)
+                .description("")
+                .sortAscendingName(false)
+                .sortAscendingPrice(false)
+                .build();*/
     }
 
     @Bean

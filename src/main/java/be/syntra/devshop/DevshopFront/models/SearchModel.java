@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class SearchModel {
-
     private String searchRequest;
     private String description;
     private BigDecimal priceLow;
