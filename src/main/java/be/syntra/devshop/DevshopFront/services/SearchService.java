@@ -23,4 +23,6 @@ public interface SearchService {
     void resetSearchModel();
 
     SearchModel getSearchModel();
+
+    void setAppliedFiltersToSearchModel();
 }
