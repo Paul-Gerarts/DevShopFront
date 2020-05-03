@@ -86,24 +86,30 @@ public class SearchController {
 
     @GetMapping("/archived/sortbyname")
     public String sortArchivedByName(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
+        //List<Product> productList = productService.findAllArchived().getProducts();
+        searchService.setArchivedView(true);
+        List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
         return getProductsSortedByName(model, productList);
     }
 
     @GetMapping("/archived/sortbyprice")
     public String sortArchivedByPrice(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
+        //List<Product> productList = productService.findAllArchived().getProducts();
+        searchService.setArchivedView(true);
+        List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
         return getProductsSortedByPrice(model, productList);
     }
 
     private List<Product> applySearch(boolean isSearchResultView) {
         searchService.setSearchResultView(isSearchResultView);
         searchService.setArchivedView(false);
-        List<Product> productList = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        // todo: DEV-034
+        /*List<Product> productList = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
         List<Product> filteredList = productService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
         return hasDescription()
                 ? productService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
-                : filteredList;
+                : filteredList;*/
+        return productService.findAllProductsBySearchModel().getProducts();
     }
 
     private boolean hasDescription() {

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequestMapping("/products")
@@ -74,8 +72,10 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        final ProductListDto productListDto = productService.filterByPrice(products, searchService.getSearchModel());
+        // todo: in backend combine these 2 if set in searchModel
+        /*List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
+        final ProductListDto productListDto = productService.filterByPrice(products, searchService.getSearchModel());*/
+        ProductListDto productListDto = productService.findAllProductsBySearchModel();
         ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
         model.addAttribute("productlist", productDtoList);
         model.addAttribute("searchModel", searchService.getSearchModel());
