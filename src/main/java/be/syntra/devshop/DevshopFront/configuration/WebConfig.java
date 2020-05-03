@@ -3,7 +3,7 @@ package be.syntra.devshop.DevshopFront.configuration;
 import be.syntra.devshop.DevshopFront.exceptions.RestTemplateResponseErrorHandler;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -59,17 +59,12 @@ public class WebConfig implements WebMvcConfigurer {
     @SessionScope
     public SearchModel getSearchModel() {
         return new SearchModel();
-        /*return SearchModel.builder()
-                .searchFailure(false)
-                .searchRequest("")
-                .searchResultView(false)
-                .activeFilters(false)
-                .appliedFiltersHeader("")
-                .archivedView(false)
-                .description("")
-                .sortAscendingName(false)
-                .sortAscendingPrice(false)
-                .build();*/
+    }
+
+    @Bean
+    @SessionScope
+    public ProductListCache getProductListCache() {
+        return new ProductListCache();
     }
 
     @Bean

@@ -7,6 +7,8 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;

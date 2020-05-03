@@ -107,12 +107,12 @@ html, body, .spinner {
     min-height: 200px;
 }
 
-
 /*file-specific CSS*/
 
 .checkbox_layout {
     padding-top: 22px;
     color: lightgray;
+    background-color: white;
 }
 
 .text-danger {
@@ -236,3 +236,8 @@ html, body, .spinner {
     top: 500px;
     left: 75%;
 }
+
+
+
+
+

@@ -78,7 +78,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return fullName;
+        return userName;
     }
 
     @Override

@@ -8,6 +8,8 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 
 import java.util.List;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 
 public interface ProductService {
 
