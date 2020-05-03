@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
@@ -77,11 +78,12 @@ public class AdminController {
 
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
+        searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
+        ProductListDto productListDto = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("products", productList);
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
         return "product/productOverview";
     }
 
