@@ -63,12 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     @SessionScope
-    public ProductListCache getProductListCache() {
-        return new ProductListCache();
-    }
-
-    @Bean
-    @SessionScope
     public DataStore getDataStore() {
         Map<String, Boolean> dataStore = new HashMap<>();
         dataStore.put("cacheNeedsUpdate", true);

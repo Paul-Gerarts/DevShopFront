@@ -5,13 +5,12 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
@@ -28,8 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProductList;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +41,9 @@ class ProductControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    ProductMapperUtil productMapperUtil;
 
     @MockBean
     private ProductService productService;
@@ -62,7 +63,8 @@ class ProductControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllNonArchived()).thenReturn(new ProductListDto(dummyProducts));
+        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductListDto(dummyProducts));
+        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -72,12 +74,13 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCartDto));
+                .andExpect(model().attributeExists("productlist", "searchModel", "cart"));
 
 
-        verify(productService, times(1)).findAllNonArchived();
+        verify(productService, times(1)).findAllProductsBySearchModel();
+        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(searchService, times(1)).getSearchModel();
+        verify(cartService, times(1)).getCart();
     }
 
     @Test
@@ -129,10 +132,12 @@ class ProductControllerTest {
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final ProductListDto productListDtoDummy = new ProductListDto(dummyProducts);
+        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findBySearchRequest(any())).thenReturn(productListDtoDummy);
-        when(productService.filterByPrice(any(), any())).thenReturn(productListDtoDummy);
+        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductListDto(dummyProducts));
+        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
+        when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")
@@ -146,11 +151,13 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts));
+                .andExpect(model().attributeExists("productlist", "searchModel", "cart"));
 
         verify(productService, times(1)).addToCart(any());
         verify(productService, times(1)).findById(dummyProduct.getId());
-        verify(productService, times(1)).findBySearchRequest(any());
+        verify(productService, times(1)).findAllProductsBySearchModel();
+        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(searchService, times(1)).getSearchModel();
+        verify(cartService, times(1)).getCart();
     }
 }

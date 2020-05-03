@@ -4,13 +4,12 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dto.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -29,8 +28,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.*;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyArchivedProductList;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProductList;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -47,14 +45,14 @@ public class SearchControllerTest {
     @MockBean
     private ProductService productService;
 
-    /*@MockBean
-    private ProductListCacheService productListCacheService;*/
-
     @MockBean
     private CartService cartService;
 
     @MockBean
     private SearchService searchService;
+
+    @MockBean
+    private ProductMapperUtil productMapperUtil;
 
     @Test
     public void canDisplaySearchedForProductsTest() throws Exception {
@@ -74,6 +72,9 @@ public class SearchControllerTest {
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
+
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
 
@@ -82,12 +83,12 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart));
+                .andExpect(model().attributeExists("productlist", "cart"));
 
-        verify(productService, times(1)).findBySearchRequest(any());
-        verify(productService, times(1)).filterByPrice(any(), any());
+        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(searchService, times(1)).getSearchModel();
+        verify(cartService, times(1)).getCart();
+        verify(searchService, times(1)).setSearchRequest(any());
     }
 
     @Test
