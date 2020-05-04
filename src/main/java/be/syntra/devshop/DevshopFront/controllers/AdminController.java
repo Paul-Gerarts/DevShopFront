@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -31,7 +32,10 @@ public class AdminController {
     private final CategoryService categoryService;
     private final ProductMapperUtil productMapperUtil;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
+    private static final String CATEGORY_FORM = "admin/product/addCategory";
+    private static final String PRODUCTS = "products";
     private static final String PRODUCT = "product";
+    private static final String STATUS = "status";
 
     @Autowired
     public AdminController(
@@ -85,22 +89,35 @@ public class AdminController {
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("products", productList);
+        model.addAttribute(PRODUCTS, productList);
         return "product/productOverview";
     }
 
     @GetMapping("/manage_category")
     public String displayCategoryForm(Model model) {
         addCategoriesModel(model);
-        return "admin/product/addCategory";
+        return CATEGORY_FORM;
     }
 
     @PostMapping("/manage_category/delete/{id}")
     public String removeCategory(@PathVariable Long id, Model model) {
         StatusNotification deletedCategory = categoryService.delete(id);
+        handleDeleteFail(id, model, deletedCategory);
         addCategoriesModel(model);
-        model.addAttribute("status", deletedCategory);
-        return "admin/product/addCategory";
+        model.addAttribute(STATUS, deletedCategory);
+        model.addAttribute("idToDelete", id);
+        return CATEGORY_FORM;
+    }
+
+    @PostMapping("/manage_category/set_category/{categoryToDelete}/{categoryToSet}")
+    public String setCategoryToProducts(@PathVariable Long categoryToDelete, @PathVariable Long categoryToSet, Model model) {
+        StatusNotification deletedCategory = categoryService.setNewCategories(categoryToDelete, categoryToSet);
+        StatusNotification succes = StatusNotification.PERSISTENCE_ERROR.equals(deletedCategory)
+                ? StatusNotification.DELETE_FAIL
+                : categoryService.delete(categoryToDelete);
+        addCategoriesModel(model);
+        model.addAttribute(STATUS, succes);
+        return CATEGORY_FORM;
     }
 
     private String handleChangedProductForm(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
@@ -117,8 +134,21 @@ public class AdminController {
 
     private String handleProductForm(ProductDto productDto, Model model) {
         StatusNotification statusNotification = productService.addProduct(productDto);
-        model.addAttribute("products", productDto);
-        model.addAttribute("status", statusNotification);
+        model.addAttribute(PRODUCTS, productDto);
+        model.addAttribute(STATUS, statusNotification);
         return PRODUCT_FORM;
+    }
+
+    private void handleDeleteFail(Long id, Model model, StatusNotification deletedCategory) {
+        if (deletedCategory.equals(StatusNotification.DELETE_FAIL)) {
+            List<Product> productList = productService.findAllWithCorrespondingCategory(id).getProducts();
+            List<Category> categories = productService.findAllCategories()
+                    .getCategories()
+                    .parallelStream()
+                    .filter(category -> !category.getId().equals(id))
+                    .collect(Collectors.toUnmodifiableList());
+            model.addAttribute("filteredCategories", categories);
+            model.addAttribute(PRODUCTS, productList);
+        }
     }
 }

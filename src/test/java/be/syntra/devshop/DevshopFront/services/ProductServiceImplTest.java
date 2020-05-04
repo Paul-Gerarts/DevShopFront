@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
@@ -29,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryDto;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,6 +150,28 @@ class ProductServiceImplTest {
 
         // when
         final ProductList receivedProductList = productService.findAllArchived();
+
+        // then
+        mockServer.verify();
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
+    }
+
+    @Test
+    void findAllWithCorrespondingCategoryTest() {
+        // given
+        final CategoryDto category = createCategoryDto();
+        final List<Product> dummyAllProductList = getDummyAllProductList();
+        final ProductList expectedProductList = new ProductList(dummyAllProductList);
+        final String dummyAllProductListJsonString = jsonUtils.asJsonString(expectedProductList);
+        final String expectedEndpoint = baseUrl + endpoint + "/all/" + category.getId();
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        withSuccess(dummyAllProductListJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        final ProductList receivedProductList = productService.findAllWithCorrespondingCategory(category.getId());
 
         // then
         mockServer.verify();

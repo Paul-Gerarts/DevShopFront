@@ -86,6 +86,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductList findAllWithCorrespondingCategory(Long id) {
+        return retrieveProductListFrom(resourceUrl + "/all/" + id);
+    }
+
+    @Override
     public Product findById(Long id) {
         ResponseEntity<Product> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
         if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {

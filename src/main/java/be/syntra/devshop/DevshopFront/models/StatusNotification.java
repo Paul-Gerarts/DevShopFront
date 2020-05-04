@@ -13,7 +13,7 @@ public enum StatusNotification {
     SUCCESS("Success"),
     SAVED("Saved"),
     FORM_ERROR("Make sure you fill in the form correctly"),
-    PERSISTANCE_ERROR("Something went wrong while persisting the desired object"),
+    PERSISTENCE_ERROR("Something went wrong while persisting the desired object"),
     DELETED("delete successful"),
     DELETE_FAIL("deletion failed"),
     PAYMENT_FAIL("Payment cart failed.");

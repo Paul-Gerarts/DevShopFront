@@ -42,6 +42,52 @@
                         <em class="material-icons">delete_outline</em>Delete category
                     </a>
                 </div>
+                <!--popup for category-delete-fail-->
+                <dialog th:if="${status != null && status.label.equals('deletion failed')}" style="top: auto"
+                        class="mdl-dialog"
+                        id="category_delete">
+                    <h4 class="mdl-dialog__title">Deletion failed</h4>
+                    <div class="mdl-dialog__content">
+                        <p>
+                            The category you're trying to delete is still attached to several products.
+                            We suggest you create a new category first.
+                            Selecting a category from this dropdown will remove the conflicting category and set the one
+                            of your choice.
+                        </p>
+                    </div>
+                    <div th:if="${filteredCategories != null && products != null && idToDelete != null}">
+                        <select class="category-dropdown" id="categoryDropdownPopup" name="categoryDropdownPopup">
+                            <option disabled selected value="none">Select a category to set</option>
+                            <option th:each="category : ${filteredCategories}"
+                                    th:value="${category}"
+                                    th:text="${category.name}">
+                            </option>
+                            <input hidden id="selectedCategoryIDPopup">
+                        </select>
+                        <ul class="mdl-list" style="overflow-y: scroll; max-height: 300px;">
+                            <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item-flex"
+                                th:each="product, index : ${products}">
+                                <a th:href="@{/products/details/{id}(id=${product.id})}"
+                                   class="cart-detail-href cart-product-item-flex-product-title" style="color: black;">
+                                    <label class="cart-product-item-title cart-detail-href"
+                                           th:text="${product.name}">Product Name</label>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mdl-dialog__actions">
+                        <a id="closeConflictPopup" th:href="@{/admin/manage_category}"
+                           class="mdl-button close  mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey mdl-color-text--white">
+                            <em class="material-icons">undo</em>Back
+                        </a>
+                        <input type="hidden" id="productsToSet" th:value="${products}">
+                        <input type="hidden" id="categoryIdToDelete" th:value="${idToDelete}">
+                        <button onclick="setCategory()" id="setNewCategoryButton" disabled
+                                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey-500 mdl-color-text--white">
+                            <em class="material-icons">build</em>Set chosen category
+                        </button>
+                    </div>
+                </dialog>
                 <script th:inline="javascript">
                     const categoryDropdown = document.getElementById('categoryDropdown');
                     const categoryToUpdate = document.getElementById('categoryToUpdate');
@@ -49,6 +95,9 @@
                     const updateButton = document.getElementById('updateButton');
                     const deleteButton = document.getElementById('deleteButton');
                     const selectedCategoryID = document.getElementById('selectedCategoryID');
+                    const categoryConflictDropdown = document.getElementById('categoryDropdownPopup');
+                    const selectedConflictCategoryID = document.getElementById('selectedCategoryIDPopup');
+                    const setNewCategoryButton = document.getElementById('setNewCategoryButton');
 
                     categoryDropdown.addEventListener('change', () => {
                         // retrieve categoryName
@@ -71,6 +120,18 @@
 
                         if (updateButton.classList.contains('mdl-color--green')) {
                             disableButton(updateButton, 'mdl-color--green')
+                        }
+                    })
+
+                    categoryConflictDropdown.addEventListener('change', () => {
+                        // retrieve categoryID
+                        const categoryConflictObject = categoryConflictDropdown.value;
+                        const subStringOfConflictNameStart = categoryConflictObject.lastIndexOf('=') + 1;
+                        const subStringOfConflictIDStart = categoryConflictObject.indexOf('=') + 1;
+                        selectedConflictCategoryID.value = categoryConflictObject.substring(subStringOfConflictIDStart, subStringOfConflictNameStart - 7);
+
+                        if (setNewCategoryButton.classList.contains('mdl-color--grey-500')) {
+                            enableButton(setNewCategoryButton, 'mdl-color--green')
                         }
                     })
 
@@ -103,9 +164,19 @@
                         document.body.appendChild(form);
                         form.submit();
                     }
+
+                    function setCategory() {
+                        const idToDelete = document.getElementById('categoryIdToDelete');
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = "/admin/manage_category/set_category/" + idToDelete.value + "/" + selectedConflictCategoryID.value;
+                        form.appendChild(idToDelete);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
                 </script>
             </div>
-            <div th:if="${status != null}">
+            <div th:if="${status != null}" id="chip">
                 <br>
                 <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
@@ -116,7 +187,7 @@
     </main>
 </div>
 <!--popup for delete button-->
-<dialog class="mdl-dialog">
+<dialog class="mdl-dialog" id="deleteDialog">
     <h4 class="mdl-dialog__title">Delete this category?</h4>
     <div class="mdl-dialog__content">
         <p>
@@ -128,25 +199,51 @@
                 class="mdl-button close  mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--grey mdl-color-text--white">
             <em class="material-icons">undo</em>Back
         </button>
-        <button onclick="deleteCategory()"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
-            <em class="material-icons">archive</em>Delete Category
+        <button onclick="deleteCategory();" id="confirmDeleteButton"
+                class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
+            <em class="material-icons">delete_outline</em>Delete Category
         </button>
     </div>
 </dialog>
-<!--logic for showing popup-->
+<!--logic for showing popups-->
 <script>
-    var dialog = document.querySelector('dialog');
-    var showModalButton = document.querySelector('.show-modal');
-    if (!dialog.showModal) {
-        dialogPolyfill.registerDialog(dialog);
+    const allApplicableDialogs = document.querySelectorAll('dialog');
+    const allDeleteButtons = document.getElementsByClassName("show-modal");
+    const deleteDialog = document.getElementById('deleteDialog');
+    const categoryDelete = document.getElementById('category_delete');
+
+    for (applicableDialog of allApplicableDialogs) {
+        if (!applicableDialog.showModal) {
+            dialogPolyfill.registerDialog(applicableDialog);
+        }
     }
-    showModalButton.addEventListener('click', function () {
-        dialog.showModal();
-    });
-    dialog.querySelector('.close').addEventListener('click', function () {
-        dialog.close();
-    });
+
+    for (let i = 0; i < allDeleteButtons.length; i++) {
+        // TODO: refactor this unnecessary for-loop unless future logic of this ticket needs it
+        if (allDeleteButtons[i].getAttribute('id') === 'deleteButton') {
+            allDeleteButtons[i].addEventListener('click', function () {
+                deleteDialog.showModal();
+            });
+        }
+
+        if (!!deleteDialog) {
+            deleteDialog.querySelector('.close').addEventListener('click', function () {
+                deleteDialog.close();
+            });
+        }
+
+        if (allDeleteButtons[i].getAttribute('id') === 'confirmDeleteButton') {
+            window.onload = () => {
+                categoryDelete.showModal();
+            }
+        }
+
+        if (!!categoryDelete) {
+            categoryDelete.querySelector('.close').addEventListener('click', function () {
+                categoryDelete.close();
+            });
+        }
+    }
 </script>
 </body>
 </html>
