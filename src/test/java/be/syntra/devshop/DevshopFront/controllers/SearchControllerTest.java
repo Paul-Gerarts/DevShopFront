@@ -107,11 +107,12 @@ public class SearchControllerTest {
         dummySearchModel.setDescription(description);
         dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productService.findBySearchRequest(any())).thenReturn(dummyProductListDto);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
         when(productService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductListDto);
         when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductListDto);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + description));
@@ -121,14 +122,12 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
+                .andExpect(model().attributeExists("productlist", "cart", "searchModel"));
 
-        verify(productService, times(1)).findBySearchRequest(any());
-        verify(productService, times(1)).filterByPrice(any(), any());
-        verify(productService, times(1)).searchForProductDescription(any(), any());
+        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(searchService, times(1)).getSearchModel();
+        verify(cartService, times(1)).getCart();
+        verify(searchService, times(1)).setDescription(any());
     }
 
     @ParameterizedTest
@@ -148,6 +147,7 @@ public class SearchControllerTest {
         dummySearchModel.setPriceLow(priceLow);
         dummySearchModel.setPriceHigh(priceHigh);
         dummySearchModel.setSearchRequest(searchRequest);
+        dummySearchModel.setActiveFilters(true);
 
         when(productService.findBySearchRequest(any())).thenReturn(dummyProductListDto);
         when(productService.sortListByName(any(), any())).thenReturn(dummyProductListDto);
@@ -156,6 +156,7 @@ public class SearchControllerTest {
         when(productService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductListDto);
         when(cartService.getCart()).thenReturn(dummyCart);
         when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get(url));
@@ -165,10 +166,7 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
+                .andExpect(model().attributeExists("productlist", "cart", "searchModel"));
 
         verify(productService, times(1)).findBySearchRequest(any());
         verify(productService, times(1)).filterByPrice(any(), any());
@@ -246,5 +244,31 @@ public class SearchControllerTest {
 
         verify(productService, times(1)).findBySearchRequest(any());
         verify(productService, times(1)).filterByPrice(any(), any());
+    }
+
+    @Test
+    void showSearchBarResultTest() throws Exception {
+        // given
+        final String TEST_REQUEST = "testRequest";
+        final ProductListDto dummyProductListDto = new ProductListDto(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + TEST_REQUEST));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setSearchRequest(TEST_REQUEST);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
     }
 }
