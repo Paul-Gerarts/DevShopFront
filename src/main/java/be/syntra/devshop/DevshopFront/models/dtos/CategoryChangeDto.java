@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 public class CategoryChangeDto {
 
-    private Long categoryToDelete;
+    private Long categoryToChange;
     private Long categoryToSet;
 }

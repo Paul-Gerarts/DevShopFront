@@ -16,7 +16,8 @@ public enum StatusNotification {
     PERSISTENCE_ERROR("Something went wrong while persisting the desired object"),
     DELETED("delete successful"),
     DELETE_FAIL("deletion failed"),
-    PAYMENT_FAIL("Payment cart failed.");
+    PAYMENT_FAIL("Payment cart failed."),
+    UPDATE_FAIL("Failed to change the category");
 
     private final String label;
 

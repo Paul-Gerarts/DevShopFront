@@ -120,6 +120,13 @@ public class AdminController {
         return CATEGORY_FORM;
     }
 
+    @PutMapping("/manage_category/update_category/{categoryToUpdate}/{categoryToSet}")
+    public String updateCategory(@PathVariable Long categoryToUpdate, @PathVariable Long categoryToSet, Model model) {
+        addCategoriesModel(model);
+        model.addAttribute(STATUS, categoryService.updateCategory(categoryToUpdate, categoryToSet));
+        return CATEGORY_FORM;
+    }
+
     private String handleChangedProductForm(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         addCategoriesModel(model);
         return (!bindingResult.hasErrors())

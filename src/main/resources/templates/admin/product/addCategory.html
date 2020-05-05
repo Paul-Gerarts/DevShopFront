@@ -30,9 +30,9 @@
                     <input class="category-dropdown" style="visibility: hidden; height: 27px; padding-left: 5px"
                            type="text" id="categoryToUpdate">
                 </div>
-                <div style="padding-left: 30px; display: flex; flex-direction: column">
+                <div style="padding-left: 30px; display: flex; flex-direction: column" onclick="updateCategory()">
                     <a id="updateButton"
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--gray mdl-color-text--white"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--gray-500 mdl-color-text--white"
                        style="padding-left: 10px; width: 200px; visibility: hidden;" disabled>
                         <em class="material-icons">sync_alt</em>Update category
                     </a>
@@ -51,7 +51,7 @@
                         <p>
                             The category you're trying to delete is still attached to several products.
                             We suggest you create a new category first.
-                            Selecting a category from this dropdown will remove the conflicting category and set the one
+                            Selecting a category from this dropdown will delete the conflicting category and set the one
                             of your choice.
                         </p>
                     </div>
@@ -119,8 +119,13 @@
                         }
 
                         if (updateButton.classList.contains('mdl-color--green')) {
-                            disableButton(updateButton, 'mdl-color--green')
+                            disableButton(updateButton, 'mdl-color--grey-500')
                         }
+                    })
+
+                    categoryToUpdate.addEventListener('input', () => {
+                        enableButton(updateButton, 'mdl-color--green')
+                        disableButton(deleteButton, 'mdl-color--red')
                     })
 
                     categoryConflictDropdown.addEventListener('change', () => {
@@ -133,11 +138,6 @@
                         if (setNewCategoryButton.classList.contains('mdl-color--grey-500')) {
                             enableButton(setNewCategoryButton, 'mdl-color--green')
                         }
-                    })
-
-                    categoryToUpdate.addEventListener('input', () => {
-                        enableButton(updateButton, 'mdl-color--green')
-                        disableButton(deleteButton, 'mdl-color--red')
                     })
 
                     function enableButton(button, color) {
@@ -170,6 +170,16 @@
                         const form = document.createElement('form');
                         form.method = 'post';
                         form.action = "/admin/manage_category/set_category/" + idToDelete.value + "/" + selectedConflictCategoryID.value;
+                        form.appendChild(idToDelete);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+
+                    function updateCategory() {
+                        const idToDelete = document.getElementById('categoryIdToDelete');
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = "/admin/manage_category/update_category/" + idToDelete.value + "/" + selectedCategoryID.value;
                         form.appendChild(idToDelete);
                         document.body.appendChild(form);
                         form.submit();
@@ -222,7 +232,9 @@
         // TODO: refactor this unnecessary for-loop unless future logic of this ticket needs it
         if (allDeleteButtons[i].getAttribute('id') === 'deleteButton') {
             allDeleteButtons[i].addEventListener('click', function () {
-                deleteDialog.showModal();
+                if (!allDeleteButtons[i].getAttribute('disabled')) {
+                    deleteDialog.showModal();
+                }
             });
         }
 

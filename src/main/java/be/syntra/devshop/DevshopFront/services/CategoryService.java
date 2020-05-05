@@ -7,4 +7,6 @@ public interface CategoryService {
     StatusNotification delete(Long id);
 
     StatusNotification setNewCategories(Long categoryToDelete, Long categoryToSet);
+
+    StatusNotification updateCategory(Long categoryToUpdate, Long categoryToSet);
 }
