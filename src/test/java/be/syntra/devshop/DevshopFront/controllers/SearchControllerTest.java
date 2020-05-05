@@ -246,6 +246,9 @@ public class SearchControllerTest {
         verify(productService, times(1)).filterByPrice(any(), any());
     }
 
+    /*
+
+     */
     @Test
     void showSearchBarResultTest() throws Exception {
         // given
@@ -270,5 +273,118 @@ public class SearchControllerTest {
         verify(searchService, times(1)).setSearchRequest(TEST_REQUEST);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchPriceLowTest() throws Exception {
+        //given
+        final String PRICE_LOW = "6.66";
+        final BigDecimal price_low_big_d = new BigDecimal(PRICE_LOW);
+        final ProductListDto dummyProductListDto = new ProductListDto(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/pricelow/?priceLow=" + PRICE_LOW));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setPriceLow(price_low_big_d);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchPriceHighTest() throws Exception {
+        //given
+        final String PRICE_HIGH = "9999.99";
+        final BigDecimal price_low_big_d = new BigDecimal(PRICE_HIGH);
+        final ProductListDto dummyProductListDto = new ProductListDto(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/pricehigh/?priceHigh=" + PRICE_HIGH));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setPriceHigh(price_low_big_d);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchProductDescriptionTest() throws Exception {
+        //given
+        final String DESCRIPTION = "my prod description";
+        final ProductListDto dummyProductListDto = new ProductListDto(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + DESCRIPTION));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setDescription(DESCRIPTION);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void sortByNameTest() throws Exception {
+        // given
+        final ProductListDto dummyProductListDto = new ProductListDto(getDummyNonArchivedProductList());
+        final SearchModel searchModel = SearchModel.builder().searchResultView(true).build();
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(productService.sortListByName(anyList(), any(SearchModel.class))).thenReturn(dummyProductListDto);
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/sortbyname"));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 }
