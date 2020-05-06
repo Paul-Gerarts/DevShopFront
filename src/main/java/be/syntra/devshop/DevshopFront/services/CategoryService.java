@@ -8,5 +8,5 @@ public interface CategoryService {
 
     StatusNotification setNewCategories(Long categoryToDelete, Long categoryToSet);
 
-    StatusNotification updateCategory(Long categoryToUpdate, Long categoryToSet);
+    StatusNotification updateCategory(String categoryToUpdate, Long categoryToSet);
 }

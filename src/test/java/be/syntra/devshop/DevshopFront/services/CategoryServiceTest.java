@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryChangeDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryChangeDto;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryDto;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyAllProductList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -100,6 +102,26 @@ public class CategoryServiceTest {
 
         // when
         StatusNotification statusNotification = categoryService.setNewCategories(categoryDto.getId(), categoryToSet);
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.SUCCESS, statusNotification);
+    }
+
+    @Test
+    void canUpdateCategoryTest() {
+        // given
+        final CategoryChangeDto categoryChangeDto = createCategoryChangeDto();
+        final String dummyCategoryDtoJsonString = jsonUtils.asJsonString(categoryChangeDto);
+        final String expectedEndpoint = baseUrl + endpoint + "/categories/update_category";
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withSuccess(dummyCategoryDtoJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        StatusNotification statusNotification = categoryService.updateCategory(categoryChangeDto.getNewCategoryName(), categoryChangeDto.getCategoryToSet());
 
         // then
         mockServer.verify();

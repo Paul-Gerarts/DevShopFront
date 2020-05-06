@@ -273,6 +273,36 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewAfterUpdateTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        final Long categoryToUpdate = categories.get(0).getId();
+        final String newCategoryName = "Test";
+        when(productService.findAllCategories()).thenReturn(categoryList);
+        when(categoryService.updateCategory(newCategoryName, categoryToUpdate)).thenReturn(StatusNotification.SUCCESS);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/admin/manage_category/update_category/" + newCategoryName + "/" + categoryToUpdate)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("categoryToUpdate", newCategoryName)
+                .param("categoryToSet", String.valueOf(categoryToUpdate)));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories", "status"))
+                .andExpect(model().attribute("categories", categories))
+                .andExpect(model().attribute("status", StatusNotification.SUCCESS));
+
+        verify(productService, times(1)).findAllCategories();
+        verify(categoryService, times(1)).updateCategory(newCategoryName, categoryToUpdate);
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();

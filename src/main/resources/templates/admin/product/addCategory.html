@@ -176,11 +176,11 @@
                     }
 
                     function updateCategory() {
-                        const idToDelete = document.getElementById('categoryIdToDelete');
+                        const newCategoryName = document.getElementById('categoryToUpdate');
                         const form = document.createElement('form');
                         form.method = 'post';
-                        form.action = "/admin/manage_category/update_category/" + idToDelete.value + "/" + selectedCategoryID.value;
-                        form.appendChild(idToDelete);
+                        form.action = "/admin/manage_category/update_category/" + newCategoryName.value + "/" + selectedCategoryID.value;
+                        form.appendChild(newCategoryName);
                         document.body.appendChild(form);
                         form.submit();
                     }

@@ -120,10 +120,10 @@ public class AdminController {
         return CATEGORY_FORM;
     }
 
-    @PutMapping("/manage_category/update_category/{categoryToUpdate}/{categoryToSet}")
-    public String updateCategory(@PathVariable Long categoryToUpdate, @PathVariable Long categoryToSet, Model model) {
-        addCategoriesModel(model);
+    @PostMapping("/manage_category/update_category/{categoryToUpdate}/{categoryToSet}")
+    public String updateCategory(@PathVariable String categoryToUpdate, @PathVariable Long categoryToSet, Model model) {
         model.addAttribute(STATUS, categoryService.updateCategory(categoryToUpdate, categoryToSet));
+        addCategoriesModel(model);
         return CATEGORY_FORM;
     }
 

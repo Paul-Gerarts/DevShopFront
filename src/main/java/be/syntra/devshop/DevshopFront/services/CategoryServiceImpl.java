@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public StatusNotification setNewCategories(Long categoryToDelete, Long categoryToSet) {
         CategoryChangeDto categoryChangeDto = CategoryChangeDto.builder()
-                .categoryToChange(categoryToDelete)
+                .categoryToDelete(categoryToDelete)
                 .categoryToSet(categoryToSet)
                 .build();
         ResponseEntity<CategoryChangeDto> categoryResponseEntity = restTemplate.postForEntity(resourceUrl + "/categories/set_category", categoryChangeDto, CategoryChangeDto.class);
@@ -64,14 +64,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public StatusNotification updateCategory(Long categoryToUpdate, Long categoryToSet) {
+    public StatusNotification updateCategory(String categoryToUpdate, Long categoryToSet) {
         CategoryChangeDto categoryChangeDto = CategoryChangeDto.builder()
-                .categoryToChange(categoryToUpdate)
+                .newCategoryName(categoryToUpdate)
                 .categoryToSet(categoryToSet)
                 .build();
         ResponseEntity<CategoryChangeDto> categoryResponseEntity = restTemplate.postForEntity(resourceUrl + "/categories/update_category", categoryChangeDto, CategoryChangeDto.class);
         if (HttpStatus.OK.equals(categoryResponseEntity.getStatusCode())) {
-            log.info("updateCategory() -> category update successful: {}", categoryResponseEntity);
+            log.info("updateCategory() -> category update successful: {}", categoryResponseEntity.getBody());
             return SUCCESS;
         }
         return UPDATE_FAIL;
