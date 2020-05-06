@@ -1,6 +1,7 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
@@ -10,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -89,6 +93,14 @@ public class ProductController {
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
         log.info("addSelectedProductFromDetailToCart()-> {}", id);
         productService.addToCart(productListCacheService.findById(id));
+        return "redirect:/products/details/" + id;
+    }
+
+    @PostMapping("/details/{id}/review")
+    public String writeReviewOfProduct(@Valid @ModelAttribute Review review, BindingResult bindingResult, @PathVariable Long id, Model model, Principal user) {
+        if (!bindingResult.hasErrors()) {
+            productService.writeReviewOfProduct(id, review, user);
+        }
         return "redirect:/products/details/" + id;
     }
 }

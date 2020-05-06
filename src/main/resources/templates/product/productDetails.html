@@ -47,6 +47,12 @@
                     </span>
                 </li>
             </ul>
+            <div sec:authorize="hasRole('ROLE_USER')"
+                 style="display: flex; flex-direction: row; justify-content: space-between; max-width: 1060px;">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                    Write Review
+                </button>
+            </div>
             <div sec:authorize="hasRole('ROLE_ADMIN')"
                  style="display: flex; flex-direction: row; justify-content: space-between; max-width: 1060px;">
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
@@ -63,6 +69,24 @@
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
+            </div>
+            <div>
+                <form>
+                    <label>
+                        <textarea>
+                        </textarea>
+                    </label>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('review')}"
+                           th:errors="*{review}"></small>
+                    <button>
+                    </button>
+                </form>
+            </div>
+            <div>
+                <ul>
+                    <li>
+                    </li>
+                </ul>
             </div>
         </div>
     </main>

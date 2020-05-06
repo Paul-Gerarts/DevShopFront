@@ -1,10 +1,13 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
+
+import java.security.Principal;
 
 public interface ProductService {
 
@@ -42,4 +45,6 @@ public interface ProductService {
     void addToCart(Product product);
 
     CategoryList findAllCategories();
+
+    StatusNotification writeReviewOfProduct(Long productId, Review review, Principal user);
 }

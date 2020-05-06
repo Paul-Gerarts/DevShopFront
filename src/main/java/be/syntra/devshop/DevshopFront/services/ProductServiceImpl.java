@@ -4,10 +4,12 @@ import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ReviewDto;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collections;
 
 @Service
@@ -110,6 +113,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public StatusNotification writeReviewOfProduct(Long productId, Review review, Principal user) {
+        ReviewDto reviewDto = getBuild(productId, review, user);
+        HttpEntity<ReviewDto> request = new HttpEntity<>(reviewDto);
+        ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.postForEntity(resourceUrl + "/reviewProduct", request, ReviewDto.class);
+        if (HttpStatus.CREATED.equals(reviewDtoResponseEntity.getStatusCode())) {
+            log.info("updateProduct() -> saved > {} ", reviewDto);
+            return StatusNotification.SUCCESS;
+        }
+        return StatusNotification.ERROR;
+    }
+
+    private ReviewDto getBuild(Long productId, Review review, Principal user) {
+        return ReviewDto.builder()
+                .review(review.getReviewText())
+                .productName(findById(productId).getName())
+                .userName(user.getName())
+                .build();
+    }
+
+    @Override
     public StatusNotification archiveProduct(Product product) {
         product.setArchived(true);
         ProductDto productDto = productMapperUtil.convertToProductDto(product);
@@ -135,4 +158,5 @@ public class ProductServiceImpl implements ProductService {
     public void addToCart(Product product) {
         cartService.addToCart(product);
     }
+
 }
