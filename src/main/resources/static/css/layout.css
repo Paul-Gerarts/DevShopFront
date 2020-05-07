@@ -259,7 +259,21 @@ html, body, .spinner {
 }
 
 .category-page-elements {
-    padding-top: 30px;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
 }
+
+.new-category {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-left: 340px;
+}
+
+::placeholder {
+    color: black;
+    opacity: 1;
+}
+

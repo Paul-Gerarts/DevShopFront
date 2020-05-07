@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.models.AdminFunctions;
 import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryChangeDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -96,7 +97,16 @@ public class AdminController {
     @GetMapping("/manage_category")
     public String displayCategoryForm(Model model) {
         addCategoriesModel(model);
+        addCategoryChangeDto(model);
         return CATEGORY_FORM;
+    }
+
+    @PostMapping("/manage_category/new")
+    public String newCategory(@ModelAttribute("newCategory") @Valid CategoryChangeDto categoryChangeDto, BindingResult bindingResult, Model model) {
+        addCategoriesModel(model);
+        return (bindingResult.hasErrors())
+                ? CATEGORY_FORM
+                : CATEGORY_FORM;
     }
 
     @PostMapping("/manage_category/delete/{id}")
@@ -104,6 +114,7 @@ public class AdminController {
         StatusNotification deletedCategory = categoryService.delete(id);
         handleDeleteFail(id, model, deletedCategory);
         addCategoriesModel(model);
+        addCategoryChangeDto(model);
         model.addAttribute(STATUS, deletedCategory);
         model.addAttribute("idToDelete", id);
         return CATEGORY_FORM;
@@ -116,6 +127,7 @@ public class AdminController {
                 ? StatusNotification.DELETE_FAIL
                 : categoryService.delete(categoryToDelete);
         addCategoriesModel(model);
+        addCategoryChangeDto(model);
         model.addAttribute(STATUS, succes);
         return CATEGORY_FORM;
     }
@@ -124,14 +136,19 @@ public class AdminController {
     public String updateCategory(@PathVariable String categoryToUpdate, @PathVariable Long categoryToSet, Model model) {
         model.addAttribute(STATUS, categoryService.updateCategory(categoryToUpdate, categoryToSet));
         addCategoriesModel(model);
+        addCategoryChangeDto(model);
         return CATEGORY_FORM;
     }
 
     private String handleChangedProductForm(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         addCategoriesModel(model);
-        return (!bindingResult.hasErrors())
-                ? handleProductForm(productDto, model)
-                : PRODUCT_FORM;
+        return (bindingResult.hasErrors())
+                ? PRODUCT_FORM
+                : handleProductForm(productDto, model);
+    }
+
+    private void addCategoryChangeDto(Model model) {
+        model.addAttribute("newCategory", CategoryChangeDto.builder().build());
     }
 
     private void addCategoriesModel(Model model) {

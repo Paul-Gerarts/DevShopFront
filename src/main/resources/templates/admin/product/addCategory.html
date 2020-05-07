@@ -16,6 +16,28 @@
     <main class="mdl-layout__content">
         <div class="page-content">
             <span class="mdl-layout-title" id="title">Manage Categories</span>
+            <div class="category-update-field new-category">
+                <form style="display: flex; align-items: baseline" th:object="${newCategory}" method="post"
+                      th:action="@{/admin/manage_category/new}">
+                    <div style="display: flex; flex-direction: column; max-height: 150px">
+                        <input class="category-dropdown" th:field="*{newCategoryName}"
+                               placeholder="Enter a new category here" style="height: 27px; padding-left: 5px"
+                               type="text" id="newCategory">
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('newCategoryName')}"
+                               th:errors="*{newCategoryName}"></small>
+                        <small th:hidden="${#fields.hasErrors('newCategoryName')}"
+                               style="min-height: 10px; text-indent: 100%; white-space: nowrap; overflow: hidden">display
+                            text</small>
+                    </div>
+                    <div style="padding-left: 30px;">
+                        <button id="newButton" th:disabled="${status != null && status.label.equals('Saved')}"
+                                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white"
+                                style="padding-left: 10px; width: 225px;">
+                            <em class="material-icons" style="margin-bottom: 4px">add</em>New category
+                        </button>
+                    </div>
+                </form>
+            </div>
             <div class="mdl-cell mdl-cell--2-col category-page-elements">
                 <select class="category-dropdown" id="categoryDropdown" name="categoryDropdown">
                     <option disabled selected value="none">Select a category to edit</option>
@@ -25,13 +47,14 @@
                     </option>
                     <input hidden id="selectedCategoryID">
                 </select>
-                <em class="material-icons" id="arrow" style="font-size: 36px; padding-left: 60px; visibility: hidden">trending_flat</em>
+                <em class="material-icons" id="arrow"
+                    style="font-size: 36px; padding-left: 60px; visibility: hidden;">trending_flat</em>
                 <div class="category-update-field">
                     <input class="category-dropdown" style="visibility: hidden; height: 27px; padding-left: 5px"
                            type="text" id="categoryToUpdate">
                 </div>
-                <div style="padding-left: 30px; display: flex; flex-direction: column" onclick="updateCategory()">
-                    <a id="updateButton"
+                <div style="padding-left: 30px; display: flex; flex-direction: column;">
+                    <a id="updateButton" onclick="updateCategory()"
                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--gray-500 mdl-color-text--white"
                        style="padding-left: 10px; width: 200px; visibility: hidden;" disabled>
                         <em class="material-icons">sync_alt</em>Update category
@@ -51,7 +74,8 @@
                         <p>
                             The category you're trying to delete is still attached to several products.
                             We suggest you create a new category first.
-                            Selecting a category from this dropdown will delete the conflicting category and set the one
+                            Selecting a category from this dropdown will delete the conflicting category and set the
+                            one
                             of your choice.
                         </p>
                     </div>
@@ -68,7 +92,8 @@
                             <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item-flex"
                                 th:each="product, index : ${products}">
                                 <a th:href="@{/products/details/{id}(id=${product.id})}"
-                                   class="cart-detail-href cart-product-item-flex-product-title" style="color: black;">
+                                   class="cart-detail-href cart-product-item-flex-product-title"
+                                   style="color: black;">
                                     <label class="cart-product-item-title cart-detail-href"
                                            th:text="${product.name}">Product Name</label>
                                 </a>
