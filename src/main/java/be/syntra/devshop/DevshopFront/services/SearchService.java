@@ -1,8 +1,10 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface SearchService {
 
@@ -25,4 +27,6 @@ public interface SearchService {
     SearchModel getSearchModel();
 
     void setAppliedFiltersToSearchModel();
+
+    void setPriceFilters(List<Product> products);
 }

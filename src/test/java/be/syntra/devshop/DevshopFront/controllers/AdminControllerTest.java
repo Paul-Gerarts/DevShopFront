@@ -203,7 +203,7 @@ class AdminControllerTest {
         final ProductDtoList productDtoList = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllArchived()).thenReturn(dummyProductListDto);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
         when(productMapperUtil.convertToProductDtoList(any())).thenReturn(productDtoList);
 
         // when

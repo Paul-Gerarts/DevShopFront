@@ -21,13 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -86,23 +81,23 @@ public class ProductServiceImpl implements ProductService {
         return StatusNotification.ERROR;
     }
 
-    @Override
+/*    @Override
     public ProductListDto findAllNonArchived() {
         return retrieveProductListFrom(resourceUrl);
-    }
+    }*/
 
-    @Override
+/*    @Override
     public ProductListDto findAllArchived() {
         return retrieveProductListFrom(resourceUrl + "/archived");
-    }
+    }*/
 
     @Override
     public ProductListDto findAllProductsBySearchModel() {
-        //SearchModel searchModel = searchService.getSearchModel();
         HttpEntity<SearchModel> request = new HttpEntity<>(searchService.getSearchModel());
         ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductListDto.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            //log.info("findProductList() -> products retrieved from backEnd with search : #{}", productListResponseEntity.getBody().getProducts().size());
+            log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
+            productListResponseEntity.getBody().getProducts().stream().limit(10).forEach(product -> log.info(product.getName() + "\t\t\t" + product.getPrice()));
             return productListResponseEntity.getBody();
         }
         return new ProductListDto(Collections.emptyList());
@@ -145,51 +140,51 @@ public class ProductServiceImpl implements ProductService {
         return StatusNotification.ERROR;
     }
 
-    private ProductListDto retrieveProductListFrom(String resourceUrl) {
+    /*private ProductListDto retrieveProductListFrom(String resourceUrl) {
         ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductListDto.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findProductList() -> products retrieved from backEnd");
             return productListResponseEntity.getBody();
         }
         return new ProductListDto(Collections.emptyList());
-    }
+    }*/
 
     @Override
     public void addToCart(Product product) {
         cartService.addToCart(product);
     }
 
-    @Override
+    /*@Override
     public ProductListDto findBySearchRequest(SearchModel searchModel) {
         List<Product> result = executeSearch(searchModel.getSearchRequest());
         return getSearchResultsOrAllProducts(result);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public ProductListDto sortListByName(List<Product> products, SearchModel searchModel) {
         final Comparator<Product> productNameComparator = (searchModel.isSortAscendingName())
                 ? Comparator.comparing(Product::getName)
                 : Comparator.comparing(Product::getName).reversed();
         return getSortedList(products, productNameComparator);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public ProductListDto sortListByPrice(List<Product> products, SearchModel searchModel) {
         final Comparator<Product> productPriceComparator = (searchModel.isSortAscendingPrice())
                 ? Comparator.comparing(Product::getPrice)
                 : Comparator.comparing(Product::getPrice).reversed();
         return getSortedList(products, productPriceComparator);
-    }
+    }*/
 
-    private ProductListDto getSortedList(List<Product> products, Comparator<Product> productComparator) {
+    /*private ProductListDto getSortedList(List<Product> products, Comparator<Product> productComparator) {
         return new ProductListDto(
                 products
                         .stream()
                         .sorted(productComparator)
                         .collect(Collectors.toUnmodifiableList()));
-    }
+    }*/
 
-    private List<Product> executeSearch(String searchRequest) {
+    /*private List<Product> executeSearch(String searchRequest) {
         return (null != searchRequest)
                 ? findAllNonArchived().getProducts()
                 .parallelStream()
@@ -198,9 +193,9 @@ public class ProductServiceImpl implements ProductService {
                         .contains(searchRequest.toLowerCase()))
                 .collect(Collectors.toUnmodifiableList())
                 : new ArrayList<>();
-    }
+    }*/
 
-    private List<Product> executeDescriptionSearch(List<Product> products, String description) {
+    /*private List<Product> executeDescriptionSearch(List<Product> products, String description) {
         return (null != description)
                 ? products
                 .parallelStream()
@@ -209,9 +204,9 @@ public class ProductServiceImpl implements ProductService {
                         .contains(description.toLowerCase()))
                 .collect(Collectors.toUnmodifiableList())
                 : new ArrayList<>();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public ProductListDto filterByPrice(List<Product> products, SearchModel searchModel) {
         setAppliedFiltersToSearchModel(searchModel);
         List<Product> result = products
@@ -219,15 +214,16 @@ public class ProductServiceImpl implements ProductService {
                 .filter(applyPriceFilter(searchModel))
                 .collect(Collectors.toUnmodifiableList());
         return getSearchResultsOrAllProducts(result);
-    }
+    }*/
 
-    @Override
+   /* @Override
     public ProductListDto searchForProductDescription(List<Product> products, SearchModel searchModel) {
         setAppliedFiltersToSearchModel(searchModel);
         List<Product> result = executeDescriptionSearch(products, searchModel.getDescription());
         return getSearchResultsOrAllProducts(result);
-    }
+    }*/
 
+/*
     @Override
     public void setPriceFilters(List<Product> products) {
         searchService.getSearchModel().setSortAscendingPrice(true);
@@ -237,13 +233,14 @@ public class ProductServiceImpl implements ProductService {
         searchService.setPriceLow(priceLow);
         searchService.setPriceHigh(priceHigh);
     }
+*/
 
-    private ProductListDto getSearchResultsOrAllProducts(List<Product> result) {
+    /*private ProductListDto getSearchResultsOrAllProducts(List<Product> result) {
         searchService.setSearchFailure(result.isEmpty());
         return result.isEmpty()
                 ? new ProductListDto(findAllNonArchived().getProducts())
                 : new ProductListDto(result);
-    }
+    }*/
 
     private void setAppliedFiltersToSearchModel(SearchModel searchModel) {
         searchModel.setAppliedFiltersHeader(" with the applied filters");

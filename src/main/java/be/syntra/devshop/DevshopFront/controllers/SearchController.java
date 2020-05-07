@@ -112,20 +112,22 @@ public class SearchController {
         return productService.findAllProductsBySearchModel().getProducts();
     }
 
-    private boolean hasDescription() {
+    /*private boolean hasDescription() {
         return null != searchService.getSearchModel().getDescription();
-    }
+    }*/
 
     private String getProductsSortedByName(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productService.sortListByName(productList, searchService.getSearchModel()).getProducts();
+        //List<Product> sortedProducts = productService.sortListByName(productList, searchService.getSearchModel()).getProducts();
         reverseNameSort();
-        return setTemplateModel(model, sortedProducts);
+        List<Product> sortedProducts = applySearch(searchService.getSearchModel().isSearchResultView());
+        return setTemplateModel(model, productList);
     }
 
     private String getProductsSortedByPrice(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
+        //List<Product> sortedProducts = productService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
         reversePriceSort();
-        return setTemplateModel(model, sortedProducts);
+        List<Product> sortedProducts = applySearch(searchService.getSearchModel().isSearchResultView());
+        return setTemplateModel(model, productList);
     }
 
     private void reverseNameSort() {

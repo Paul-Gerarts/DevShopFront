@@ -6,7 +6,6 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -30,7 +29,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -113,48 +113,6 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(StatusNotification.SAVED, statusNotification);
-    }
-
-    @Test
-    void findAllNonArchivedTest() {
-        // given
-        final List<Product> dummyProductList = getDummyNonArchivedProductList();
-        final ProductListDto expectedProductListDto = new ProductListDto(dummyProductList);
-        final String dummyProductListJsonString = jsonUtils.asJsonString(expectedProductListDto);
-        final String expectedEndpoint = baseUrl + endpoint;
-        mockServer
-                .expect(requestTo(expectedEndpoint))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(
-                        withSuccess(dummyProductListJsonString, MediaType.APPLICATION_JSON));
-
-        // when
-        final ProductListDto receivedProductListDto = productService.findAllNonArchived();
-
-        // then
-        mockServer.verify();
-        assertEquals(expectedProductListDto.getProducts().size(), receivedProductListDto.getProducts().size());
-    }
-
-    @Test
-    void findAllArchivedTest() {
-        // given
-        final List<Product> dummyArchivedProductList = getDummyArchivedProductList();
-        final ProductListDto expectedProductListDto = new ProductListDto(dummyArchivedProductList);
-        final String dummyArchivedProductListJsonString = jsonUtils.asJsonString(expectedProductListDto);
-        final String expectedEndpoint = baseUrl + endpoint + "/archived";
-        mockServer
-                .expect(requestTo(expectedEndpoint))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(
-                        withSuccess(dummyArchivedProductListJsonString, MediaType.APPLICATION_JSON));
-
-        // when
-        final ProductListDto receivedProductListDto = productService.findAllArchived();
-
-        // then
-        mockServer.verify();
-        assertEquals(expectedProductListDto.getProducts().size(), receivedProductListDto.getProducts().size());
     }
 
     @Test

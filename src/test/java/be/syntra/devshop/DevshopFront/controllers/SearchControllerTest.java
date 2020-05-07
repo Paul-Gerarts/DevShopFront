@@ -169,7 +169,7 @@ public class SearchControllerTest {
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(productService.sortListByName(anyList(), any(SearchModel.class))).thenReturn(dummyProductListDto);
+        //when(productService.sortListByName(anyList(), any(SearchModel.class))).thenReturn(dummyProductListDto);
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);
@@ -198,7 +198,7 @@ public class SearchControllerTest {
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(productService.sortListByPrice(anyList(), any(SearchModel.class))).thenReturn(dummyProductListDto);
+        //when(productService.sortListByPrice(anyList(), any(SearchModel.class))).thenReturn(dummyProductListDto);
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListDto);

@@ -44,7 +44,8 @@ public class ProductController {
         ProductListDto productListDto = productService.findAllProductsBySearchModel();
         ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
         //searchService.resetSearchModel();
-        productService.setPriceFilters(productListDto.getProducts());
+        //productService.setPriceFilters(productListDto.getProducts());
+        searchService.setPriceFilters(productListDto.getProducts());
         model.addAttribute("productlist", productDtoList);
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
