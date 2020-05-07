@@ -66,6 +66,9 @@ class ProductServiceImplTest {
     @MockBean
     CartService service;
 
+    @MockBean
+    SearchService searchService;
+
     @Autowired
     private DataStore dataStore;
 

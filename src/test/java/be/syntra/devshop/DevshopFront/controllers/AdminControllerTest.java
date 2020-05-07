@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -197,11 +198,13 @@ class AdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     public void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
+        final List<Product> dummyProducts = getDummyArchivedProductList();
         final ProductListDto dummyProductListDto = new ProductListDto(dummyProducts);
+        final ProductDtoList productDtoList = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllArchived()).thenReturn(dummyProductListDto);
+        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(productDtoList);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
@@ -211,9 +214,14 @@ class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts));
+                .andExpect(model().attributeExists("productlist"))
+                .andExpect(model().attribute("productlist", productDtoList));
 
-        verify(productService, times(1)).findAllArchived();
+        verify(searchService, times(1)).resetSearchModel();
+        verify(searchService, times(1)).setSearchResultView(false);
+        verify(searchService, times(1)).setArchivedView(true);
+        verify(searchService, times(1)).getSearchModel();
+        verify(productService, times(1)).findAllProductsBySearchModel();
+        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
     }
 }
