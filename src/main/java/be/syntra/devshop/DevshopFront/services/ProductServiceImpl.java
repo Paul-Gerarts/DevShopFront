@@ -86,7 +86,6 @@ public class ProductServiceImpl implements ProductService {
         ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductListDto.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
-            productListResponseEntity.getBody().getProducts().stream().limit(10).forEach(product -> log.info(product.getName() + "\t\t\t" + product.getPrice()));
             return productListResponseEntity.getBody();
         }
         return new ProductListDto(Collections.emptyList());
