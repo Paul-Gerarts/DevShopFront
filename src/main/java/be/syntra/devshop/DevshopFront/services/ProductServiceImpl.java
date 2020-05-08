@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.function.Predicate;
 
 @Service
 @Slf4j
@@ -81,16 +80,6 @@ public class ProductServiceImpl implements ProductService {
         return StatusNotification.ERROR;
     }
 
-/*    @Override
-    public ProductListDto findAllNonArchived() {
-        return retrieveProductListFrom(resourceUrl);
-    }*/
-
-/*    @Override
-    public ProductListDto findAllArchived() {
-        return retrieveProductListFrom(resourceUrl + "/archived");
-    }*/
-
     @Override
     public ProductListDto findAllProductsBySearchModel() {
         HttpEntity<SearchModel> request = new HttpEntity<>(searchService.getSearchModel());
@@ -140,123 +129,8 @@ public class ProductServiceImpl implements ProductService {
         return StatusNotification.ERROR;
     }
 
-    /*private ProductListDto retrieveProductListFrom(String resourceUrl) {
-        ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductListDto.class);
-        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            log.info("findProductList() -> products retrieved from backEnd");
-            return productListResponseEntity.getBody();
-        }
-        return new ProductListDto(Collections.emptyList());
-    }*/
-
     @Override
     public void addToCart(Product product) {
         cartService.addToCart(product);
-    }
-
-    /*@Override
-    public ProductListDto findBySearchRequest(SearchModel searchModel) {
-        List<Product> result = executeSearch(searchModel.getSearchRequest());
-        return getSearchResultsOrAllProducts(result);
-    }*/
-
-    /*@Override
-    public ProductListDto sortListByName(List<Product> products, SearchModel searchModel) {
-        final Comparator<Product> productNameComparator = (searchModel.isSortAscendingName())
-                ? Comparator.comparing(Product::getName)
-                : Comparator.comparing(Product::getName).reversed();
-        return getSortedList(products, productNameComparator);
-    }*/
-
-    /*@Override
-    public ProductListDto sortListByPrice(List<Product> products, SearchModel searchModel) {
-        final Comparator<Product> productPriceComparator = (searchModel.isSortAscendingPrice())
-                ? Comparator.comparing(Product::getPrice)
-                : Comparator.comparing(Product::getPrice).reversed();
-        return getSortedList(products, productPriceComparator);
-    }*/
-
-    /*private ProductListDto getSortedList(List<Product> products, Comparator<Product> productComparator) {
-        return new ProductListDto(
-                products
-                        .stream()
-                        .sorted(productComparator)
-                        .collect(Collectors.toUnmodifiableList()));
-    }*/
-
-    /*private List<Product> executeSearch(String searchRequest) {
-        return (null != searchRequest)
-                ? findAllNonArchived().getProducts()
-                .parallelStream()
-                .filter(product -> product.getName()
-                        .toLowerCase()
-                        .contains(searchRequest.toLowerCase()))
-                .collect(Collectors.toUnmodifiableList())
-                : new ArrayList<>();
-    }*/
-
-    /*private List<Product> executeDescriptionSearch(List<Product> products, String description) {
-        return (null != description)
-                ? products
-                .parallelStream()
-                .filter(product -> product.getDescription()
-                        .toLowerCase()
-                        .contains(description.toLowerCase()))
-                .collect(Collectors.toUnmodifiableList())
-                : new ArrayList<>();
-    }*/
-
-    /*@Override
-    public ProductListDto filterByPrice(List<Product> products, SearchModel searchModel) {
-        setAppliedFiltersToSearchModel(searchModel);
-        List<Product> result = products
-                .parallelStream()
-                .filter(applyPriceFilter(searchModel))
-                .collect(Collectors.toUnmodifiableList());
-        return getSearchResultsOrAllProducts(result);
-    }*/
-
-   /* @Override
-    public ProductListDto searchForProductDescription(List<Product> products, SearchModel searchModel) {
-        setAppliedFiltersToSearchModel(searchModel);
-        List<Product> result = executeDescriptionSearch(products, searchModel.getDescription());
-        return getSearchResultsOrAllProducts(result);
-    }*/
-
-/*
-    @Override
-    public void setPriceFilters(List<Product> products) {
-        searchService.getSearchModel().setSortAscendingPrice(true);
-        List<Product> sortedProducts = sortListByPrice(products, searchService.getSearchModel()).getProducts();
-        BigDecimal priceLow = new BigDecimal("0");
-        BigDecimal priceHigh = sortedProducts.get(sortedProducts.size() - 1).getPrice();
-        searchService.setPriceLow(priceLow);
-        searchService.setPriceHigh(priceHigh);
-    }
-*/
-
-    /*private ProductListDto getSearchResultsOrAllProducts(List<Product> result) {
-        searchService.setSearchFailure(result.isEmpty());
-        return result.isEmpty()
-                ? new ProductListDto(findAllNonArchived().getProducts())
-                : new ProductListDto(result);
-    }*/
-
-    private void setAppliedFiltersToSearchModel(SearchModel searchModel) {
-        searchModel.setAppliedFiltersHeader(" with the applied filters");
-        String searchRequest = hasSearchRequest()
-                ? searchService.getSearchModel().getSearchRequest()
-                : "";
-        searchModel.setSearchRequest(searchRequest);
-        searchModel.setSearchFailure(false);
-        searchModel.setActiveFilters(true);
-    }
-
-    private boolean hasSearchRequest() {
-        return null != searchService.getSearchModel().getSearchRequest();
-    }
-
-    private Predicate<Product> applyPriceFilter(SearchModel searchModel) {
-        return product -> product.getPrice().compareTo(searchModel.getPriceLow()) >= 0 && product.getPrice().compareTo(searchModel.getPriceHigh()) <= 0;
     }
 }

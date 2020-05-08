@@ -74,68 +74,50 @@ public class SearchController {
 
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
+        disablePriceSorting();
+        reverseNameSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
-        return getProductsSortedByName(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
+        disableNameSorting();
+        reversePriceSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
-        return getProductsSortedByPrice(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/archived/sortbyname")
     public String sortArchivedByName(Model model) {
-        //List<Product> productList = productService.findAllArchived().getProducts();
+        disablePriceSorting();
+        reverseNameSorting();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
-        return getProductsSortedByName(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/archived/sortbyprice")
     public String sortArchivedByPrice(Model model) {
-        //List<Product> productList = productService.findAllArchived().getProducts();
+        disableNameSorting();
+        reversePriceSorting();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
-        return getProductsSortedByPrice(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     private List<Product> applySearch(boolean isSearchResultView) {
         searchService.setSearchResultView(isSearchResultView);
         searchService.setArchivedView(false);
-        // todo: DEV-034
-        /*List<Product> productList = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        List<Product> filteredList = productService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
-        return hasDescription()
-                ? productService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
-                : filteredList;*/
         return productService.findAllProductsBySearchModel().getProducts();
     }
 
-    /*private boolean hasDescription() {
-        return null != searchService.getSearchModel().getDescription();
-    }*/
-
-    private String getProductsSortedByName(Model model, List<Product> productList) {
-        //List<Product> sortedProducts = productService.sortListByName(productList, searchService.getSearchModel()).getProducts();
-        reverseNameSort();
-        List<Product> sortedProducts = applySearch(searchService.getSearchModel().isSearchResultView());
-        return setTemplateModel(model, productList);
-    }
-
-    private String getProductsSortedByPrice(Model model, List<Product> productList) {
-        //List<Product> sortedProducts = productService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
-        reversePriceSort();
-        List<Product> sortedProducts = applySearch(searchService.getSearchModel().isSearchResultView());
-        return setTemplateModel(model, productList);
-    }
-
-    private void reverseNameSort() {
+    private void reverseNameSorting() {
         boolean sortAscending = searchService.getSearchModel().isSortAscendingName();
         searchService.getSearchModel().setSortAscendingName(!sortAscending);
     }
 
-    private void reversePriceSort() {
+    private void reversePriceSorting() {
         boolean sortAscending = searchService.getSearchModel().isSortAscendingPrice();
         searchService.getSearchModel().setSortAscendingPrice(!sortAscending);
     }
@@ -147,5 +129,13 @@ public class SearchController {
         model.addAttribute(PRODUCTS, productDtoListDto);
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
+    }
+
+    private void disableNameSorting() {
+        searchService.getSearchModel().setSortAscendingName(false);
+    }
+
+    private void disablePriceSorting() {
+        searchService.getSearchModel().setSortAscendingPrice(false);
     }
 }
