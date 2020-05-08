@@ -181,6 +181,13 @@
                         element.style.visibility = 'visible';
                     }
 
+                    function hideFields() {
+                        categoryToUpdate.style.visibility = 'hidden';
+                        transitionArrow.style.visibility = 'hidden';
+                        deleteButton.style.visibility = 'hidden';
+                        updateButton.style.visibility = 'hidden';
+                    }
+
                     function deleteCategory() {
                         const form = document.createElement('form');
                         form.method = 'post';
@@ -201,6 +208,7 @@
                     }
 
                     function updateCategory() {
+                        hideFields();
                         const newCategoryName = document.getElementById('categoryToUpdate');
                         const form = document.createElement('form');
                         form.method = 'post';
