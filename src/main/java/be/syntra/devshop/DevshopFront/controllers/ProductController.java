@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -39,14 +38,10 @@ public class ProductController {
 
     @GetMapping
     public String displayProductOverview(Model model) {
-        //ProductListDto productListDto = productService.findAllNonArchived();
         searchService.resetSearchModel();
         ProductListDto productListDto = productService.findAllProductsBySearchModel();
-        ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
-        //searchService.resetSearchModel();
-        //productService.setPriceFilters(productListDto.getProducts());
         searchService.setPriceFilters(productListDto.getProducts());
-        model.addAttribute("productlist", productDtoList);
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -73,12 +68,8 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        // todo: in backend combine these 2 if set in searchModel
-        /*List<Product> products = productService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        final ProductListDto productListDto = productService.filterByPrice(products, searchService.getSearchModel());*/
         ProductListDto productListDto = productService.findAllProductsBySearchModel();
-        ProductDtoList productDtoList = productMapperUtil.convertToProductDtoList(productListDto);
-        model.addAttribute("productlist", productDtoList);
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
