@@ -262,7 +262,6 @@
     }
 
     for (let i = 0; i < allDeleteButtons.length; i++) {
-        // TODO: refactor this unnecessary for-loop unless future logic of this ticket needs it
         if (allDeleteButtons[i].getAttribute('id') === 'deleteButton') {
             allDeleteButtons[i].addEventListener('click', function () {
                 if (!allDeleteButtons[i].getAttribute('disabled')) {

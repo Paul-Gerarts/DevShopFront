@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_EXCISTS;
+
 
 @Slf4j
 @Controller
@@ -106,7 +108,7 @@ public class AdminController {
         addCategoriesModel(model);
         return (bindingResult.hasErrors())
                 ? CATEGORY_FORM
-                : CATEGORY_FORM;
+                : newCategory(model, categoryChangeDto.getNewCategoryName());
     }
 
     @PostMapping("/manage_category/delete/{id}")
@@ -138,6 +140,23 @@ public class AdminController {
         addCategoriesModel(model);
         addCategoryChangeDto(model);
         return CATEGORY_FORM;
+    }
+
+    private String newCategory(Model model, String newCategory) {
+        addCategoryChangeDto(model);
+        createCategory(newCategory, model);
+        addCategoriesModel(model);
+        return CATEGORY_FORM;
+    }
+
+    private Model createCategory(String newCategory, Model model) {
+        boolean categoryExcists = productService.findAllCategories()
+                .getCategories()
+                .parallelStream()
+                .anyMatch(category -> category.getName().equals(newCategory));
+        return categoryExcists
+                ? model.addAttribute(STATUS, CATEGORY_EXCISTS)
+                : model.addAttribute(STATUS, categoryService.updateCategory(newCategory, 0L));
     }
 
     private String handleChangedProductForm(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {

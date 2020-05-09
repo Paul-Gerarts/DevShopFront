@@ -17,7 +17,8 @@ public enum StatusNotification {
     DELETED("delete successful"),
     DELETE_FAIL("deletion failed"),
     PAYMENT_FAIL("Payment cart failed."),
-    UPDATE_FAIL("Failed to change the category");
+    UPDATE_FAIL("Failed to change the category"),
+    CATEGORY_EXCISTS("Creation failed. Category already excists");
 
     private final String label;
 
