@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -73,6 +74,14 @@ public class ProductUtils {
                 .archived(true)
                 .categories(createCategoryList())
                 .build();
+    }
+
+    public static ProductsDisplayList getDummyProductDtoList() {
+        return new ProductsDisplayList(getDummyListOfProductDtos());
+    }
+
+    public static List<ProductDto> getDummyListOfProductDtos() {
+        return (List.of(getDummyProductDto(), getOtherDummyProductDto()));
     }
 
     public static List<Product> getDummyNonArchivedProductList() {

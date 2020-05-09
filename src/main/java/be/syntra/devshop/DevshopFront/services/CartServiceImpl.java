@@ -59,7 +59,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addOneToProductInCart(Long productId) {
         Product productToAlter = getProductFromCartById(productId);
-        // todo: DEV-034: update in cachedProducts-replacement
         productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);
     }
 
@@ -67,7 +66,6 @@ public class CartServiceImpl implements CartService {
     public void removeOneFromProductInCart(Long productId) {
         Product productToAlter = getProductFromCartById(productId);
         final int totalInCart = productToAlter.getTotalInCart();
-        // todo: DEV-034: update in cachedProducts-replacement
         if (totalInCart == 1) {
             removeProductFromCart(productId);
         } else {
@@ -78,7 +76,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeProductFromCart(Long productId) {
         Product productToRemove = getProductFromCartById(productId);
-        // todo: DEV-034: update in cachedProducts-replacement
         productToRemove.setTotalInCart(0);
         currentCart.getProducts().remove(productToRemove);
     }

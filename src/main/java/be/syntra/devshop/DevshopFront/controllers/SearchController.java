@@ -1,10 +1,12 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +26,8 @@ public class SearchController {
     private final CartService cartService;
     private final SearchService searchService;
     private final ProductService productService;
-    private final ProductListCacheService productListCacheService;
-    private static final String PRODUCTS = "products";
+    private final ProductMapper productMapper;
+    private static final String PRODUCTS = "productlist";
     private static final String SEARCH_MODEL = "searchModel";
     private static final String PRODUCT_OVERVIEW = "product/productOverview";
 
@@ -34,12 +36,12 @@ public class SearchController {
             CartService cartService,
             SearchService searchService,
             ProductService productService,
-            ProductListCacheService productListCacheService
+            ProductMapper productMapper
     ) {
         this.cartService = cartService;
         this.searchService = searchService;
         this.productService = productService;
-        this.productListCacheService = productListCacheService;
+        this.productMapper = productMapper;
     }
 
     @GetMapping("/")
@@ -72,67 +74,55 @@ public class SearchController {
 
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
+        reverseNameSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
-        return getProductsSortedByName(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
+        reversePriceSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
-        return getProductsSortedByPrice(model, productList);
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/archived/sortbyname")
     public String sortArchivedByName(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
-        return getProductsSortedByName(model, productList);
+        reverseNameSorting();
+        searchService.setArchivedView(true);
+        List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
+        return setTemplateModel(model, productList);
     }
 
     @GetMapping("/archived/sortbyprice")
     public String sortArchivedByPrice(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
-        return getProductsSortedByPrice(model, productList);
+        reversePriceSorting();
+        searchService.setArchivedView(true);
+        List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
+        return setTemplateModel(model, productList);
     }
 
     private List<Product> applySearch(boolean isSearchResultView) {
         searchService.setSearchResultView(isSearchResultView);
         searchService.setArchivedView(false);
-        List<Product> productList = productListCacheService.findBySearchRequest(searchService.getSearchModel()).getProducts();
-        List<Product> filteredList = productListCacheService.filterByPrice(productList, searchService.getSearchModel()).getProducts();
-        return hasDescription()
-                ? productListCacheService.searchForProductDescription(filteredList, searchService.getSearchModel()).getProducts()
-                : filteredList;
+        return productService.findAllProductsBySearchModel().getProducts();
     }
 
-    private boolean hasDescription() {
-        return null != searchService.getSearchModel().getDescription();
-    }
-
-    private String getProductsSortedByName(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productListCacheService.sortListByName(productList, searchService.getSearchModel()).getProducts();
-        reverseNameSort();
-        return setTemplateModel(model, sortedProducts);
-    }
-
-    private String getProductsSortedByPrice(Model model, List<Product> productList) {
-        List<Product> sortedProducts = productListCacheService.sortListByPrice(productList, searchService.getSearchModel()).getProducts();
-        reversePriceSort();
-        return setTemplateModel(model, sortedProducts);
-    }
-
-    private void reverseNameSort() {
+    private void reverseNameSorting() {
         boolean sortAscending = searchService.getSearchModel().isSortAscendingName();
         searchService.getSearchModel().setSortAscendingName(!sortAscending);
     }
 
-    private void reversePriceSort() {
+    private void reversePriceSorting() {
         boolean sortAscending = searchService.getSearchModel().isSortAscendingPrice();
         searchService.getSearchModel().setSortAscendingPrice(!sortAscending);
     }
 
     private String setTemplateModel(Model model, List<Product> productList) {
+        ProductList productListDto = new ProductList(productList);
+        ProductsDisplayList productsDisplay = productMapper.convertToProductDtoList(productListDto);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productList);
+        model.addAttribute(PRODUCTS, productsDisplay);
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
     }

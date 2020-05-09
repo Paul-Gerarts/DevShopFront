@@ -8,9 +8,9 @@ import java.util.List;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CategoryMapperUtilTest {
+public class CategoryMapperTest {
 
-    private final CategoryMapperUtil categoryMapperUtil = new CategoryMapperUtil();
+    private final CategoryMapper categoryMapper = new CategoryMapper();
 
     @Test
     void canMapToCategoryNamesTest() {
@@ -18,7 +18,7 @@ public class CategoryMapperUtilTest {
         List<Category> categories = createCategoryList();
 
         // when
-        List<String> result = categoryMapperUtil.mapToCategoryNames(categories);
+        List<String> result = categoryMapper.mapToCategoryNames(categories);
 
         // then
         assertThat(result.size()).isEqualTo(categories.size());

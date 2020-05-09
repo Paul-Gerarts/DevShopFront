@@ -1,10 +1,14 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -32,22 +36,20 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setSearchFailure(boolean searchFailure) {
-        searchModel.setSearchFailure(searchFailure);
-    }
-
-    @Override
     public void setPriceLow(BigDecimal priceLow) {
+        setAppliedFiltersToSearchModel();
         searchModel.setPriceLow(priceLow);
     }
 
     @Override
     public void setPriceHigh(BigDecimal priceHigh) {
+        setAppliedFiltersToSearchModel();
         searchModel.setPriceHigh(priceHigh);
     }
 
     @Override
     public void setDescription(String description) {
+        setAppliedFiltersToSearchModel();
         searchModel.setDescription(description);
     }
 
@@ -59,5 +61,30 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public void resetSearchModel() {
         this.searchModel = new SearchModel();
+    }
+
+    @Override
+    public void setAppliedFiltersToSearchModel() {
+        searchModel.setAppliedFiltersHeader(" with the applied filters");
+        String searchRequest = hasSearchRequest()
+                ? getSearchModel().getSearchRequest()
+                : "";
+        searchModel.setSearchRequest(searchRequest);
+        searchModel.setSearchFailure(false);
+        searchModel.setActiveFilters(true);
+    }
+
+    private boolean hasSearchRequest() {
+        return StringUtils.hasText(getSearchModel().getSearchRequest());
+    }
+
+    @Override
+    public void setPriceFilters(List<Product> products) {
+        BigDecimal priceHigh = products.stream()
+                .map(Product::getPrice)
+                .max(Comparator.naturalOrder())
+                .orElse(BigDecimal.ZERO);
+        searchModel.setPriceLow(BigDecimal.ZERO);
+        searchModel.setPriceHigh(priceHigh);
     }
 }

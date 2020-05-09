@@ -22,14 +22,7 @@ public interface ProductService {
      */
     StatusNotification addProduct(ProductDto productDto);
 
-    /***
-     * to retrieve all products present from the backend
-     * returns a ProductList object
-     * @return ProductList
-     */
-    ProductList findAllNonArchived();
-
-    ProductList findAllArchived();
+    ProductList findAllProductsBySearchModel();
 
     Product findById(Long id);
 
