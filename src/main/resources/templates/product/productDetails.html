@@ -49,7 +49,11 @@
             </ul>
             <div sec:authorize="hasRole('ROLE_USER')"
                  style="display: flex; flex-direction: row; justify-content: space-between; max-width: 1060px;">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white"
+                        onclick="show()">
+                       <span class="material-icons">
+                                add_comment
+                            </span>
                     Write Review
                 </button>
             </div>
@@ -70,21 +74,38 @@
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
             </div>
-            <div>
-                <form>
-                    <label>
-                        <textarea>
+            <div th:object="${review}" sec:authorize="hasRole('ROLE_USER')" id="visible">
+                <form class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+                    <label style="padding: 3%">
+                        <textarea style="height: 100px; width: 75%; ">
                         </textarea>
                     </label>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('review')}"
-                           th:errors="*{review}"></small>
-                    <button>
-                    </button>
+                    <div style="padding-left: 3%">
+                        <button type="submit"
+                                class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--green mdl-color-text--white">
+                            <span class="material-icons">
+                                chat
+                            </span>
+                            Submit Review
+                        </button>
+                    </div>
                 </form>
             </div>
-            <div>
+            <!-- Chip -->
+            <div th:if="${status != null}">
+                <br>
+                <span class="mdl-chip mdl-chip--deletable">
+                    <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
+                    <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
+                </span>
+            </div>
+            <div th:object="product" th:if="*{product.getReviews()}? '(There are no reviews of this product yet.)'">
                 <ul>
-                    <li>
+                    <li th:each="review : ${product.getReviews()}">
+                        <label>
+                            <textarea th:text="${review.getReviewText()}">
+                            </textarea>
+                        </label>
                     </li>
                 </ul>
             </div>
@@ -120,6 +141,7 @@
 <script>
     var dialog = document.querySelector('dialog');
     var showModalButton = document.querySelector('.show-modal');
+
     if (!dialog.showModal) {
         dialogPolyfill.registerDialog(dialog);
     }
@@ -129,6 +151,15 @@
     dialog.querySelector('.close').addEventListener('click', function () {
         dialog.close();
     });
+
+    function show() {
+        var showReviewForm = document.getElementById('visible');
+        if (showReviewForm.style.display === "none") {
+            showReviewForm.style.display = "block";
+        } else {
+            showReviewForm.style.display = "none";
+        }
+    }
 </script>
 </body>
 </html>

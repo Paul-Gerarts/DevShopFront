@@ -138,3 +138,7 @@ html, body, .spinner {
     transform: rotate(-35deg);
     z-index: 1;
 }
+
+#visible {
+    display: none;
+}

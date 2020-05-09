@@ -34,4 +34,6 @@ public class Product {
 
     @NotEmpty
     private List<Category> categories;
+
+    private List<Review> reviews;
 }

@@ -58,6 +58,7 @@ public class ProductController {
                 isProductListCacheEmpty(id)
                         ? productService.findById(id)
                         : productListCacheService.findById(id);
+        model.addAttribute("review", new Review());
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
@@ -100,6 +101,7 @@ public class ProductController {
     public String writeReviewOfProduct(@Valid @ModelAttribute Review review, BindingResult bindingResult, @PathVariable Long id, Model model, Principal user) {
         if (!bindingResult.hasErrors()) {
             productService.writeReviewOfProduct(id, review, user);
+            productListCacheService.updateProductListCache();
         }
         return "redirect:/products/details/" + id;
     }
