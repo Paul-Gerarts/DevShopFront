@@ -5,9 +5,9 @@ import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -161,7 +161,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllWithCorrespondingCategoryTest() {
+    void findAllWithOnlyCategoryTest() {
         // given
         final CategoryDto category = createCategoryDto();
         final List<Product> dummyAllProductList = getDummyAllProductList();
@@ -175,7 +175,7 @@ class ProductServiceImplTest {
                         withSuccess(dummyAllProductListJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        final ProductList receivedProductList = productService.findAllWithCorrespondingCategory(category.getId());
+        final ProductList receivedProductList = productService.findAllWithOnlyCategory(category.getId());
 
         // then
         mockServer.verify();

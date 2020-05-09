@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findAllWithCorrespondingCategory(Long id) {
+    public ProductList findAllWithOnlyCategory(Long id) {
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl + "/all/" + id, ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");

@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_EXCISTS;
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_EXISTS;
 
 
 @Slf4j
@@ -157,7 +157,7 @@ public class AdminController {
                 .parallelStream()
                 .anyMatch(category -> category.getName().equals(newCategory));
         return categoryExcists
-                ? model.addAttribute(STATUS, CATEGORY_EXCISTS)
+                ? model.addAttribute(STATUS, CATEGORY_EXISTS)
                 : model.addAttribute(STATUS, categoryService.updateCategory(newCategory, 0L));
     }
 
@@ -186,7 +186,7 @@ public class AdminController {
 
     private void handleDeleteFail(Long id, Model model, StatusNotification deletedCategory) {
         if (deletedCategory.equals(StatusNotification.DELETE_FAIL)) {
-            List<Product> productList = productService.findAllWithCorrespondingCategory(id).getProducts();
+            List<Product> productList = productService.findAllWithOnlyCategory(id).getProducts();
             List<Category> categories = productService.findAllCategories()
                     .getCategories()
                     .parallelStream()

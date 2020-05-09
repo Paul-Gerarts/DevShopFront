@@ -26,7 +26,7 @@ public interface ProductService {
 
     Product findById(Long id);
 
-    ProductList findAllWithCorrespondingCategory(Long id);
+    ProductList findAllWithOnlyCategory(Long id);
 
     StatusNotification archiveProduct(Product product);
 
