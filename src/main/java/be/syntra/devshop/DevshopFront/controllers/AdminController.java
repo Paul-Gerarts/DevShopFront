@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
@@ -81,9 +81,9 @@ public class AdminController {
         searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
-        ProductListDto productListDto = productService.findAllProductsBySearchModel();
+        ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productList));
         return "product/productOverview";
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ProductDtoList {
+public class ProductsDisplayList {
 
     private List<ProductDto> products;
 }

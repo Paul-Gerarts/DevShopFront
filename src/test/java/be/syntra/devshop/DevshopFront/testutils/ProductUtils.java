@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDtoList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -76,8 +76,8 @@ public class ProductUtils {
                 .build();
     }
 
-    public static ProductDtoList getDummyProductDtoList() {
-        return new ProductDtoList(getDummyListOfProductDtos());
+    public static ProductsDisplayList getDummyProductDtoList() {
+        return new ProductsDisplayList(getDummyListOfProductDtos());
     }
 
     public static List<ProductDto> getDummyListOfProductDtos() {

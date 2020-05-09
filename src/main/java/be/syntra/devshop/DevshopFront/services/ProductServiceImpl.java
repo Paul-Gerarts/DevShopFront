@@ -8,7 +8,7 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +71,6 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-        // todo: DEV-34
-        dataStore.getMap().put("cacheNeedsUpdate", true);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;
@@ -81,14 +79,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductListDto findAllProductsBySearchModel() {
+    public ProductList findAllProductsBySearchModel() {
         HttpEntity<SearchModel> request = new HttpEntity<>(searchService.getSearchModel());
-        ResponseEntity<ProductListDto> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductListDto.class);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductListDto(Collections.emptyList());
+        return new ProductList(Collections.emptyList());
     }
 
     @Override

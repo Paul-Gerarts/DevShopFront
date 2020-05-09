@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ProductListDto {
+public class ProductList {
 
     private List<Product> products;
 }

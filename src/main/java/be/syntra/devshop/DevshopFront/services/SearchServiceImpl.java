@@ -35,11 +35,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setSearchFailure(boolean searchFailure) {
-        searchModel.setSearchFailure(searchFailure);
-    }
-
-    @Override
     public void setPriceLow(BigDecimal priceLow) {
         setAppliedFiltersToSearchModel();
         searchModel.setPriceLow(priceLow);

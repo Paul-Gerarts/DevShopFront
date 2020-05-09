@@ -42,7 +42,6 @@ public class TestWebConfig {
     @Bean
     public DataStore getDataStore() {
         Map<String, Boolean> dataStore = new HashMap<>();
-        dataStore.put("cacheNeedsUpdate", true);
         dataStore.put("redirectToCartAfterUserSuccessfulLogin", false);
         return new DataStore(dataStore);
     }

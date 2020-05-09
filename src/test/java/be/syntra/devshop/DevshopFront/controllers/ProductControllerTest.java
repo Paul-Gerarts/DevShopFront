@@ -6,7 +6,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -63,8 +63,8 @@ class ProductControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductListDto(dummyProducts));
-        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        when(productMapperUtil.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -131,12 +131,12 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductListDto productListDtoDummy = new ProductListDto(dummyProducts);
+        final ProductList productListDummy = new ProductList(dummyProducts);
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductListDto(dummyProducts));
-        when(productMapperUtil.convertToProductDtoList(any(ProductListDto.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        when(productMapperUtil.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when

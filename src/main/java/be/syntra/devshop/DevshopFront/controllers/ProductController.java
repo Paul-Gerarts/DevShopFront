@@ -2,7 +2,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -39,9 +39,9 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
-        ProductListDto productListDto = productService.findAllProductsBySearchModel();
-        searchService.setPriceFilters(productListDto.getProducts());
-        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
+        ProductList productList = productService.findAllProductsBySearchModel();
+        searchService.setPriceFilters(productList.getProducts());
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -68,8 +68,8 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        ProductListDto productListDto = productService.findAllProductsBySearchModel();
-        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productListDto));
+        ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

@@ -4,7 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 
 public interface ProductService {
 
@@ -22,16 +22,7 @@ public interface ProductService {
      */
     StatusNotification addProduct(ProductDto productDto);
 
-    /***
-     * to retrieve all products present from the backend
-     * returns a ProductListDto object
-     * @return ProductListDto
-     */
-    //ProductListDto findAllNonArchived();
-
-    //ProductListDto findAllArchived();
-
-    ProductListDto findAllProductsBySearchModel();
+    ProductList findAllProductsBySearchModel();
 
     Product findById(Long id);
 
@@ -44,17 +35,4 @@ public interface ProductService {
     void addToCart(Product product);
 
     CategoryList findAllCategories();
-
-    //ProductListDto findBySearchRequest(SearchModel searchModel);
-
-    //ProductListDto sortListByName(List<Product> products, SearchModel searchModel);
-
-    // ProductListDto sortListByPrice(List<Product> products, SearchModel searchModel);
-
-    //ProductListDto filterByPrice(List<Product> products, SearchModel searchModel);
-
-    //ProductListDto searchForProductDescription(List<Product> products, SearchModel searchModel);
-
-    //void setPriceFilters(List<Product> products);
-
 }

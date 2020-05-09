@@ -14,8 +14,6 @@ public interface SearchService {
 
     void setSearchResultView(boolean searchResultView);
 
-    void setSearchFailure(boolean searchFailure);
-
     void setPriceLow(BigDecimal priceLow);
 
     void setPriceHigh(BigDecimal priceHigh);
