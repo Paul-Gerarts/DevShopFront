@@ -6,6 +6,7 @@ import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -47,6 +48,9 @@ class AdminControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private CategoryService categoryService;
 
     @MockBean
     private SearchService searchService;
@@ -223,5 +227,147 @@ class AdminControllerTest {
         verify(searchService, times(1)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductDtoList(any());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        when(productService.findAllCategories()).thenReturn(categoryList);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/admin/manage_category"));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories"))
+                .andExpect(model().attribute("categories", categories));
+
+        verify(productService, times(1)).findAllCategories();
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewAfterDeleteTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        final Long categoryToDelete = categories.get(0).getId();
+        when(productService.findAllCategories()).thenReturn(categoryList);
+        when(categoryService.delete(categoryToDelete)).thenReturn(StatusNotification.DELETED);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/admin/manage_category/delete/" + categoryToDelete)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("id", String.valueOf(categoryToDelete)));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories", "status"))
+                .andExpect(model().attribute("categories", categories))
+                .andExpect(model().attribute("status", StatusNotification.DELETED));
+
+        verify(productService, times(1)).findAllCategories();
+        verify(categoryService, times(1)).delete(categoryToDelete);
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewAfterUpdateTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        final Long categoryToUpdate = categories.get(0).getId();
+        final String newCategoryName = "Test";
+        when(productService.findAllCategories()).thenReturn(categoryList);
+        when(categoryService.updateCategory(newCategoryName, categoryToUpdate)).thenReturn(StatusNotification.SUCCESS);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/admin/manage_category/update_category/" + newCategoryName + "/" + categoryToUpdate)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("categoryToUpdate", newCategoryName)
+                .param("categoryToSet", String.valueOf(categoryToUpdate)));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories", "status"))
+                .andExpect(model().attribute("categories", categories))
+                .andExpect(model().attribute("status", StatusNotification.SUCCESS));
+
+        verify(productService, times(1)).findAllCategories();
+        verify(categoryService, times(1)).updateCategory(newCategoryName, categoryToUpdate);
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewAfterCreatingNewCategoryTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        final Long categoryToCreate = 0L;
+        final String newCategoryName = "Test";
+        when(productService.findAllCategories()).thenReturn(categoryList);
+        when(categoryService.updateCategory(newCategoryName, categoryToCreate)).thenReturn(StatusNotification.SUCCESS);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/admin/manage_category/new")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("newCategoryName", newCategoryName)
+                .param("categoryToSet", String.valueOf(categoryToCreate)));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories", "status"))
+                .andExpect(model().attribute("categories", categories))
+                .andExpect(model().attribute("status", StatusNotification.SUCCESS));
+
+        verify(productService, times(3)).findAllCategories();
+        verify(categoryService, times(1)).updateCategory(newCategoryName, categoryToCreate);
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryList = new CategoryList(categories);
+        final Long categoryToDelete = categories.get(0).getId();
+        final long categoryToSet = 2L;
+        when(productService.findAllCategories()).thenReturn(categoryList);
+        when(categoryService.setNewCategories(categoryToDelete, categoryToSet)).thenReturn(StatusNotification.SUCCESS);
+        when(categoryService.delete(categoryToDelete)).thenReturn(StatusNotification.DELETED);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/admin/manage_category/set_category/" + categoryToDelete + "/" + categoryToSet)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("categoryToDelete", String.valueOf(categoryToDelete))
+                .param("categoryToSet", String.valueOf(categoryToSet)));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/product/addCategory"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("categories", "status"))
+                .andExpect(model().attribute("categories", categories))
+                .andExpect(model().attribute("status", StatusNotification.DELETED));
+
+        verify(productService, times(1)).findAllCategories();
+        verify(categoryService, times(1)).setNewCategories(categoryToDelete, categoryToSet);
+        verify(categoryService, times(1)).delete(categoryToDelete);
     }
 }

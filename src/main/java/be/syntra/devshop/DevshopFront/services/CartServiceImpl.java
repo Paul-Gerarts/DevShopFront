@@ -86,12 +86,13 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
+
     @Override
     public StatusNotification payCart(String userName) {
-        setUserName(currentCart, userName);
+        currentCart.setUser(userName);
         setCartToFinalized(currentCart);
         log.info("cart() -> {}", currentCart);
-        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, currentCart, CartDto.class);
+        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, persistCart(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);
             currentCart.getProducts().forEach(product -> product.setTotalInCart(0));
@@ -101,8 +102,20 @@ public class CartServiceImpl implements CartService {
         return StatusNotification.PAYMENT_FAIL;
     }
 
-    private void setUserName(CartDto cartDto, String user) {
-        cartDto.setUser(user);
+    /*
+     * when using the raw currentCart, a stackOverFlowError is thrown
+     * instead, we're wrapping our CartDto to be able to persist without a problem
+     * @Return: CartDto which is a copy of the currentCart
+     */
+    private CartDto persistCart(CartDto currentCart) {
+        return CartDto.builder()
+                .activeCart(currentCart.isActiveCart())
+                .finalizedCart(currentCart.isFinalizedCart())
+                .paidCart(currentCart.isPaidCart())
+                .cartCreationDateTime(currentCart.getCartCreationDateTime())
+                .user(currentCart.getUser())
+                .products(currentCart.getProducts())
+                .build();
     }
 
     private void setCartToFinalized(CartDto cartDto) {

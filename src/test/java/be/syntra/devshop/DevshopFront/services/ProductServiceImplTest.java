@@ -4,8 +4,10 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -28,9 +30,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryDto;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDto;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -156,6 +158,28 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertEquals(StatusNotification.UPDATED, statusNotification);
+    }
+
+    @Test
+    void findAllWithOnlyCategoryTest() {
+        // given
+        final CategoryDto category = createCategoryDto();
+        final List<Product> dummyAllProductList = getDummyAllProductList();
+        final ProductList expectedProductList = new ProductList(dummyAllProductList);
+        final String dummyAllProductListJsonString = jsonUtils.asJsonString(expectedProductList);
+        final String expectedEndpoint = baseUrl + endpoint + "/all/" + category.getId();
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        withSuccess(dummyAllProductListJsonString, MediaType.APPLICATION_JSON));
+
+        // when
+        final ProductList receivedProductList = productService.findAllWithOnlyCategory(category.getId());
+
+        // then
+        mockServer.verify();
+        assertEquals(expectedProductList.getProducts().size(), receivedProductList.getProducts().size());
     }
 
     @Test

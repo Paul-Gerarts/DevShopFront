@@ -12,8 +12,13 @@ public enum StatusNotification {
     UPDATED("The update was successful!"),
     SUCCESS("Success"),
     SAVED("Saved"),
-    ERROR("Error: make sure you fill in the form correctly"),
-    PAYMENT_FAIL("Payment cart failed.");
+    FORM_ERROR("Make sure you fill in the form correctly"),
+    PERSISTENCE_ERROR("Something went wrong while persisting the desired object"),
+    DELETED("delete successful"),
+    DELETE_FAIL("deletion failed"),
+    PAYMENT_FAIL("Payment cart failed."),
+    UPDATE_FAIL("Failed to change the category"),
+    CATEGORY_EXISTS("Creation failed. Category already excists");
 
     private final String label;
 

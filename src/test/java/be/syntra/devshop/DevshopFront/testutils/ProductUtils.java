@@ -91,4 +91,8 @@ public class ProductUtils {
     public static List<Product> getDummyArchivedProductList() {
         return List.of(getDummyArchivedProduct(), getOtherDummyArchivedProduct());
     }
+
+    public static List<Product> getDummyAllProductList() {
+        return List.of(getDummyNonArchivedProduct(), getDummyArchivedProduct());
+    }
 }

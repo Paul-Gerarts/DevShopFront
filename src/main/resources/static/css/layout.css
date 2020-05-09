@@ -107,12 +107,22 @@ html, body, .spinner {
     min-height: 200px;
 }
 
+.mdl-dialog {
+    top: 45%;
+    width: 30%;;
+}
+
+.mdl-dialog__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
+
 /*file-specific CSS*/
 
 .checkbox_layout {
     padding-top: 22px;
     color: lightgray;
-    background-color: white;
 }
 
 .text-danger {
@@ -237,7 +247,33 @@ html, body, .spinner {
     left: 75%;
 }
 
+.category-dropdown {
+    height: 35px;
+    font-size: 18px;
+    width: 270px;
+    border: solid;
+}
 
+.category-update-field {
+    padding-left: 60px;
+}
 
+.category-page-elements {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
 
+.new-category {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-left: 340px;
+}
+
+::placeholder {
+    color: black;
+    opacity: 1;
+}
 

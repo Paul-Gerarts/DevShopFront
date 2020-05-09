@@ -63,7 +63,6 @@ public class UserController {
 
     @PostMapping("/cart/detail")
     public String payCart(Model model, Principal user) {
-        log.info(user.getName());
         StatusNotification statusNotification = cartService.payCart(user.getName());
         addModelAttributesOfCartAndPayment(model);
         model.addAttribute("status", statusNotification);
