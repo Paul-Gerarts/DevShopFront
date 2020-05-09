@@ -28,7 +28,8 @@
             <span class="mdl-layout-title"
                   th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
                   th:text="'After searching ' + ${searchModel.getSearchRequest().toUpperCase()} + ' we found nothing with the applied filters, so we\'re showing ALL'"></span>
-            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" th:each="product : ${products}">
+            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                th:each="product : ${productlist.products}">
                 <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
                         <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">

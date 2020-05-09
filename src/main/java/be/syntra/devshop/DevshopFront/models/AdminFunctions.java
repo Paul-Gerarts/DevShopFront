@@ -9,7 +9,8 @@ public enum AdminFunctions {
 
     ADD_PRODUCT("ADD a product", "note_add", "./addproduct"),
     UPDATE_PRODUCT("UPDATE a product", "sync_alt", "/products"),
-    ARCHIVE_PRODUCT("view ARCHIVED products", "archive", "/admin/archived");
+    ARCHIVE_PRODUCT("view ARCHIVED products", "archive", "/admin/archived"),
+    MANAGE_CATEGORY("MANAGE categories", "build", "./manage_category");
 
     private final String description;
     private final String icon;

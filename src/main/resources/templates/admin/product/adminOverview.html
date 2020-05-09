@@ -38,7 +38,8 @@
     const isOnPage = !!location.href.match(regex);
     if (isOnPage) {
         adminButton.disabled = isOnPage;
-        adminButton.style.display = "none";
+        adminButton.classList.remove('mdl-color--blue');
+        adminButton.classList.add('mdl-color--grey-500');
     }
 </script>
 </html>

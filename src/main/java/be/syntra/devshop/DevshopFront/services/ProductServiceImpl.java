@@ -11,6 +11,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ReviewDto;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +40,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final CartService cartService;
     private final DataStore dataStore;
-    private final ProductMapperUtil productMapperUtil;
+    private final ProductMapper productMapper;
+    private final SearchService searchService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -48,11 +50,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(
             CartService cartService,
             DataStore dataStore,
-            ProductMapperUtil productMapperUtil
+            ProductMapper productMapper,
+            SearchService searchService
     ) {
         this.cartService = cartService;
         this.dataStore = dataStore;
-        this.productMapperUtil = productMapperUtil;
+        this.productMapper = productMapper;
+        this.searchService = searchService;
     }
 
     @PostConstruct
@@ -67,25 +71,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public StatusNotification addProduct(@Valid ProductDto productDto) {
-        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
-        ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
-        dataStore.getMap().put("cacheNeedsUpdate", true);
+        ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, productDto, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;
         }
-        return StatusNotification.ERROR;
+        return StatusNotification.FORM_ERROR;
     }
 
     @Override
-    public ProductList findAllNonArchived() {
-        return retrieveProductListFrom(resourceUrl);
+    public ProductList findAllProductsBySearchModel() {
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
+            return productListResponseEntity.getBody();
+        }
+        return new ProductList(Collections.emptyList());
     }
 
     @Override
-    public ProductList findAllArchived() {
-        return retrieveProductListFrom(resourceUrl + "/archived");
+    public ProductList findAllWithOnlyCategory(Long id) {
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl + "/all/" + id, ProductList.class);
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
+            return productListResponseEntity.getBody();
+        }
+        return new ProductList(Collections.emptyList());
     }
 
     @Override
@@ -135,28 +146,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public StatusNotification archiveProduct(Product product) {
         product.setArchived(true);
-        ProductDto productDto = productMapperUtil.convertToProductDto(product);
+        ProductDto productDto = productMapper.convertToProductDto(product);
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
             log.info("updateProduct() -> saved > {} ", product);
             return StatusNotification.UPDATED;
         }
-        return StatusNotification.ERROR;
-    }
-
-    private ProductList retrieveProductListFrom(String resourceUrl) {
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl, ProductList.class);
-        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            log.info("findProductList() -> products retrieved from backEnd");
-            return productListResponseEntity.getBody();
-        }
-        return new ProductList(Collections.emptyList());
+        return StatusNotification.FORM_ERROR;
     }
 
     @Override
     public void addToCart(Product product) {
         cartService.addToCart(product);
     }
-
 }
