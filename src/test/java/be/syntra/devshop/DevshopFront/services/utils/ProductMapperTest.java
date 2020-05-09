@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-class ProductMapperUtilTest {
+class ProductMapperTest {
 
     @InjectMocks
-    private ProductMapperUtil productMapperUtil;
+    private ProductMapper productMapper;
 
     @Mock
-    private CategoryMapperUtil categoryMapperUtil;
+    private CategoryMapper categoryMapper;
 
     @BeforeEach
     public void setUp() {
@@ -32,10 +32,10 @@ class ProductMapperUtilTest {
         // given
         Product product = getDummyNonArchivedProduct();
         List<String> categoryNames = List.of("Headphones");
-        when(categoryMapperUtil.mapToCategoryNames(product.getCategories())).thenReturn(categoryNames);
+        when(categoryMapper.mapToCategoryNames(product.getCategories())).thenReturn(categoryNames);
 
         // when
-        ProductDto mappedProductDto = productMapperUtil.convertToProductDto(product);
+        ProductDto mappedProductDto = productMapper.convertToProductDto(product);
 
         // then
         assertEquals(mappedProductDto.getClass(), ProductDto.class);

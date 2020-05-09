@@ -5,9 +5,10 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class AdminController {
 
     private final ProductService productService;
     private final SearchService searchService;
-    private final ProductMapperUtil productMapperUtil;
+    private final ProductMapper productMapper;
     private static final String PRODUCT_FORM = "admin/product/addProduct";
     private static final String PRODUCT = "product";
 
@@ -35,11 +36,11 @@ public class AdminController {
     public AdminController(
             ProductService productService,
             SearchService searchService,
-            ProductMapperUtil productMapperUtil
+            ProductMapper productMapper
     ) {
         this.productService = productService;
         this.searchService = searchService;
-        this.productMapperUtil = productMapperUtil;
+        this.productMapper = productMapper;
     }
 
     @GetMapping("/addproduct")
@@ -66,7 +67,7 @@ public class AdminController {
     public String forward(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
         addCategoriesModel(model);
-        model.addAttribute(PRODUCT, productMapperUtil.convertToProductDto(product));
+        model.addAttribute(PRODUCT, productMapper.convertToProductDto(product));
         return PRODUCT_FORM;
     }
 
@@ -77,11 +78,12 @@ public class AdminController {
 
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
-        List<Product> productList = productService.findAllArchived().getProducts();
+        searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
+        ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("products", productList);
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         return "product/productOverview";
     }
 

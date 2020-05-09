@@ -2,9 +2,9 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 
 public interface ProductService {
 
@@ -22,14 +22,7 @@ public interface ProductService {
      */
     StatusNotification addProduct(ProductDto productDto);
 
-    /***
-     * to retrieve all products present from the backend
-     * returns a ProductList object
-     * @return ProductList
-     */
-    ProductList findAllNonArchived();
-
-    ProductList findAllArchived();
+    ProductList findAllProductsBySearchModel();
 
     Product findById(Long id);
 

@@ -2,14 +2,13 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
-import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductListCacheService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -25,11 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.testutils.CartUtils.*;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyArchivedProductList;
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProductList;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDtoList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -47,69 +45,107 @@ public class SearchControllerTest {
     private ProductService productService;
 
     @MockBean
-    private ProductListCacheService productListCacheService;
-
-    @MockBean
     private CartService cartService;
 
     @MockBean
     private SearchService searchService;
 
-    @Test
-    public void canDisplaySearchedForProductsTest() throws Exception {
-        // given
-        final String searchRequest = "product";
-        final String description = "another";
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
-        final CartDto dummyCart = getCartWithOneDummyProduct();
-        final SearchModel dummySearchModel = new SearchModel();
-        dummySearchModel.setSearchRequest(searchRequest);
-        dummySearchModel.setDescription(description);
+    @MockBean
+    private ProductMapper productMapper;
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+    @Test
+    void showSearchBarResultTest() throws Exception {
+        // given
+        final String testRequest = "testRequest";
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
-        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + searchRequest));
+        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + testRequest));
 
         // then
         getResult
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart));
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(searchService, times(1)).setSearchRequest(testRequest);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
     @Test
-    void canSearchForDescriptionTest() throws Exception {
-        // given
-        final String searchRequest = "product";
-        final String description = "another";
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
-        final CartDto dummyCart = getCartWithOneDummyProduct();
-        final SearchModel dummySearchModel = new SearchModel();
-        BigDecimal priceLow = new BigDecimal("0");
-        BigDecimal priceHigh = new BigDecimal("10000");
-        dummySearchModel.setPriceLow(priceLow);
-        dummySearchModel.setPriceHigh(priceHigh);
-        dummySearchModel.setDescription(description);
-        dummySearchModel.setSearchRequest(searchRequest);
-
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+    void searchPriceLowTest() throws Exception {
+        //given
+        final String priceLow = "6.66";
+        final BigDecimal price_low_big_d = new BigDecimal(priceLow);
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
-        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/pricelow/?priceLow=" + priceLow));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setPriceLow(price_low_big_d);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchPriceHighTest() throws Exception {
+        //given
+        final String priceHigh = "9999.99";
+        final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/pricehigh/?priceHigh=" + priceHigh));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setPriceHigh(price_low_big_d);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchProductDescriptionTest() throws Exception {
+        //given
+        final String description = "my prod description";
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + description));
@@ -119,41 +155,26 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
-        verify(productListCacheService, times(1)).searchForProductDescription(any(), any());
+        verify(searchService, times(1)).setDescription(description);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/search/sortbyname", "/search/sortbyprice"})
     public void canSortProductsTest(String url) throws Exception {
-
         // given
-        final String searchRequest = "product";
-        final String description = "another";
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        final SearchModel dummySearchModel = new SearchModel();
-        BigDecimal priceLow = BigDecimal.ZERO;
-        BigDecimal priceHigh = BigDecimal.TEN;
-        dummySearchModel.setDescription(description);
-        dummySearchModel.setPriceLow(priceLow);
-        dummySearchModel.setPriceHigh(priceHigh);
-        dummySearchModel.setSearchRequest(searchRequest);
 
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
-        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
         // when
         final ResultActions getResult = mockMvc.perform(get(url));
@@ -163,31 +184,25 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/search/archived/sortbyname", "/search/archived/sortbyprice"})
     public void canSortArchivedProductsTest(String url) throws Exception {
-
         // given
-        final List<Product> dummyProducts = getDummyArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
-        final CartDto dummyCart = getCartWithMultipleArchivedProducts();
-        final SearchModel dummySearchModel = new SearchModel();
-        dummySearchModel.setArchivedView(true);
+        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
-        when(productService.findAllArchived()).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByName(any(), any())).thenReturn(dummyProductList);
-        when(productListCacheService.sortListByPrice(any(), any())).thenReturn(dummyProductList);
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
-        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
 
         // when
         final ResultActions getResult = mockMvc.perform(get(url));
@@ -197,52 +212,10 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(productService, times(1)).findAllArchived();
+        verify(searchService, times(1)).setArchivedView(true);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"/search/pricelow/?priceLow=", "/search/pricehigh/?priceHigh="})
-    void canFilterProductsByPriceTest(String url) throws Exception {
-
-        // given
-        final String searchRequest = "product";
-        final String description = "another";
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        final SearchModel dummySearchModel = new SearchModel();
-        BigDecimal priceLow = BigDecimal.ZERO;
-        BigDecimal priceHigh = BigDecimal.TEN;
-        dummySearchModel.setDescription(description);
-        dummySearchModel.setPriceLow(priceLow);
-        dummySearchModel.setPriceHigh(priceHigh);
-        dummySearchModel.setSearchRequest(searchRequest);
-
-        when(productListCacheService.findBySearchRequest(any())).thenReturn(dummyProductList);
-        when(productListCacheService.filterByPrice(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(productListCacheService.searchForProductDescription(dummyProducts, dummySearchModel)).thenReturn(dummyProductList);
-        when(cartService.getCart()).thenReturn(dummyCart);
-        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
-
-        // when
-        final ResultActions getResult = mockMvc.perform(get(url + priceLow.toString()));
-
-        // then
-        getResult
-                .andExpect(status().isOk())
-                .andExpect(view().name("product/productOverview"))
-                .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", dummyProducts))
-                .andExpect(model().attribute("cart", dummyCart))
-                .andExpect(model().attribute("searchModel", dummySearchModel));
-
-        verify(productListCacheService, times(1)).findBySearchRequest(any());
-        verify(productListCacheService, times(1)).filterByPrice(any(), any());
-    }
 }
