@@ -6,8 +6,8 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryChangeDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
@@ -94,7 +94,7 @@ public class AdminController {
         searchService.setArchivedView(true);
         ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute(PRODUCTS, productMapper.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         return "product/productOverview";
     }
 

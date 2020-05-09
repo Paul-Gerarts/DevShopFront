@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
@@ -68,8 +67,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public StatusNotification addProduct(@Valid ProductDto productDto) {
-        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
+        ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, productDto, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
             return StatusNotification.SAVED;
@@ -79,8 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        HttpEntity<SearchModel> request = new HttpEntity<>(searchService.getSearchModel());
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", request, ProductList.class);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
@@ -90,7 +87,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllWithCorrespondingCategory(Long id) {
-        return retrieveProductListFrom(resourceUrl + "/all/" + id);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl + "/all/" + id, ProductList.class);
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
+            return productListResponseEntity.getBody();
+        }
+        return new ProductList(Collections.emptyList());
     }
 
     @Override
