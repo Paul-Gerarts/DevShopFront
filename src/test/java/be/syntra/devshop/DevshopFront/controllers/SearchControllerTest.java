@@ -8,10 +8,12 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,21 +51,21 @@ public class SearchControllerTest {
     private SearchService searchService;
 
     @MockBean
-    private ProductMapperUtil productMapperUtil;
+    private ProductMapper productMapper;
 
     @Test
     void showSearchBarResultTest() throws Exception {
         // given
-        final String TEST_REQUEST = "testRequest";
+        final String testRequest = "testRequest";
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + TEST_REQUEST));
+        final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + testRequest));
 
         // then
         getResult
@@ -72,7 +74,7 @@ public class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setSearchRequest(TEST_REQUEST);
+        verify(searchService, times(1)).setSearchRequest(testRequest);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -81,17 +83,17 @@ public class SearchControllerTest {
     @Test
     void searchPriceLowTest() throws Exception {
         //given
-        final String PRICE_LOW = "6.66";
-        final BigDecimal price_low_big_d = new BigDecimal(PRICE_LOW);
+        final String priceLow = "6.66";
+        final BigDecimal price_low_big_d = new BigDecimal(priceLow);
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/pricelow/?priceLow=" + PRICE_LOW));
+        final ResultActions getResult = mockMvc.perform(get("/search/pricelow/?priceLow=" + priceLow));
 
         // then
         getResult
@@ -109,17 +111,17 @@ public class SearchControllerTest {
     @Test
     void searchPriceHighTest() throws Exception {
         //given
-        final String PRICE_HIGH = "9999.99";
-        final BigDecimal price_low_big_d = new BigDecimal(PRICE_HIGH);
+        final String priceHigh = "9999.99";
+        final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/pricehigh/?priceHigh=" + PRICE_HIGH));
+        final ResultActions getResult = mockMvc.perform(get("/search/pricehigh/?priceHigh=" + priceHigh));
 
         // then
         getResult
@@ -137,16 +139,16 @@ public class SearchControllerTest {
     @Test
     void searchProductDescriptionTest() throws Exception {
         //given
-        final String DESCRIPTION = "my prod description";
+        final String description = "my prod description";
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + DESCRIPTION));
+        final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + description));
 
         // then
         getResult
@@ -155,28 +157,27 @@ public class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setDescription(DESCRIPTION);
+        verify(searchService, times(1)).setDescription(description);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
-    @Test
-    void sortByNameTest() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"/search/sortbyname", "/search/sortbyprice"})
+    public void canSortProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        //when(productService.sortListByName(anyList(), any(SearchModel.class))).thenReturn(dummyProductList);
-        when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/sortbyname"));
+        final ResultActions getResult = mockMvc.perform(get(url));
 
         // then
         getResult
@@ -190,22 +191,21 @@ public class SearchControllerTest {
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
-    @Test
-    void sortByPriceTest() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"/search/archived/sortbyname", "/search/archived/sortbyprice"})
+    public void canSortArchivedProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        //when(productService.sortListByPrice(anyList(), any(SearchModel.class))).thenReturn(dummyProductList);
-        when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/search/sortbyprice"));
+        final ResultActions getResult = mockMvc.perform(get(url));
 
         // then
         getResult
@@ -214,8 +214,8 @@ public class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setSearchResultView(true);
-        verify(searchService, times(1)).setArchivedView(false);
+        verify(searchService, times(1)).setArchivedView(true);
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
+
 }

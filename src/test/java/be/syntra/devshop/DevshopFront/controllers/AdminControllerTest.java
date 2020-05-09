@@ -9,8 +9,8 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -52,10 +52,10 @@ class AdminControllerTest {
     private SearchService searchService;
 
     @MockBean
-    private ProductMapperUtil productMapperUtil;
+    private ProductMapper productMapper;
 
     @MockBean
-    private CategoryMapperUtil categoryMapperUtil;
+    private CategoryMapper categoryMapper;
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
@@ -142,8 +142,8 @@ class AdminControllerTest {
         ProductDto dummyProductDto = getDummyProductDto();
         List<Category> categories = createCategoryList();
         List<String> categoryNames = List.of("Headphones");
-        when(categoryMapperUtil.mapToCategoryNames(categories)).thenReturn(categoryNames);
-        when(productMapperUtil.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
+        when(categoryMapper.mapToCategoryNames(categories)).thenReturn(categoryNames);
+        when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
 
@@ -204,7 +204,7 @@ class AdminControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapperUtil.convertToProductDtoList(any())).thenReturn(productsDisplayList);
+        when(productMapper.convertToProductDtoList(any())).thenReturn(productsDisplayList);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
@@ -222,6 +222,6 @@ class AdminControllerTest {
         verify(searchService, times(1)).setArchivedView(true);
         verify(searchService, times(1)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductDtoList(any());
     }
 }

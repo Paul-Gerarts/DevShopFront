@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CategoryMapperUtil {
+public class CategoryMapper {
 
     public List<String> mapToCategoryNames(List<Category> categories) {
         List<String> categoryNames = new ArrayList<>();
@@ -16,9 +16,13 @@ public class CategoryMapperUtil {
         return categoryNames;
     }
 
-    public List<Category> mapToCategories(List<String> categoryStrings) {
-        List<Category> categories = categoryStrings.stream().map(categoryString -> Category.builder().name(categoryString).build()).collect(Collectors.toList());
-        return categories;
+    List<Category> mapToCategories(List<String> categoryStrings) {
+        return categoryStrings.stream()
+                .map(
+                        categoryString -> Category.builder()
+                                .name(categoryString)
+                                .build())
+                .collect(Collectors.toList());
     }
 
 }

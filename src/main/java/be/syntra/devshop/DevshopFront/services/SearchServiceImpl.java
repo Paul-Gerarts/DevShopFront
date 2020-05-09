@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -74,12 +75,15 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private boolean hasSearchRequest() {
-        return null != getSearchModel().getSearchRequest();
+        return StringUtils.hasText(getSearchModel().getSearchRequest());
     }
 
     @Override
     public void setPriceFilters(List<Product> products) {
-        BigDecimal priceHigh = products.stream().map(Product::getPrice).max(Comparator.naturalOrder()).orElse(BigDecimal.ZERO);
+        BigDecimal priceHigh = products.stream()
+                .map(Product::getPrice)
+                .max(Comparator.naturalOrder())
+                .orElse(BigDecimal.ZERO);
         searchModel.setPriceLow(BigDecimal.ZERO);
         searchModel.setPriceHigh(priceHigh);
     }

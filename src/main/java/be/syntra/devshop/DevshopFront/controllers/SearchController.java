@@ -6,7 +6,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class SearchController {
     private final CartService cartService;
     private final SearchService searchService;
     private final ProductService productService;
-    private final ProductMapperUtil productMapperUtil;
+    private final ProductMapper productMapper;
     private static final String PRODUCTS = "productlist";
     private static final String SEARCH_MODEL = "searchModel";
     private static final String PRODUCT_OVERVIEW = "product/productOverview";
@@ -36,12 +36,12 @@ public class SearchController {
             CartService cartService,
             SearchService searchService,
             ProductService productService,
-            ProductMapperUtil productMapperUtil
+            ProductMapper productMapper
     ) {
         this.cartService = cartService;
         this.searchService = searchService;
         this.productService = productService;
-        this.productMapperUtil = productMapperUtil;
+        this.productMapper = productMapper;
     }
 
     @GetMapping("/")
@@ -74,7 +74,6 @@ public class SearchController {
 
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
-        disablePriceSorting();
         reverseNameSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return setTemplateModel(model, productList);
@@ -82,7 +81,6 @@ public class SearchController {
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
-        disableNameSorting();
         reversePriceSorting();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return setTemplateModel(model, productList);
@@ -90,7 +88,6 @@ public class SearchController {
 
     @GetMapping("/archived/sortbyname")
     public String sortArchivedByName(Model model) {
-        disablePriceSorting();
         reverseNameSorting();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
@@ -99,7 +96,6 @@ public class SearchController {
 
     @GetMapping("/archived/sortbyprice")
     public String sortArchivedByPrice(Model model) {
-        disableNameSorting();
         reversePriceSorting();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
@@ -124,18 +120,11 @@ public class SearchController {
 
     private String setTemplateModel(Model model, List<Product> productList) {
         ProductList productListDto = new ProductList(productList);
-        ProductsDisplayList productsDisplay = productMapperUtil.convertToProductDtoList(productListDto);
+        ProductsDisplayList productsDisplay = productMapper.convertToProductDtoList(productListDto);
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productsDisplay);
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
     }
 
-    private void disableNameSorting() {
-        searchService.getSearchModel().setSortAscendingName(false);
-    }
-
-    private void disablePriceSorting() {
-        searchService.getSearchModel().setSortAscendingPrice(false);
-    }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ProductMapperUtil {
+public class ProductMapper {
 
     @Autowired
-    private CategoryMapperUtil categoryMapperUtil;
+    private CategoryMapper categoryMapper;
 
     @Autowired
     private CartService cartService;
@@ -28,21 +28,8 @@ public class ProductMapperUtil {
                 .description(product.getDescription())
                 .archived(product.isArchived())
                 .totalInCart(product.getTotalInCart())
-                .categoryNames(categoryMapperUtil.mapToCategoryNames(product.getCategories()))
+                .categoryNames(categoryMapper.mapToCategoryNames(product.getCategories()))
                 .build();
-    }
-
-    public Product convertToProduct(ProductDto productDto) {
-        return Product.builder()
-                .id(productDto.getId())
-                .name(productDto.getName())
-                .price(productDto.getPrice())
-                .description(productDto.getDescription())
-                .archived(productDto.isArchived())
-                .totalInCart(0)
-                .categories(categoryMapperUtil.mapToCategories(productDto.getCategoryNames()))
-                .build();
-
     }
 
     public ProductsDisplayList convertToProductDtoList(ProductList productList) {

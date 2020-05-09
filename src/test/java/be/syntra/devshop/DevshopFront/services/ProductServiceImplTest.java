@@ -6,8 +6,8 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.services.utils.CategoryMapperUtil;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RestClientTest(ProductServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
-@Import({TestWebConfig.class, JsonUtils.class, ProductMapperUtil.class})
+@Import({TestWebConfig.class, JsonUtils.class, ProductMapper.class})
 class ProductServiceImplTest {
 
     @Autowired
@@ -58,10 +58,10 @@ class ProductServiceImplTest {
     ProductServiceImpl productService;
 
     @MockBean
-    ProductMapperUtil productMapperUtil;
+    ProductMapper productMapper;
 
     @MockBean
-    CategoryMapperUtil categoryMapperUtil;
+    CategoryMapper categoryMapper;
 
     @MockBean
     CartService service;

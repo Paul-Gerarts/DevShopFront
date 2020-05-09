@@ -6,7 +6,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,19 +21,19 @@ public class ProductController {
     private final ProductService productService;
     private final CartService cartService;
     private final SearchService searchService;
-    private final ProductMapperUtil productMapperUtil;
+    private final ProductMapper productMapper;
 
     @Autowired
     public ProductController(
             ProductService productService,
             CartService cartService,
             SearchService searchService,
-            ProductMapperUtil productMapperUtil
+            ProductMapper productMapper
     ) {
         this.productService = productService;
         this.cartService = cartService;
         this.searchService = searchService;
-        this.productMapperUtil = productMapperUtil;
+        this.productMapper = productMapper;
     }
 
     @GetMapping
@@ -41,7 +41,7 @@ public class ProductController {
         searchService.resetSearchModel();
         ProductList productList = productService.findAllProductsBySearchModel();
         searchService.setPriceFilters(productList.getProducts());
-        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -69,7 +69,7 @@ public class ProductController {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         ProductList productList = productService.findAllProductsBySearchModel();
-        model.addAttribute("productlist", productMapperUtil.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

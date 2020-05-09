@@ -10,7 +10,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
@@ -43,7 +43,7 @@ class ProductControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    ProductMapperUtil productMapperUtil;
+    ProductMapper productMapper;
 
     @MockBean
     private ProductService productService;
@@ -64,7 +64,7 @@ class ProductControllerTest {
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
-        when(productMapperUtil.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -78,7 +78,7 @@ class ProductControllerTest {
 
 
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductDtoList(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
@@ -136,7 +136,7 @@ class ProductControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
-        when(productMapperUtil.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when
@@ -156,7 +156,7 @@ class ProductControllerTest {
         verify(productService, times(1)).addToCart(any());
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapperUtil, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductDtoList(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }

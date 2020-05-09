@@ -9,7 +9,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
+import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final CartService cartService;
     private final DataStore dataStore;
-    private final ProductMapperUtil productMapperUtil;
+    private final ProductMapper productMapper;
     private final SearchService searchService;
 
     @Autowired
@@ -47,12 +47,12 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(
             CartService cartService,
             DataStore dataStore,
-            ProductMapperUtil productMapperUtil,
+            ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
         this.dataStore = dataStore;
-        this.productMapperUtil = productMapperUtil;
+        this.productMapper = productMapper;
         this.searchService = searchService;
     }
 
@@ -69,7 +69,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public StatusNotification addProduct(@Valid ProductDto productDto) {
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        log.info("string from restTemplate -> {} ", restTemplate.getUriTemplateHandler());
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
             log.info("addProduct() -> saved > {} ", productDto);
@@ -116,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public StatusNotification archiveProduct(Product product) {
         product.setArchived(true);
-        ProductDto productDto = productMapperUtil.convertToProductDto(product);
+        ProductDto productDto = productMapper.convertToProductDto(product);
         HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
         ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
