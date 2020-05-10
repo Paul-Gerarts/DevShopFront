@@ -74,21 +74,21 @@ public class SearchController {
 
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
-        reverseNameSorting();
+        searchService.setSortingByName();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return setTemplateModel(model, productList);
     }
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
-        reversePriceSorting();
+        searchService.setSortingByPrice();
         List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         return setTemplateModel(model, productList);
     }
 
     @GetMapping("/archived/sortbyname")
     public String sortArchivedByName(Model model) {
-        reverseNameSorting();
+        searchService.setSortingByName();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
         return setTemplateModel(model, productList);
@@ -96,7 +96,7 @@ public class SearchController {
 
     @GetMapping("/archived/sortbyprice")
     public String sortArchivedByPrice(Model model) {
-        reversePriceSorting();
+        searchService.setSortingByPrice();
         searchService.setArchivedView(true);
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
         return setTemplateModel(model, productList);
@@ -108,16 +108,6 @@ public class SearchController {
         return productService.findAllProductsBySearchModel().getProducts();
     }
 
-    private void reverseNameSorting() {
-        boolean sortAscending = searchService.getSearchModel().isSortAscendingName();
-        searchService.getSearchModel().setSortAscendingName(!sortAscending);
-    }
-
-    private void reversePriceSorting() {
-        boolean sortAscending = searchService.getSearchModel().isSortAscendingPrice();
-        searchService.getSearchModel().setSortAscendingPrice(!sortAscending);
-    }
-
     private String setTemplateModel(Model model, List<Product> productList) {
         ProductList productListDto = new ProductList(productList);
         ProductsDisplayList productsDisplay = productMapper.convertToProductDtoList(productListDto);
@@ -126,5 +116,4 @@ public class SearchController {
         model.addAttribute("cart", cartService.getCart());
         return PRODUCT_OVERVIEW;
     }
-
 }

@@ -27,4 +27,8 @@ public interface SearchService {
     void setAppliedFiltersToSearchModel();
 
     void setPriceFilters(List<Product> products);
+
+    void setSortingByName();
+
+    void setSortingByPrice();
 }

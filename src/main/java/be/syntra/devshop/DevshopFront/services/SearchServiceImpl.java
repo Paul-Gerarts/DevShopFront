@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 public class SearchServiceImpl implements SearchService {
 
@@ -22,6 +24,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setSearchRequest(String searchRequest) {
+        resetSearchModel();
         searchModel.setSearchRequest(searchRequest);
     }
 
@@ -49,6 +52,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setDescription(String description) {
+        resetSearchModel();
         setAppliedFiltersToSearchModel();
         searchModel.setDescription(description);
     }
@@ -84,7 +88,36 @@ public class SearchServiceImpl implements SearchService {
                 .map(Product::getPrice)
                 .max(Comparator.naturalOrder())
                 .orElse(BigDecimal.ZERO);
+        log.info("setPriceFilters() -> priceHigh = {}", priceHigh);
         searchModel.setPriceLow(BigDecimal.ZERO);
         searchModel.setPriceHigh(priceHigh);
+    }
+
+    @Override
+    public void setSortingByName() {
+        if (searchModel.isNameSortActive()) {
+            reverseNameSorting();
+        }
+        searchModel.setNameSortActive(true);
+        searchModel.setPriceSortActive(false);
+    }
+
+    @Override
+    public void setSortingByPrice() {
+        if (searchModel.isPriceSortActive()) {
+            reversePriceSorting();
+        }
+        searchModel.setPriceSortActive(true);
+        searchModel.setNameSortActive(false);
+    }
+
+    private void reverseNameSorting() {
+        boolean sortAscending = searchModel.isSortAscendingName();
+        searchModel.setSortAscendingName(!sortAscending);
+    }
+
+    private void reversePriceSorting() {
+        boolean sortAscending = searchModel.isSortAscendingPrice();
+        searchModel.setSortAscendingPrice(!sortAscending);
     }
 }
