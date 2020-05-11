@@ -75,9 +75,12 @@
                 </span>
             </div>
             <div th:object="${review}" sec:authorize="hasRole('ROLE_USER')" id="visible">
-                <form class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp">
+                <form class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp" action="#"
+                      th:action="@{/products/details/{id}/review} (id=${product.id})" th:object="${review}"
+                      method="post">
+                    <input type="hidden" name="id" th:value="${product.id}"/>
                     <label style="padding: 3%">
-                        <textarea style="height: 100px; width: 75%; ">
+                        <textarea style="height: 100px; width: 75%; " class="text_font">
                         </textarea>
                     </label>
                     <div style="padding-left: 3%">
@@ -99,10 +102,11 @@
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
             </div>
-            <div th:object="product" th:if="*{product.getReviews()}? '(There are no reviews of this product yet.)'">
+            <div th:object="product"
+                 th:if="*{!product.getReviews().isEmpty()}?:'(There are no reviews of this product yet.)'">
                 <ul>
                     <li th:each="review : ${product.getReviews()}">
-                        <label th:text="${review.getUserName()}">
+                        <label>
                             <textarea th:text="${review.getReviewText()}">
                             </textarea>
                         </label>
