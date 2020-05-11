@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank;
 @ToString
 public class Review {
 
+    private String userName;
+
     @NotBlank(message = "This is a required field!")
     private String reviewText;
 }

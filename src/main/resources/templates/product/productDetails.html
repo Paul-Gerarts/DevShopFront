@@ -102,7 +102,7 @@
             <div th:object="product" th:if="*{product.getReviews()}? '(There are no reviews of this product yet.)'">
                 <ul>
                     <li th:each="review : ${product.getReviews()}">
-                        <label>
+                        <label th:text="${review.getUserName()}">
                             <textarea th:text="${review.getReviewText()}">
                             </textarea>
                         </label>

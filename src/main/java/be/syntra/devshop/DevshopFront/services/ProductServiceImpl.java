@@ -10,7 +10,6 @@ import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ReviewDto;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapperUtil;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,12 +126,12 @@ public class ProductServiceImpl implements ProductService {
     public StatusNotification writeReviewOfProduct(Long productId, Review review, Principal user) {
         ReviewDto reviewDto = getBuild(productId, review, user);
         HttpEntity<ReviewDto> request = new HttpEntity<>(reviewDto);
-        ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.postForEntity(resourceUrl + "/reviewProduct", request, ReviewDto.class);
+        ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.postForEntity(resourceUrl + "/review", request, ReviewDto.class);
         if (HttpStatus.CREATED.equals(reviewDtoResponseEntity.getStatusCode())) {
             log.info("updateProduct() -> saved > {} ", reviewDto);
             return StatusNotification.SUCCESS;
         }
-        return StatusNotification.ERROR;
+        return StatusNotification.FORM_ERROR;
     }
 
     private ReviewDto getBuild(Long productId, Review review, Principal user) {

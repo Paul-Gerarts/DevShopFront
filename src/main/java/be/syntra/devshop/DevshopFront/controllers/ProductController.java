@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -28,6 +27,7 @@ public class ProductController {
     private final CartService cartService;
     private final SearchService searchService;
     private final ProductMapper productMapper;
+    private final String PRODUCT_DETAIL = "redirect:/products/details/";
 
     @Autowired
     public ProductController(
@@ -86,14 +86,15 @@ public class ProductController {
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
         log.info("addSelectedProductFromDetailToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        return "redirect:/products/details/" + id;
+        return PRODUCT_DETAIL + id;
     }
 
     @PostMapping("/details/{id}/review")
     public String writeReviewOfProduct(@Valid @ModelAttribute Review review, BindingResult bindingResult, @PathVariable Long id, Model model, Principal user) {
         if (!bindingResult.hasErrors()) {
-            productService.writeReviewOfProduct(id, review, user);
+            model.addAttribute("status", productService.writeReviewOfProduct(id, review, user));
+            return PRODUCT_DETAIL + id;
         }
-        return "redirect:/products/details/" + id;
+        return PRODUCT_DETAIL + id;
     }
 }
