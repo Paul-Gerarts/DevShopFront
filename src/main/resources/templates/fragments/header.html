@@ -33,9 +33,16 @@
         </div>
         <div style="position: absolute; left: 42%">
             <!-- Logged in user -->
-            <span class="mdl-layout-title" sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"
-                  th:text="|Welcome ${#authentication.getName()}|"></span>
+            <span hidden th:text="${#authentication.getName()}" id="userEmail"></span>
+            <span id="welcomeUserName" class="mdl-layout-title"
+                  sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')"></span>
         </div>
+        <script th:inline="javascript">
+            const email = document.getElementById('userEmail');
+            const index = email.innerText.indexOf('@');
+            const name = email.innerText.substring(0, index);
+            document.getElementById('welcomeUserName').innerHTML = 'Welcome ' + name;
+        </script>
         <div style="position: absolute; right: 20px;">
             <form method="get" sec:authorize="!hasRole('ROLE_ADMIN')&&!hasRole('ROLE_USER')" th:action="@{/auth/login}">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
