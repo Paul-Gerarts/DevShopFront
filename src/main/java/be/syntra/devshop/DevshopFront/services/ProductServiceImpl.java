@@ -4,10 +4,12 @@ import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMaxPrice;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,13 +78,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductList findAllProductsBySearchModel() {
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
+    public ProductListAndMaxPrice findAllProductsBySearchModel() {
+        //public ProductList findAllProductsBySearchModel() {
+        final SearchModel originalSearchModel = searchService.getSearchModel();
+        final SearchModel searchModel = SearchModel.builder()
+                .archivedView(originalSearchModel.isArchivedView())
+                .searchRequest(originalSearchModel.getSearchRequest())
+                .searchResultView(originalSearchModel.isSearchResultView())
+                .searchFailure(originalSearchModel.isSearchFailure())
+                .activeFilters(originalSearchModel.isActiveFilters())
+                .appliedFiltersHeader(originalSearchModel.getAppliedFiltersHeader())
+                .description(originalSearchModel.getDescription())
+                .nameSortActive(originalSearchModel.isNameSortActive())
+                .priceHigh(originalSearchModel.getPriceHigh())
+                .priceLow(originalSearchModel.getPriceLow())
+                .priceSortActive(originalSearchModel.isPriceSortActive())
+                .sortAscendingName(originalSearchModel.isSortAscendingName())
+                .sortAscendingPrice(originalSearchModel.isSortAscendingPrice())
+                .build();
+        //ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductList.class);
+        ResponseEntity<ProductListAndMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMaxPrice.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        //return new ProductList(Collections.emptyList());
+        return ProductListAndMaxPrice.builder().products(Collections.emptyList()).build();
     }
 
     @Override

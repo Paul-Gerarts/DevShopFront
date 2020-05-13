@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -39,9 +40,12 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
-        ProductList productList = productService.findAllProductsBySearchModel();
-        searchService.setPriceFilters(productList.getProducts());
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        //ProductList productList = productService.findAllProductsBySearchModel();
+        ProductListAndMaxPrice productListAndMaxPrice = productService.findAllProductsBySearchModel();
+        //searchService.setPriceFilters(productList.getProducts());
+        searchService.setPriceFilters(productListAndMaxPrice.getSearchResultMaxPrice());
+        //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -68,8 +72,10 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        ProductList productList = productService.findAllProductsBySearchModel();
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        //ProductList productList = productService.findAllProductsBySearchModel();
+        ProductListAndMaxPrice productListAndMaxPrice = productService.findAllProductsBySearchModel();
+        //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

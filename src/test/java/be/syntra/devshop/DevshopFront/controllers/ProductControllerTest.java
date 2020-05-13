@@ -63,7 +63,7 @@ class ProductControllerTest {
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        //when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
         when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
@@ -135,7 +135,7 @@ class ProductControllerTest {
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        //when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
         when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
