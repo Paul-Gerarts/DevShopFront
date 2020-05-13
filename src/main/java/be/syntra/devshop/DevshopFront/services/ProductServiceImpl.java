@@ -2,8 +2,8 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
-import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
@@ -35,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private final CartService cartService;
-    private final DataStore dataStore;
     private final ProductMapper productMapper;
     private final SearchService searchService;
 
@@ -45,12 +44,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(
             CartService cartService,
-            DataStore dataStore,
             ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
-        this.dataStore = dataStore;
         this.productMapper = productMapper;
         this.searchService = searchService;
     }
@@ -77,12 +74,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", persistSearchModel(searchService.getSearchModel()), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
         return new ProductList(Collections.emptyList());
+    }
+
+    private SearchModel persistSearchModel(SearchModel searchModel) {
+        return SearchModel.builder()
+                .archivedView(searchModel.isArchivedView())
+                .searchRequest(searchModel.getSearchRequest())
+                .searchResultView(searchModel.isSearchResultView())
+                .searchFailure(searchModel.isSearchFailure())
+                .activeFilters(searchModel.isActiveFilters())
+                .appliedFiltersHeader(searchModel.getAppliedFiltersHeader())
+                .description(searchModel.getDescription())
+                .priceHigh(searchModel.getPriceHigh())
+                .priceLow(searchModel.getPriceLow())
+                .sortAscendingName(searchModel.isSortAscendingName())
+                .sortAscendingPrice(searchModel.isSortAscendingPrice())
+                .build();
     }
 
     @Override
