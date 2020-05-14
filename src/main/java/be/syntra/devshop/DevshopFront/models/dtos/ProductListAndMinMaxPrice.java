@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Builder
-public class ProductListAndMaxPrice {
+public class ProductListAndMinMaxPrice {
     private List<Product> products;
+    private BigDecimal searchResultMinPrice;
     private BigDecimal searchResultMaxPrice;
 }

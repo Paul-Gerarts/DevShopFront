@@ -7,7 +7,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryChangeDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMaxPrice;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -94,10 +94,10 @@ public class AdminController {
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
         //ProductList productList = productService.findAllProductsBySearchModel();
-        ProductListAndMaxPrice productListAndMaxPrice = productService.findAllProductsBySearchModel();
+        ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
         //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMaxPrice.getProducts())));
+        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         return "product/productOverview";
     }
 

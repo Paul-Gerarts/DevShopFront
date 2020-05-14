@@ -9,7 +9,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMaxPrice;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductListAndMaxPrice findAllProductsBySearchModel() {
+    public ProductListAndMinMaxPrice findAllProductsBySearchModel() {
         //public ProductList findAllProductsBySearchModel() {
         final SearchModel originalSearchModel = searchService.getSearchModel();
         final SearchModel searchModel = SearchModel.builder()
@@ -97,13 +97,13 @@ public class ProductServiceImpl implements ProductService {
                 .sortAscendingPrice(originalSearchModel.isSortAscendingPrice())
                 .build();
         //ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductList.class);
-        ResponseEntity<ProductListAndMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMaxPrice.class);
+        ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMinMaxPrice.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
         //return new ProductList(Collections.emptyList());
-        return ProductListAndMaxPrice.builder().products(Collections.emptyList()).build();
+        return ProductListAndMinMaxPrice.builder().products(Collections.emptyList()).build();
     }
 
     @Override

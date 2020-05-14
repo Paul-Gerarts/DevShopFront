@@ -25,7 +25,7 @@ public interface SearchService {
     void setAppliedFiltersToSearchModel();
 
     //void setPriceFilters(List<Product> products);
-    void setPriceFilters(BigDecimal maxPrice);
+    void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice);
 
     void setSortingByName();
 

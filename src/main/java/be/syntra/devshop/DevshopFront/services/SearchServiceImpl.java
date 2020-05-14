@@ -90,13 +90,13 @@ public class SearchServiceImpl implements SearchService {
         searchModel.setPriceHigh(priceHigh);
     }*/
 
-    public void setPriceFilters(BigDecimal maxPrice) {
+    public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
         /*BigDecimal priceHigh = products.stream()
                 .map(Product::getPrice)
                 .max(Comparator.naturalOrder())
                 .orElse(BigDecimal.ZERO);
         log.info("setPriceFilters() -> priceHigh = {}", priceHigh);*/
-        searchModel.setPriceLow(BigDecimal.ZERO);
+        searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
     }
 

@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMaxPrice;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 
 public interface ProductService {
 
@@ -24,7 +24,7 @@ public interface ProductService {
     StatusNotification addProduct(ProductDto productDto);
 
     //ProductList findAllProductsBySearchModel();
-    ProductListAndMaxPrice findAllProductsBySearchModel();
+    ProductListAndMinMaxPrice findAllProductsBySearchModel();
 
     Product findById(Long id);
 
