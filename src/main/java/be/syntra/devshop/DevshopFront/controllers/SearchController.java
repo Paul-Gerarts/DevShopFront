@@ -61,7 +61,11 @@ public class SearchController {
         //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
+        /*if(!searchService.getSearchModel().isActiveFilters()) {
+            searchService.getSearchModel().setSearchFailure(true);
+            searchService.getSearchModel().setSearchResultView(true);
+            searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(), productListAndMinMaxPrice.getSearchResultMaxPrice());
+        }*/
         return setTemplateModel(model, productList);
     }
 
@@ -71,7 +75,11 @@ public class SearchController {
         //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
+       /* if(!searchService.getSearchModel().isActiveFilters()) {
+            searchService.getSearchModel().setSearchFailure(true);
+            searchService.getSearchModel().setSearchResultView(true);
+            searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(), productListAndMinMaxPrice.getSearchResultMaxPrice());
+        }*/
         return setTemplateModel(model, productList);
     }
 
@@ -91,7 +99,7 @@ public class SearchController {
         //List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(searchService.getSearchModel().isSearchResultView());
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
+        //searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 
@@ -101,7 +109,7 @@ public class SearchController {
         //List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(searchService.getSearchModel().isSearchResultView());
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
+        //searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 

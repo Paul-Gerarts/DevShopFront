@@ -12,12 +12,12 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+//@ToString
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SearchModel {
-    private String searchRequest;
-    private String description;
+    private String searchRequest = "";
+    private String description = "";
     private BigDecimal priceLow;
     private BigDecimal priceHigh;
     private boolean sortAscendingName;
@@ -29,4 +29,23 @@ public class SearchModel {
     private boolean searchFailure;
     private boolean activeFilters;
     private String appliedFiltersHeader;
+
+    @Override
+    public String toString() {
+        return "SearchModel{" +
+                "searchRequest='" + searchRequest + '\'' + "\n" +
+                ", description='" + description + '\'' + "\n" +
+                ", priceLow=" + priceLow + "\n" +
+                ", priceHigh=" + priceHigh + "\n" +
+                ", sortAscendingName=" + sortAscendingName + "\n" +
+                ", sortAscendingPrice=" + sortAscendingPrice + "\n" +
+                ", nameSortActive=" + nameSortActive + "\n" +
+                ", priceSortActive=" + priceSortActive + "\n" +
+                ", archivedView=" + archivedView + "\n" +
+                ", searchResultView=" + searchResultView + "\n" +
+                ", searchFailure=" + searchFailure + "\n" +
+                ", activeFilters=" + activeFilters + "\n" +
+                ", appliedFiltersHeader='" + appliedFiltersHeader + '\'' + "\n" +
+                '}';
+    }
 }
