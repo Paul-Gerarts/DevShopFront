@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
+import be.syntra.devshop.DevshopFront.models.StarRating;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Data
@@ -31,6 +33,11 @@ public class ProductDto {
 
     @NotEmpty(message = "You must select at least one")
     private List<String> categoryNames;
+
+    private Set<StarRating> ratings;
+
+    @PositiveOrZero
+    private double averageRating;
 
     @Builder.Default
     private int totalInCart = 0;

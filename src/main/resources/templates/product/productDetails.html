@@ -10,6 +10,7 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
     <link type="text/css" href="../static/css/productDetail.css" th:href="@{/css/productDetail.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -45,6 +46,42 @@
                         </form>
                             </a>
                     </span>
+                    <!--starring-->
+                    <div style="margin: 0; padding: 0; background: #262626">
+                        <input hidden th:value="${product.averageRating}" id="averageRating">
+                        <div class="rating">
+                            <input class="star" type="radio" name="star" id="star1">
+                            <label for="star1"></label>
+                            <input class="star" type="radio" name="star" id="star2">
+                            <label for="star2"></label>
+                            <input class="star" type="radio" name="star" id="star3">
+                            <label for="star3"></label>
+                            <input class="star" type="radio" name="star" id="star4">
+                            <label for="star4"></label>
+                            <input class="star" type="radio" name="star" id="star5">
+                            <label for="star5"></label>
+                        </div>
+                    </div>
+                    <script th:inline="javascript">
+                        const averageRating = document.getElementById('averageRating');
+                        const rating = Math.round(averageRating.value);
+                        const starsMax = 5;
+
+                        window.onload = () => {
+                            getRating();
+                        }
+
+                        /*
+                         * the stars consist of two layers on top of each other, one of which is inverted.
+                         * so we're using a reverse for-loop to check the stars (which are radiobuttons)
+                         */
+                        function getRating() {
+                            const stars = document.querySelectorAll('.star');
+                            for (let i = starsMax - 1; i >= rating; i--) {
+                                stars[i].checked = true
+                            }
+                        }
+                    </script>
                 </li>
             </ul>
             <div sec:authorize="hasRole('ROLE_ADMIN')"
