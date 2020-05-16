@@ -65,19 +65,6 @@ public class SearchServiceImpl implements SearchService {
     public void resetSearchModel() {
         log.info("resetSearchModel()");
         this.searchModel = new SearchModel();
-        /*searchModel.setSearchRequest(null);
-        searchModel.setDescription(null);
-        searchModel.setPriceLow(null);
-        searchModel.setPriceHigh(null);
-        searchModel.setSortAscendingName(false);
-        searchModel.setSortAscendingPrice(false);
-        searchModel.setNameSortActive(true);
-        searchModel.setPriceSortActive(true);
-        searchModel.setArchivedView(false);
-        searchModel.setSearchResultView(false);
-        searchModel.setSearchFailure(false);
-        searchModel.setActiveFilters(false);
-        searchModel.setAppliedFiltersHeader(null);*/
     }
 
     @Override
@@ -95,23 +82,8 @@ public class SearchServiceImpl implements SearchService {
         return StringUtils.hasText(searchModel.getSearchRequest());
     }
 
-    /*@Override
-    public void setPriceFilters(List<Product> products) {
-        BigDecimal priceHigh = products.stream()
-                .map(Product::getPrice)
-                .max(Comparator.naturalOrder())
-                .orElse(BigDecimal.ZERO);
-        log.info("setPriceFilters() -> priceHigh = {}", priceHigh);
-        searchModel.setPriceLow(BigDecimal.ZERO);
-        searchModel.setPriceHigh(priceHigh);
-    }*/
-
+    @Override
     public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
-        /*BigDecimal priceHigh = products.stream()
-                .map(Product::getPrice)
-                .max(Comparator.naturalOrder())
-                .orElse(BigDecimal.ZERO);
-        log.info("setPriceFilters() -> priceHigh = {}", priceHigh);*/
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
     }

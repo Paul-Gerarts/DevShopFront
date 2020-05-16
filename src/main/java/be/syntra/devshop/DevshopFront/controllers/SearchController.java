@@ -48,7 +48,6 @@ public class SearchController {
     @GetMapping("/")
     public String showSearchBarResult(@RequestParam String searchRequest, Model model) {
         searchService.setSearchRequest(searchRequest);
-        //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
         searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
@@ -58,35 +57,22 @@ public class SearchController {
     @GetMapping("/pricelow/")
     public String searchPriceLow(@RequestParam String priceLow, Model model) {
         searchService.setPriceLow(new BigDecimal(priceLow));
-        //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        /*if(!searchService.getSearchModel().isActiveFilters()) {
-            searchService.getSearchModel().setSearchFailure(true);
-            searchService.getSearchModel().setSearchResultView(true);
-            searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(), productListAndMinMaxPrice.getSearchResultMaxPrice());
-        }*/
         return setTemplateModel(model, productList);
     }
 
     @GetMapping("/pricehigh/")
     public String searchPriceHigh(@RequestParam String priceHigh, Model model) {
         searchService.setPriceHigh(new BigDecimal(priceHigh));
-        //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-       /* if(!searchService.getSearchModel().isActiveFilters()) {
-            searchService.getSearchModel().setSearchFailure(true);
-            searchService.getSearchModel().setSearchResultView(true);
-            searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(), productListAndMinMaxPrice.getSearchResultMaxPrice());
-        }*/
         return setTemplateModel(model, productList);
     }
 
     @GetMapping("/description/")
     public String searchProductDescription(@RequestParam String description, Model model) {
         searchService.setDescription(description);
-        //List<Product> productList = applySearch(true);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
         searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
@@ -96,20 +82,16 @@ public class SearchController {
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
         searchService.setSortingByName();
-        //List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(searchService.getSearchModel().isSearchResultView());
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        //searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 
     @GetMapping("/sortbyprice")
     public String sortByPrice(Model model) {
         searchService.setSortingByPrice();
-        //List<Product> productList = applySearch(searchService.getSearchModel().isSearchResultView());
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(searchService.getSearchModel().isSearchResultView());
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        //searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 
@@ -128,12 +110,6 @@ public class SearchController {
         List<Product> productList = productService.findAllProductsBySearchModel().getProducts();
         return setTemplateModel(model, productList);
     }
-
-    /*private List<Product> applySearch(boolean isSearchResultView) {
-        searchService.setSearchResultView(isSearchResultView);
-        searchService.setArchivedView(false);
-        return productService.findAllProductsBySearchModel().getProducts();
-    }*/
 
     private ProductListAndMinMaxPrice applySearch(boolean isSearchResultView) {
         searchService.setSearchResultView(isSearchResultView);

@@ -78,29 +78,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductListAndMinMaxPrice findAllProductsBySearchModel() {
-        //public ProductList findAllProductsBySearchModel() {
         log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
-        /*final SearchModel originalSearchModel = searchService.getSearchModel();
-        final SearchModel searchModel = SearchModel.builder()
-                .archivedView(originalSearchModel.isArchivedView())
-                .searchRequest(originalSearchModel.getSearchRequest())
-                .searchResultView(originalSearchModel.isSearchResultView())
-                .searchFailure(originalSearchModel.isSearchFailure())
-                .activeFilters(originalSearchModel.isActiveFilters())
-                .appliedFiltersHeader(originalSearchModel.getAppliedFiltersHeader())
-                .description(originalSearchModel.getDescription())
-                .nameSortActive(originalSearchModel.isNameSortActive())
-                .priceHigh(originalSearchModel.getPriceHigh())
-                .priceLow(originalSearchModel.getPriceLow())
-                .priceSortActive(originalSearchModel.isPriceSortActive())
-                .sortAscendingName(originalSearchModel.isSortAscendingName())
-                .sortAscendingPrice(originalSearchModel.isSortAscendingPrice())
-                .build();*/
-        //ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductList.class);
-        //ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMinMaxPrice.class);
         ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductListAndMinMaxPrice.class);
-        //checkSearchResults(productListResponseEntity.getBody());
-        //if(searchService.getSearchModel().isSearchFailure()){
         if (productListResponseEntity.getBody().getProducts().size() == 0) {
             searchService.resetSearchModel();
             productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductListAndMinMaxPrice.class);
@@ -111,18 +90,8 @@ public class ProductServiceImpl implements ProductService {
                 log.info("findAllProductsBySearchModel() -> receivedFromBackEnd -> size : {}", productListResponseEntity.getBody().getProducts().size());
                 return productListResponseEntity.getBody();
             }
-            //return new ProductList(Collections.emptyList());
         }
         return productListResponseEntity.getBody();
-    }
-
-    private void checkSearchResults(ProductListAndMinMaxPrice body) {
-        if (body.getProducts().size() == 0) {
-            searchService.getSearchModel().setSearchFailure(true);
-        } else {
-            searchService.getSearchModel().setSearchFailure(false);
-        }
-        log.info("checkSearchResults() -> {}", searchService.getSearchModel().isSearchFailure());
     }
 
     @Override

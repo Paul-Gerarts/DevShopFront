@@ -40,13 +40,9 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
-        //ProductList productList = productService.findAllProductsBySearchModel();
         ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
-        //searchService.setPriceFilters(productList.getProducts());
         searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
-        //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         log.info("displayProductOverview() -> {}", searchService.getSearchModel());
-
         model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
@@ -74,9 +70,7 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        //ProductList productList = productService.findAllProductsBySearchModel();
         ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
-        //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
