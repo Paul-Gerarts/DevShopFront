@@ -180,6 +180,15 @@
                             </form>
                         </div>
                     </div>
+                    <select class="category-dropdown category-select" id="categorySelect" name="categorySelect">
+                        <option disabled selected value="none" style="color: black">Search for a category here...
+                        </option>
+                        <option th:each="category : ${searchModel.getCategories()}" style="color: black"
+                                th:value="${category}"
+                                th:text="${category.name}">
+                        </option>
+                        <input hidden id="selectedCategoryID">
+                    </select>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
                             <em class="material-icons">clear</em>Reset all filters

@@ -39,6 +39,7 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
+        productService.addSelectableCategoriesToSearchModel();
         ProductList productList = productService.findAllProductsBySearchModel();
         searchService.setPriceFilters(productList.getProducts());
         model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));

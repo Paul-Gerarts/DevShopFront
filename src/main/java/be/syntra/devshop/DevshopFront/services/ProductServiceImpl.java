@@ -63,6 +63,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void addSelectableCategoriesToSearchModel() {
+        this.searchService.getSearchModel().setCategories(findAllCategories().getCategories());
+    }
+
+    @Override
     public StatusNotification addProduct(@Valid ProductDto productDto) {
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, productDto, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {

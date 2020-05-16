@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.models;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,4 +23,5 @@ public class SearchModel {
     private boolean searchFailure;
     private boolean activeFilters;
     private String appliedFiltersHeader;
+    private List<Category> categories;
 }

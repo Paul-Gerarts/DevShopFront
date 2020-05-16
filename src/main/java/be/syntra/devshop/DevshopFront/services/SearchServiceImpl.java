@@ -16,7 +16,9 @@ public class SearchServiceImpl implements SearchService {
     private SearchModel searchModel;
 
     @Autowired
-    public SearchServiceImpl(SearchModel searchModel) {
+    public SearchServiceImpl(
+            SearchModel searchModel
+    ) {
         this.searchModel = searchModel;
     }
 
