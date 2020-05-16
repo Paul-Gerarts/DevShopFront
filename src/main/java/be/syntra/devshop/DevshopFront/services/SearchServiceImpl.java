@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
 
 @Slf4j
+@SessionScope
 @Service
 public class SearchServiceImpl implements SearchService {
-
     private SearchModel searchModel;
 
     @Autowired
@@ -56,19 +57,34 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchModel getSearchModel() {
+        log.info("getSearchModel()");
         return searchModel;
     }
 
     @Override
     public void resetSearchModel() {
+        log.info("resetSearchModel()");
         this.searchModel = new SearchModel();
+        /*searchModel.setSearchRequest(null);
+        searchModel.setDescription(null);
+        searchModel.setPriceLow(null);
+        searchModel.setPriceHigh(null);
+        searchModel.setSortAscendingName(false);
+        searchModel.setSortAscendingPrice(false);
+        searchModel.setNameSortActive(true);
+        searchModel.setPriceSortActive(true);
+        searchModel.setArchivedView(false);
+        searchModel.setSearchResultView(false);
+        searchModel.setSearchFailure(false);
+        searchModel.setActiveFilters(false);
+        searchModel.setAppliedFiltersHeader(null);*/
     }
 
     @Override
     public void setAppliedFiltersToSearchModel() {
         searchModel.setAppliedFiltersHeader(" with the applied filters");
         String searchRequest = hasSearchRequest()
-                ? getSearchModel().getSearchRequest()
+                ? searchModel.getSearchRequest()
                 : "";
         searchModel.setSearchRequest(searchRequest);
         searchModel.setSearchFailure(false);
@@ -76,7 +92,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private boolean hasSearchRequest() {
-        return StringUtils.hasText(getSearchModel().getSearchRequest());
+        return StringUtils.hasText(searchModel.getSearchRequest());
     }
 
     /*@Override

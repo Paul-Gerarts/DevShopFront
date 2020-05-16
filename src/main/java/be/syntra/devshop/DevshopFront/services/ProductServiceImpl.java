@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
@@ -80,7 +79,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductListAndMinMaxPrice findAllProductsBySearchModel() {
         //public ProductList findAllProductsBySearchModel() {
-        final SearchModel originalSearchModel = searchService.getSearchModel();
+        log.info("findAllProductsBySearchModel -> SearchModel -> isNameSortActive = {}", searchService.getSearchModel().isNameSortActive());
+        /*final SearchModel originalSearchModel = searchService.getSearchModel();
         final SearchModel searchModel = SearchModel.builder()
                 .archivedView(originalSearchModel.isArchivedView())
                 .searchRequest(originalSearchModel.getSearchRequest())
@@ -95,9 +95,10 @@ public class ProductServiceImpl implements ProductService {
                 .priceSortActive(originalSearchModel.isPriceSortActive())
                 .sortAscendingName(originalSearchModel.isSortAscendingName())
                 .sortAscendingPrice(originalSearchModel.isSortAscendingPrice())
-                .build();
+                .build();*/
         //ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductList.class);
-        ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMinMaxPrice.class);
+        //ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchModel, ProductListAndMinMaxPrice.class);
+        ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductListAndMinMaxPrice.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
             return productListResponseEntity.getBody();

@@ -1,6 +1,9 @@
 package be.syntra.devshop.DevshopFront.models;
 
 import lombok.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
@@ -10,6 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Component
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SearchModel {
     private String searchRequest;
     private String description;
@@ -17,8 +22,8 @@ public class SearchModel {
     private BigDecimal priceHigh;
     private boolean sortAscendingName;
     private boolean sortAscendingPrice;
-    private boolean nameSortActive;
-    private boolean priceSortActive;
+    private boolean nameSortActive = true;
+    private boolean priceSortActive = true;
     private boolean archivedView;
     private boolean searchResultView;
     private boolean searchFailure;
