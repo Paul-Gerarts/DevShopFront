@@ -48,10 +48,11 @@
                     </span>
                     <!--starring-->
                     <div th:if="${product.averageRating != 0}">
-                        <div th:text="'Your rating: ' + ${product.ratings}"></div>
+                        <div class="personal-rating" th:if="${rating != null && rating.getRating() > 0}"
+                             th:text="'Your rating: ' + ${rating.getRating()}"></div>
                         <div style="margin: 0; padding: 0; background: #262626">
                             <input hidden th:value="${product.averageRating}" id="averageRating">
-                            <div class="rating">
+                            <div sec:authorize="!hasRole('ROLE_ADMIN')" class="rating">
                                 <input class="star" type="radio" name="star" id="star1">
                                 <label for="star1"></label>
                                 <input class="star" type="radio" name="star" id="star2">
@@ -63,8 +64,22 @@
                                 <input class="star" type="radio" name="star" id="star5">
                                 <label for="star5"></label>
                             </div>
+                            <!--the copy of the starfields has nothing to do with function, only with placement because of the admin buttons-->
+                            <div sec:authorize="hasRole('ROLE_ADMIN')" class="rating" style="top: 41%">
+                                <input class="star" type="radio" name="star" id="star11">
+                                <label for="star11"></label>
+                                <input class="star" type="radio" name="star" id="star22">
+                                <label for="star22"></label>
+                                <input class="star" type="radio" name="star" id="star33">
+                                <label for="star33"></label>
+                                <input class="star" type="radio" name="star" id="star44">
+                                <label for="star44"></label>
+                                <input class="star" type="radio" name="star" id="star55">
+                                <label for="star55"></label>
+                            </div>
                         </div>
-                        <div th:text="${product.averageRating} + ' of ' + ${product.ratings.size() + ' votes'}"></div>
+                        <div class="personal-rating overall-rating"
+                             th:text="'(' + ${product.averageRating} + ') ' + ${product.ratings.size() + ' users voted'}"></div>
                     </div>
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');

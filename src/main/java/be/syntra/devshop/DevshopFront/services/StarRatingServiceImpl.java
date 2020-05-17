@@ -1,6 +1,5 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.exceptions.StarRatingNotFoundException;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,6 @@ public class StarRatingServiceImpl implements StarRatingService {
         if (HttpStatus.OK.equals(ratingResponseEntity.getStatusCode())) {
             log.info("findBy() -> rating retrieved from backEnd");
             return ratingResponseEntity.getBody();
-        } else if (HttpStatus.NOT_FOUND.equals(ratingResponseEntity.getStatusCode())) {
-            throw new StarRatingNotFoundException("rating for productId: " + productId + " and userName: " + userName + " was not found");
         }
         return new StarRatingDto();
     }

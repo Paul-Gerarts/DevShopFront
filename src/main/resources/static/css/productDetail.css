@@ -142,7 +142,7 @@ html, body, .spinner {
 .rating {
     position: absolute;
     top: 50%;
-    left: 33%;
+    left: 32%;
     transform: translate(-50%, -50%) rotateY(180deg);
     display: flex;
     margin-top: 100px;
@@ -184,4 +184,16 @@ html, body, .spinner {
 .rating label:hover ~ label:after,
 .rating input:checked ~ label:after {
     opacity: 1;
+}
+
+.personal-rating {
+    position: absolute;
+    margin-top: 150px;
+    left: 355px;
+    font-weight: bold;
+    color: goldenrod;
+}
+
+.overall-rating {
+    left: 760px;
 }
