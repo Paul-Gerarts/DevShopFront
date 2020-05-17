@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,20 @@ public class StarRatingServiceImpl implements StarRatingService {
             return ratingResponseEntity.getBody();
         }
         return new StarRatingDto();
+    }
+
+    @Override
+    public StatusNotification submitRating(Long productId, Double count, String userName) {
+        StarRatingDto starRatingDto = StarRatingDto.builder()
+                .productId(productId)
+                .rating(count)
+                .userName(userName)
+                .build();
+        ResponseEntity<StarRatingDto> starRatingDtoResponseEntity = restTemplate.postForEntity(resourceUrl + "/ratings", starRatingDto, StarRatingDto.class);
+        if (HttpStatus.CREATED.equals(starRatingDtoResponseEntity.getStatusCode())) {
+            log.info("submitRating() -> saved {} ", starRatingDto);
+            return StatusNotification.SUCCESS;
+        }
+        return StatusNotification.RATING_FAIL;
     }
 }

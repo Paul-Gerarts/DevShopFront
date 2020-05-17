@@ -56,21 +56,25 @@ public class ProductController {
 
     @GetMapping("/details/{id}")
     public String handleGet(@PathVariable Long id, Model model, Principal user) {
-        Product product = productService.findById(id);
-        StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
-        model.addAttribute("rating", rating);
-        model.addAttribute("product", product);
-        model.addAttribute("cart", cartService.getCart());
-        return "product/productDetails";
+        return getProductDetails(id, model, user);
     }
 
     @PostMapping("/details/{id}")
-    public String archiveProduct(@PathVariable Long id, Model model) {
+    public String archiveProduct(@PathVariable Long id, Model model, Principal user) {
         Product product = productService.findById(id);
         StatusNotification statusNotification = productService.archiveProduct(productMapper.convertToProductDto(product));
+        StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
+        model.addAttribute("rating", rating);
         model.addAttribute("product", product);
         model.addAttribute("status", statusNotification);
         return "product/productDetails";
+    }
+
+    @PostMapping("{productId}/ratings/{count}")
+    public String submitRating(@PathVariable Long productId, @PathVariable Double count, Model model, Principal user) {
+        StatusNotification status = starRatingService.submitRating(productId, count, nullSafe(user));
+        model.addAttribute("status", status);
+        return getProductDetails(productId, model, user);
     }
 
     @PostMapping
@@ -89,6 +93,15 @@ public class ProductController {
         log.info("addSelectedProductFromDetailToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         return "redirect:/products/details/" + id;
+    }
+
+    private String getProductDetails(@PathVariable Long id, Model model, Principal user) {
+        Product product = productService.findById(id);
+        StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
+        model.addAttribute("rating", rating);
+        model.addAttribute("product", product);
+        model.addAttribute("cart", cartService.getCart());
+        return "product/productDetails";
     }
 
     private String nullSafe(Principal user) {

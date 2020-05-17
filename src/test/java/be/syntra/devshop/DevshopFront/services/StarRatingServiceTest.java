@@ -1,6 +1,8 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
@@ -13,12 +15,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDto;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -72,5 +77,30 @@ public class StarRatingServiceTest {
         // then
         mockServer.verify();
         assertEquals(result.toString(), ratingDto.toString());
+    }
+
+    @Test
+    void submitRatingTest() {
+        // given
+        final StarRatingDto starRatingDto = createStarRatingDto();
+        final ProductDto dummyProductDto = getDummyProductDto();
+        final String starRatingDtoAsJson = jsonUtils.asJsonString(starRatingDto);
+        final String expectedEndpoint = baseUrl + endpoint + "/ratings";
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.CREATED)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(starRatingDtoAsJson));
+
+        // when
+        StatusNotification statusNotification = ratingService.submitRating(dummyProductDto.getId(), starRatingDto.getRating(), starRatingDto.getUserName());
+
+        // then
+        mockServer.verify();
+        assertEquals(StatusNotification.SUCCESS, statusNotification);
     }
 }

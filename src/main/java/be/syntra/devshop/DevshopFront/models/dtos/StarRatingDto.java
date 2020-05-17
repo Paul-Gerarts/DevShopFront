@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StarRatingDto {
 
+    private Long productId;
     private String userName;
     private double rating;
 }

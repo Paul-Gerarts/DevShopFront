@@ -47,10 +47,10 @@
                             </a>
                     </span>
                     <!--starring-->
-                    <div th:if="${product.averageRating != 0}">
+                    <div data-th-title="'Click to submit YOUR rating'" th:if="${product.averageRating != 0}">
                         <div class="personal-rating" th:if="${rating != null && rating.getRating() > 0}"
                              th:text="'Your rating: ' + ${rating.getRating()}"></div>
-                        <div style="margin: 0; padding: 0; background: #262626">
+                        <div style="margin: 0; padding: 0; background: #262626" onclick="submitRating()">
                             <input hidden th:value="${product.averageRating}" id="averageRating">
                             <div sec:authorize="!hasRole('ROLE_ADMIN')" class="rating">
                                 <input class="star" type="radio" name="star" id="star1">
@@ -83,8 +83,10 @@
                     </div>
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');
+                        const productId = document.getElementById('id');
                         const rating = Math.round(averageRating.value);
                         const starsMax = 5;
+                        const stars = document.querySelectorAll('.star');
 
                         window.onload = () => {
                             getRating();
@@ -95,10 +97,24 @@
                          * so we're using a reverse for-loop to check the stars (which are radiobuttons)
                          */
                         function getRating() {
-                            const stars = document.querySelectorAll('.star');
                             for (let i = starsMax; i >= rating; i--) {
                                 stars[i - 1].checked = true
                             }
+                        }
+
+                        function submitRating() {
+                            let count = 0;
+                            for (let i = starsMax; i >= rating; i--) {
+                                if (stars[i - 1].checked === true) {
+                                    count++;
+                                }
+                            }
+                            const form = document.createElement('form');
+                            form.method = 'post';
+                            form.action = "/products/" + productId.value + "/ratings/" + count;
+                            form.appendChild(count);
+                            document.body.appendChild(form);
+                            form.submit();
                         }
                     </script>
                 </li>

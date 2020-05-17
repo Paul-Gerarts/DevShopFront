@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
@@ -31,6 +30,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static org.mockito.Mockito.*;
@@ -122,7 +123,7 @@ class ProductControllerTest {
         final ProductDto productDtoDummy = getDummyProductDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(productMapper.convertToProductDto(dummyProduct)).thenReturn(productDtoDummy);
-        when(productService.archiveProduct(productDtoDummy)).thenReturn(StatusNotification.UPDATED);
+        when(productService.archiveProduct(productDtoDummy)).thenReturn(UPDATED);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId()));
@@ -134,7 +135,7 @@ class ProductControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("product", "status"))
                 .andExpect(model().attribute("product", dummyProduct))
-                .andExpect(model().attribute("status", StatusNotification.UPDATED));
+                .andExpect(model().attribute("status", UPDATED));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).archiveProduct(productDtoDummy);
@@ -171,6 +172,38 @@ class ProductControllerTest {
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductDtoList(any());
         verify(searchService, times(1)).getSearchModel();
+        verify(cartService, times(1)).getCart();
+    }
+
+    @Test
+    void canSubmitRatingTest() throws Exception {
+        // given
+        final StarRatingDto starRatingDto = createStarRatingDto();
+        final Product dummyProduct = getDummyNonArchivedProduct();
+        when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(ratingService.findBy(dummyProduct.getId(), starRatingDto.getUserName())).thenReturn(starRatingDto);
+        when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), starRatingDto.getUserName())).thenReturn(SUCCESS);
+        when(cartService.getCart()).thenReturn(new CartDto());
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/products/"
+                + dummyProduct.getId()
+                + "/ratings"
+                + starRatingDto.getRating()));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productDetails"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("product", "status", "rating"))
+                .andExpect(model().attribute("product", dummyProduct))
+                .andExpect(model().attribute("status", SUCCESS))
+                .andExpect(model().attribute("rating", starRatingDto));
+
+        verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(ratingService, times(1)).findBy(dummyProduct.getId(), starRatingDto.getUserName());
+        verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), starRatingDto.getUserName());
         verify(cartService, times(1)).getCart();
     }
 }
