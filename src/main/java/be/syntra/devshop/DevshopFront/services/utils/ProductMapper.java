@@ -29,6 +29,8 @@ public class ProductMapper {
                 .archived(product.isArchived())
                 .totalInCart(product.getTotalInCart())
                 .categoryNames(categoryMapper.mapToCategoryNames(product.getCategories()))
+                .averageRating(product.getAverageRating())
+                .ratings(product.getRatings())
                 .build();
     }
 

@@ -136,7 +136,7 @@ html, body, .spinner {
     font-size: 80px;
     font-weight: bold;
     transform: rotate(-35deg);
-    z-index: 1;
+    z-index: 5;
 }
 
 .rating {

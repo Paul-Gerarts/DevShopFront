@@ -4,6 +4,7 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
+import be.syntra.devshop.DevshopFront.models.StarRating;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
@@ -13,7 +14,6 @@ import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.StarRatingService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
-import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -29,11 +29,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.Set;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
+import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSet;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,7 +71,7 @@ class ProductControllerTest {
 
         // given
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
+        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
@@ -146,7 +149,7 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
+        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
@@ -176,19 +179,22 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void canSubmitRatingTest() throws Exception {
         // given
         final StarRatingDto starRatingDto = createStarRatingDto();
         final Product dummyProduct = getDummyNonArchivedProduct();
+        final Set<StarRating> ratings = createStarRatingSet();
+        dummyProduct.setRatings(ratings);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
-        when(ratingService.findBy(dummyProduct.getId(), starRatingDto.getUserName())).thenReturn(starRatingDto);
-        when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), starRatingDto.getUserName())).thenReturn(SUCCESS);
-        when(cartService.getCart()).thenReturn(new CartDto());
+        when(ratingService.findBy(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
+        when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
+        when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/"
                 + dummyProduct.getId()
-                + "/ratings"
+                + "/ratings/"
                 + starRatingDto.getRating()));
 
         // then
@@ -202,8 +208,8 @@ class ProductControllerTest {
                 .andExpect(model().attribute("rating", starRatingDto));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
-        verify(ratingService, times(1)).findBy(dummyProduct.getId(), starRatingDto.getUserName());
-        verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), starRatingDto.getUserName());
+        verify(ratingService, times(1)).findBy(dummyProduct.getId(), "user");
+        verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user");
         verify(cartService, times(1)).getCart();
     }
 }

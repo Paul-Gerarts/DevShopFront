@@ -35,7 +35,7 @@
                             <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action" href="#">
                                 <form method="post" th:object="${product}"
                                       th:action="@{/products/details/addtocart/{id}(id=${product.id})}">
-                            <input type="hidden" name="id" th:value="${product.id}"/>
+                            <input hidden id="productId" name="id" th:value="${product.id}"/>
                             <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
                                         <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
@@ -83,7 +83,7 @@
                     </div>
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');
-                        const productId = document.getElementById('id');
+                        const productId = document.getElementById('productId');
                         const rating = Math.round(averageRating.value);
                         const starsMax = 5;
                         const stars = document.querySelectorAll('.star');
@@ -112,7 +112,6 @@
                             const form = document.createElement('form');
                             form.method = 'post';
                             form.action = "/products/" + productId.value + "/ratings/" + count;
-                            form.appendChild(count);
                             document.body.appendChild(form);
                             form.submit();
                         }
@@ -128,14 +127,14 @@
                    class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
             </div>
-            <!-- Chip -->
-            <div th:if="${status != null}">
-                <br>
-                <span class="mdl-chip mdl-chip--deletable">
+        </div>
+        <!-- Chip -->
+        <div style="margin-top: 200px; margin-left: 450px" th:if="${status != null}">
+            <br>
+            <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
-            </div>
         </div>
     </main>
 </div>

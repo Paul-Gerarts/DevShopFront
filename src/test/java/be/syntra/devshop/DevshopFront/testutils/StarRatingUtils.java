@@ -1,6 +1,9 @@
 package be.syntra.devshop.DevshopFront.testutils;
 
+import be.syntra.devshop.DevshopFront.models.StarRating;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
+
+import java.util.Set;
 
 public class StarRatingUtils {
 
@@ -9,5 +12,12 @@ public class StarRatingUtils {
                 .rating(4D)
                 .userName("paul.gerarts@juvo.be")
                 .build();
+    }
+
+    public static Set<StarRating> createStarRatingSet() {
+        return Set.of(StarRating.builder()
+                .rating(4D)
+                .userName("paul.gerarts@juvo.be")
+                .build());
     }
 }

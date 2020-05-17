@@ -95,7 +95,7 @@ public class ProductController {
         return "redirect:/products/details/" + id;
     }
 
-    private String getProductDetails(@PathVariable Long id, Model model, Principal user) {
+    private String getProductDetails(Long id, Model model, Principal user) {
         Product product = productService.findById(id);
         StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
         model.addAttribute("rating", rating);
