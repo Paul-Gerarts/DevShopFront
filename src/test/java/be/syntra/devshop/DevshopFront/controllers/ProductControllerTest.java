@@ -7,6 +7,7 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -24,8 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static org.mockito.Mockito.*;
@@ -58,12 +57,12 @@ class ProductControllerTest {
     void displayProductOverViewTest() throws Exception {
 
         // given
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        //when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
@@ -130,12 +129,11 @@ class ProductControllerTest {
     void addSelectedProductToCart() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList productListDummy = new ProductList(dummyProducts);
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        //when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 

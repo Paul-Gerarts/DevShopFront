@@ -93,10 +93,8 @@ public class AdminController {
         searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
-        //ProductList productList = productService.findAllProductsBySearchModel();
         ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        //model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
         model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         return "product/productOverview";
     }

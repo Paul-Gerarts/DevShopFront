@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SearchModel {

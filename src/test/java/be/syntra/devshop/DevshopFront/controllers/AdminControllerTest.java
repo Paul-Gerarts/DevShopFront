@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -200,14 +200,13 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayProductArchivedOverViewTest() throws Exception {
+    void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final List<Product> dummyProducts = getDummyArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final ProductsDisplayList productsDisplayList = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any())).thenReturn(productsDisplayList);
 
         // when
@@ -231,7 +230,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewTest() throws Exception {
+    void displayManageCategoryViewTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -253,7 +252,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterDeleteTest() throws Exception {
+    void displayManageCategoryViewAfterDeleteTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -281,7 +280,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterUpdateTest() throws Exception {
+    void displayManageCategoryViewAfterUpdateTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -311,7 +310,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterCreatingNewCategoryTest() throws Exception {
+    void displayManageCategoryViewAfterCreatingNewCategoryTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -341,7 +340,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
+    void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);

@@ -3,6 +3,7 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
+import be.syntra.devshop.DevshopFront.testutils.WebContextTestExecutionListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,17 +11,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
+import static junit.framework.TestCase.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RestClientTest(SearchServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
 @Import({TestWebConfig.class, JsonUtils.class})
-public class SearchServiceTest {
+@TestExecutionListeners({WebContextTestExecutionListener.class,
+        DependencyInjectionTestExecutionListener.class,
+        DirtiesContextTestExecutionListener.class})
+class SearchServiceTest {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -28,10 +36,10 @@ public class SearchServiceTest {
     @Autowired
     private SearchServiceImpl searchService;
 
-    MockRestServiceServer mockServer;
+    private MockRestServiceServer mockServer;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
@@ -151,5 +159,79 @@ public class SearchServiceTest {
 
         // then
         assertThat(searchService.getSearchModel().toString()).isNotEqualTo(searchModelDummy.toString());
+    }
+
+    @Test
+    void canGetSearchModelTest() {
+        // when
+        SearchModel searchModel = searchService.getSearchModel();
+
+        // then
+        assertThat(searchModel).isNotNull();
+        assertEquals(searchModel.getClass(), SearchModel.class);
+    }
+
+    @Test
+    void canSetAppliedFiltersToSearchModelTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        searchModelDummy.setSearchRequest("testRequest");
+
+        // when
+        searchService.setAppliedFiltersToSearchModel();
+
+        // then
+        assertEquals(searchModelDummy.getSearchRequest(), "testRequest");
+        assertEquals(searchModelDummy.getAppliedFiltersHeader(), " with the applied filters");
+        assertFalse(searchModelDummy.isSearchFailure());
+        assertTrue(searchModelDummy.isActiveFilters());
+
+    }
+
+    @Test
+    void canSetPriceFiltersTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+
+        // when
+        searchService.setPriceFilters(BigDecimal.ZERO, BigDecimal.TEN);
+
+        // then
+        assertEquals(searchModelDummy.getPriceLow(), BigDecimal.ZERO);
+        assertEquals(searchModelDummy.getPriceHigh(), BigDecimal.TEN);
+    }
+
+    @Test
+    void canSetSortingByNameTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        searchModelDummy.setNameSortActive(true);
+        searchModelDummy.setPriceSortActive(true);
+        searchModelDummy.setSortAscendingName(true);
+
+        // when
+        searchService.setSortingByName();
+
+        // then
+        assertTrue(searchModelDummy.isNameSortActive());
+        assertFalse(searchModelDummy.isPriceSortActive());
+        assertFalse(searchModelDummy.isSortAscendingName());
+    }
+
+    @Test
+    void canSetSortingByPriceTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        searchModelDummy.setPriceSortActive(true);
+        searchModelDummy.setNameSortActive(true);
+        searchModelDummy.setSortAscendingPrice(true);
+
+        // when
+        searchService.setSortingByPrice();
+
+        // then
+        assertFalse(searchModelDummy.isNameSortActive());
+        assertTrue(searchModelDummy.isPriceSortActive());
+        assertFalse(searchModelDummy.isSortAscendingPrice());
     }
 }

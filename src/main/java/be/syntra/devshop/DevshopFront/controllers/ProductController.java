@@ -42,7 +42,6 @@ public class ProductController {
         searchService.resetSearchModel();
         ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
         searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
-        log.info("displayProductOverview() -> {}", searchService.getSearchModel());
         model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());

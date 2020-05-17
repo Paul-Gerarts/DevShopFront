@@ -4,7 +4,7 @@ import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -26,8 +26,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.math.BigDecimal;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
-import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProductList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDtoList;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductListAndMinMaxPrice;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, JWTTokenExceptionHandler.class})
 )
 @ContextConfiguration(classes = {TestWebConfig.class, TestSecurityConfig.class})
-public class SearchControllerTest {
+class SearchControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -57,9 +57,9 @@ public class SearchControllerTest {
     void showSearchBarResultTest() throws Exception {
         // given
         final String testRequest = "testRequest";
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
@@ -85,9 +85,9 @@ public class SearchControllerTest {
         //given
         final String priceLow = "6.66";
         final BigDecimal price_low_big_d = new BigDecimal(priceLow);
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
@@ -113,9 +113,9 @@ public class SearchControllerTest {
         //given
         final String priceHigh = "9999.99";
         final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
@@ -140,9 +140,9 @@ public class SearchControllerTest {
     void searchProductDescriptionTest() throws Exception {
         //given
         final String description = "my prod description";
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
         when(cartService.getCart()).thenReturn(dummyCart);
@@ -165,15 +165,15 @@ public class SearchControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/search/sortbyname", "/search/sortbyprice"})
-    public void canSortProductsTest(String url) throws Exception {
+    void canSortProductsTest(String url) throws Exception {
         // given
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
@@ -193,15 +193,15 @@ public class SearchControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/search/archived/sortbyname", "/search/archived/sortbyprice"})
-    public void canSortArchivedProductsTest(String url) throws Exception {
+    void canSortArchivedProductsTest(String url) throws Exception {
         // given
-        final ProductList dummyProductList = new ProductList(getDummyNonArchivedProductList());
+        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductDtoList(any())).thenReturn(getDummyProductDtoList());
-        //when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when

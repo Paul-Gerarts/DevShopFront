@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 
 import java.math.BigDecimal;
@@ -94,5 +95,13 @@ public class ProductUtils {
 
     public static List<Product> getDummyAllProductList() {
         return List.of(getDummyNonArchivedProduct(), getDummyArchivedProduct());
+    }
+
+    public static ProductListAndMinMaxPrice getDummyProductListAndMinMaxPrice() {
+        return ProductListAndMinMaxPrice.builder()
+                .products(getDummyNonArchivedProductList())
+                .searchResultMinPrice(BigDecimal.ZERO)
+                .searchResultMaxPrice(BigDecimal.TEN)
+                .build();
     }
 }
