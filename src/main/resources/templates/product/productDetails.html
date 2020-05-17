@@ -47,20 +47,24 @@
                             </a>
                     </span>
                     <!--starring-->
-                    <div style="margin: 0; padding: 0; background: #262626">
-                        <input hidden th:value="${product.averageRating}" id="averageRating">
-                        <div class="rating">
-                            <input class="star" type="radio" name="star" id="star1">
-                            <label for="star1"></label>
-                            <input class="star" type="radio" name="star" id="star2">
-                            <label for="star2"></label>
-                            <input class="star" type="radio" name="star" id="star3">
-                            <label for="star3"></label>
-                            <input class="star" type="radio" name="star" id="star4">
-                            <label for="star4"></label>
-                            <input class="star" type="radio" name="star" id="star5">
-                            <label for="star5"></label>
+                    <div th:if="${product.averageRating != 0}">
+                        <div th:text="'Your rating: ' + ${product.ratings}"></div>
+                        <div style="margin: 0; padding: 0; background: #262626">
+                            <input hidden th:value="${product.averageRating}" id="averageRating">
+                            <div class="rating">
+                                <input class="star" type="radio" name="star" id="star1">
+                                <label for="star1"></label>
+                                <input class="star" type="radio" name="star" id="star2">
+                                <label for="star2"></label>
+                                <input class="star" type="radio" name="star" id="star3">
+                                <label for="star3"></label>
+                                <input class="star" type="radio" name="star" id="star4">
+                                <label for="star4"></label>
+                                <input class="star" type="radio" name="star" id="star5">
+                                <label for="star5"></label>
+                            </div>
                         </div>
+                        <div th:text="${product.averageRating} + ' of ' + ${product.ratings.size() + ' votes'}"></div>
                     </div>
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');
@@ -77,8 +81,8 @@
                          */
                         function getRating() {
                             const stars = document.querySelectorAll('.star');
-                            for (let i = starsMax - 1; i >= rating; i--) {
-                                stars[i].checked = true
+                            for (let i = starsMax; i >= rating; i--) {
+                                stars[i - 1].checked = true
                             }
                         }
                     </script>

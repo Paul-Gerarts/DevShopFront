@@ -91,7 +91,6 @@ public class CartServiceImpl implements CartService {
     public StatusNotification payCart(String userName) {
         currentCart.setUser(userName);
         setCartToFinalized(currentCart);
-        log.info("cart() -> {}", currentCart);
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, persistCart(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);

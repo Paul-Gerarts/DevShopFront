@@ -19,5 +19,5 @@ public class StarRating {
     private String userName;
 
     @PositiveOrZero
-    private int rating;
+    private double rating;
 }

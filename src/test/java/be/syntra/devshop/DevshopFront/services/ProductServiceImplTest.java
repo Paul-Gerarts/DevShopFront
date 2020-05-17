@@ -139,7 +139,7 @@ class ProductServiceImplTest {
     @Test
     void archiveProductTest() {
         // given
-        final Product dummyProduct = getDummyNonArchivedProduct();
+        final ProductDto dummyProduct = getDummyProductDto();
         final String productDtoAsJson = jsonUtils.asJsonString(dummyProduct);
         final String expectedEndpoint = baseUrl + endpoint + "/update";
 

@@ -6,10 +6,13 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
+import be.syntra.devshop.DevshopFront.services.StarRatingService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
@@ -21,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,6 +32,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,6 +58,9 @@ class ProductControllerTest {
 
     @MockBean
     private SearchService searchService;
+
+    @MockBean
+    private StarRatingService ratingService;
 
     @Test
     void displayProductOverViewTest() throws Exception {
@@ -84,10 +92,13 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void displayProductDetailsTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
+        final StarRatingDto ratingDto = createStarRatingDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
+        when(ratingService.findBy(dummyProduct.getId(), "user")).thenReturn(ratingDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -101,14 +112,17 @@ class ProductControllerTest {
                 .andExpect(model().attribute("product", dummyProduct));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(ratingService, times(1)).findBy(dummyProduct.getId(), "user");
     }
 
     @Test
     void canArchiveProductTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
+        final ProductDto productDtoDummy = getDummyProductDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
-        when(productService.archiveProduct(dummyProduct)).thenReturn(StatusNotification.UPDATED);
+        when(productMapper.convertToProductDto(dummyProduct)).thenReturn(productDtoDummy);
+        when(productService.archiveProduct(productDtoDummy)).thenReturn(StatusNotification.UPDATED);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId()));
@@ -123,7 +137,7 @@ class ProductControllerTest {
                 .andExpect(model().attribute("status", StatusNotification.UPDATED));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
-        verify(productService, times(1)).archiveProduct(dummyProduct);
+        verify(productService, times(1)).archiveProduct(productDtoDummy);
     }
 
     @Test
@@ -131,7 +145,6 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final ProductList productListDummy = new ProductList(dummyProducts);
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);

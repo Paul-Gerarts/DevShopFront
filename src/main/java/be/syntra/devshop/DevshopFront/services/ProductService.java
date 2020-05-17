@@ -28,7 +28,7 @@ public interface ProductService {
 
     ProductList findAllWithOnlyCategory(Long id);
 
-    StatusNotification archiveProduct(Product product);
+    StatusNotification archiveProduct(ProductDto product);
 
     /***
      * adds a poduct to the cart

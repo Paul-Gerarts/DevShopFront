@@ -12,7 +12,6 @@ import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -120,11 +119,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public StatusNotification archiveProduct(Product product) {
+    public StatusNotification archiveProduct(ProductDto product) {
         product.setArchived(true);
-        ProductDto productDto = productMapper.convertToProductDto(product);
-        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
+        ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", product, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
             log.info("updateProduct() -> saved > {} ", product);
             return StatusNotification.UPDATED;
