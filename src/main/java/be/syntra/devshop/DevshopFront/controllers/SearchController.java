@@ -50,7 +50,6 @@ public class SearchController {
         searchService.setSearchRequest(searchRequest);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 
@@ -75,7 +74,6 @@ public class SearchController {
         searchService.setDescription(description);
         ProductListAndMinMaxPrice productListAndMinMaxPrice = applySearch(true);
         List<Product> productList = productListAndMinMaxPrice.getProducts();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
         return setTemplateModel(model, productList);
     }
 

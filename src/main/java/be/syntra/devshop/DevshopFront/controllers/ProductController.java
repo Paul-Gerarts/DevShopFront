@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Controller
 @RequestMapping("/products")
@@ -41,7 +43,7 @@ public class ProductController {
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
         ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
-        searchService.setPriceFilters(productListAndMinMaxPrice.getSearchResultMinPrice(),productListAndMinMaxPrice.getSearchResultMaxPrice());
+        searchService.setPriceFilters(BigDecimal.ZERO, productListAndMinMaxPrice.getSearchResultMaxPrice());
         model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());

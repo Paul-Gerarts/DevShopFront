@@ -22,8 +22,8 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setSearchRequest(String searchRequest) {
-        resetSearchModel();
         searchModel.setSearchRequest(searchRequest);
+        searchModel.setDescription("");
     }
 
     @Override
@@ -50,14 +50,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setDescription(String description) {
-        resetSearchModel();
         setAppliedFiltersToSearchModel();
         searchModel.setDescription(description);
     }
 
     @Override
     public SearchModel getSearchModel() {
-        log.info("getSearchModel()");
         return searchModel;
     }
 
@@ -84,6 +82,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
+        setSortingByPrice();
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
     }
