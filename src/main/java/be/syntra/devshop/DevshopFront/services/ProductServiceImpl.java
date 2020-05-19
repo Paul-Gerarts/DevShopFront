@@ -2,13 +2,11 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
-import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -36,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private final CartService cartService;
-    private final DataStore dataStore;
     private final ProductMapper productMapper;
     private final SearchService searchService;
 
@@ -46,12 +44,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(
             CartService cartService,
-            DataStore dataStore,
             ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
-        this.dataStore = dataStore;
         this.productMapper = productMapper;
         this.searchService = searchService;
     }
@@ -77,21 +73,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductListAndMinMaxPrice findAllProductsBySearchModel() {
+    public ProductList findAllProductsBySearchModel() {
         log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
-        ResponseEntity<ProductListAndMinMaxPrice> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductListAndMinMaxPrice.class);
-        if (productListResponseEntity.getBody().getProducts().size() == 0) {
-            searchService.resetSearchModel();
-            productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductListAndMinMaxPrice.class);
-            searchService.getSearchModel().setSearchFailure(true);
-            searchService.getSearchModel().setSearchResultView(true);
-        } else {
-            if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-                log.info("findAllProductsBySearchModel() -> receivedFromBackEnd -> size : {}", productListResponseEntity.getBody().getProducts().size());
-                return productListResponseEntity.getBody();
-            }
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
+        if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
+            checkResultForSearchFailure(productListResponseEntity);
+            return productListResponseEntity.getBody();
         }
-        return productListResponseEntity.getBody();
+        return ProductList.builder()
+                .products(Collections.emptyList())
+                .build();
+    }
+
+    private void checkResultForSearchFailure(ResponseEntity<ProductList> productListResponseEntity) {
+        searchService.getSearchModel().setSearchFailure(Objects.requireNonNull(productListResponseEntity.getBody()).isSearchFailure());
     }
 
     @Override
@@ -101,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return ProductList.builder().products(Collections.emptyList()).build();
     }
 
     @Override

@@ -82,7 +82,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
-        setSortingByPrice();
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
     }

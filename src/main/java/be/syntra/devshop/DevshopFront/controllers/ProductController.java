@@ -3,7 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -42,9 +41,9 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
-        ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
-        searchService.setPriceFilters(BigDecimal.ZERO, productListAndMinMaxPrice.getSearchResultMaxPrice());
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
+        ProductList productList = productService.findAllProductsBySearchModel();
+        searchService.setPriceFilters(BigDecimal.ZERO, productList.getSearchResultMaxPrice());
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -71,8 +70,8 @@ public class ProductController {
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
-        ProductListAndMinMaxPrice productListAndMinMaxPrice = productService.findAllProductsBySearchModel();
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(new ProductList(productListAndMinMaxPrice.getProducts())));
+        ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

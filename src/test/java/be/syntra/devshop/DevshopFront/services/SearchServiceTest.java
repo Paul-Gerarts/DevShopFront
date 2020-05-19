@@ -4,18 +4,13 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.testutils.WebContextTestExecutionListener;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
@@ -23,7 +18,6 @@ import static junit.framework.TestCase.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RestClientTest(SearchServiceImpl.class)
-@ExtendWith(MockitoExtension.class)
 @Import({TestWebConfig.class, JsonUtils.class})
 @TestExecutionListeners({WebContextTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class,
@@ -31,17 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SearchServiceTest {
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
     private SearchServiceImpl searchService;
-
-    private MockRestServiceServer mockServer;
-
-    @BeforeEach
-    void setUp() {
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-    }
 
     @Test
     void canSetSearchRequestTest() {

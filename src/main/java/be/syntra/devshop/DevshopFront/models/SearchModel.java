@@ -19,10 +19,10 @@ public class SearchModel {
     private String description = "";
     private BigDecimal priceLow;
     private BigDecimal priceHigh;
-    private boolean sortAscendingName;
+    private boolean sortAscendingName = true;
     private boolean sortAscendingPrice;
     private boolean nameSortActive = true;
-    private boolean priceSortActive = true;
+    private boolean priceSortActive;
     private boolean archivedView;
     private boolean searchResultView;
     private boolean searchFailure;

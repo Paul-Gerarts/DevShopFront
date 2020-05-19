@@ -22,7 +22,6 @@ public class CartDto {
     private String user;
     private LocalDateTime cartCreationDateTime = LocalDateTime.now();
     private List<Product> products = new ArrayList<>();
-    private boolean activeCart = true;
     private boolean finalizedCart;
     private boolean paidCart;
 }

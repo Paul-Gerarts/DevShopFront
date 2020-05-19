@@ -13,8 +13,6 @@ public class WebContextTestExecutionListener implements TestExecutionListener {
         if (testContext.getApplicationContext() instanceof GenericApplicationContext) {
             GenericApplicationContext context = (GenericApplicationContext) testContext.getApplicationContext();
             ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-            /*beanFactory.registerScope(WebApplicationContext.SCOPE_REQUEST,
-                    new SimpleThreadScope());*/
             beanFactory.registerScope(WebApplicationContext.SCOPE_SESSION,
                     new SimpleThreadScope());
         }

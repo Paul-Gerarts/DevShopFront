@@ -5,8 +5,8 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -202,12 +202,12 @@ class AdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
-        final ProductsDisplayList productsDisplayList = getDummyProductDtoList();
+        final ProductList dummyProductList = getDummyProductList();
+        final ProductsDisplayListDto productsDisplayListDto = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
-        when(productMapper.convertToProductDtoList(any())).thenReturn(productsDisplayList);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
@@ -218,14 +218,14 @@ class AdminControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("productlist"))
-                .andExpect(model().attribute("productlist", productsDisplayList));
+                .andExpect(model().attribute("productlist", productsDisplayListDto));
 
         verify(searchService, times(1)).resetSearchModel();
         verify(searchService, times(1)).setSearchResultView(false);
         verify(searchService, times(1)).setArchivedView(true);
         verify(searchService, times(1)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
     }
 
     @Test

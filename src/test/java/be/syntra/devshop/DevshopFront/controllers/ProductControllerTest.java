@@ -7,7 +7,6 @@ import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductListAndMinMaxPrice;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -58,12 +57,12 @@ class ProductControllerTest {
 
         // given
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
-        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
+        final ProductList dummyProductList = getDummyProductList();
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
-        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -77,7 +76,7 @@ class ProductControllerTest {
 
 
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
@@ -129,12 +128,12 @@ class ProductControllerTest {
     void addSelectedProductToCart() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        final ProductListAndMinMaxPrice dummyProductListAndMinMaxPrice = getDummyProductListAndMinMaxPrice();
+        final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductListAndMinMaxPrice);
-        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when
@@ -154,7 +153,7 @@ class ProductControllerTest {
         verify(productService, times(1)).addToCart(any());
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
