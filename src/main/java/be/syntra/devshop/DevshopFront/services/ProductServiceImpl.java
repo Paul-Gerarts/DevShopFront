@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -79,28 +80,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", persistSearchModel(searchService.getSearchModel()), ProductList.class);
+        log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
+            checkResultForSearchFailure(productListResponseEntity);
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return ProductList.builder()
+                .products(Collections.emptyList())
+                .build();
     }
 
-    private SearchModel persistSearchModel(SearchModel searchModel) {
-        return SearchModel.builder()
-                .archivedView(searchModel.isArchivedView())
-                .searchRequest(searchModel.getSearchRequest())
-                .searchResultView(searchModel.isSearchResultView())
-                .searchFailure(searchModel.isSearchFailure())
-                .activeFilters(searchModel.isActiveFilters())
-                .appliedFiltersHeader(searchModel.getAppliedFiltersHeader())
-                .description(searchModel.getDescription())
-                .priceHigh(searchModel.getPriceHigh())
-                .priceLow(searchModel.getPriceLow())
-                .sortAscendingName(searchModel.isSortAscendingName())
-                .sortAscendingPrice(searchModel.isSortAscendingPrice())
-                .build();
+    private void checkResultForSearchFailure(ResponseEntity<ProductList> productListResponseEntity) {
+        if (null != productListResponseEntity.getBody()) {
+            searchService.getSearchModel().setSearchFailure(Objects.requireNonNull(productListResponseEntity.getBody()).isSearchFailure());
+        } else {
+            searchService.getSearchModel().setSearchFailure(true);
+        }
     }
 
     @Override
@@ -110,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return ProductList.builder().products(Collections.emptyList()).build();
     }
 
     @Override

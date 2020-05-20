@@ -11,7 +11,6 @@ public class CartUtils {
 
     public static CartDto getCartWithOneDummyProduct() {
         return CartDto.builder()
-                .activeCart(true)
                 .finalizedCart(false)
                 .paidCart(false)
                 .products(List.of(getDummyNonArchivedProduct()))
@@ -20,7 +19,6 @@ public class CartUtils {
 
     public static CartDto getCartWithMultipleNonArchivedProducts() {
         return CartDto.builder()
-                .activeCart(true)
                 .finalizedCart(false)
                 .paidCart(false)
                 .products(getDummyNonArchivedProductList())
@@ -29,7 +27,6 @@ public class CartUtils {
 
     public static CartDto getCartWithMultipleArchivedProducts() {
         return CartDto.builder()
-                .activeCart(true)
                 .finalizedCart(false)
                 .paidCart(false)
                 .products(getDummyArchivedProductList())
