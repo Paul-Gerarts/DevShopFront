@@ -73,7 +73,6 @@ class CartServiceImplTest {
         CartDto newCart = cartService.getCart();
 
         // then
-        assertEquals(true,newCart.isActiveCart());
         assertEquals(false,newCart.isFinalizedCart());
         assertEquals(false,newCart.isPaidCart());
         assertEquals(0,newCart.getProducts().size());
@@ -89,7 +88,6 @@ class CartServiceImplTest {
 
         // then
         assertEquals(getCart.getProducts().size(), 1);
-        assertEquals(getCart.isActiveCart(), true);
         assertEquals(getCart.isFinalizedCart(), false);
         assertEquals(getCart.isPaidCart(), false);
     }
@@ -188,13 +186,11 @@ class CartServiceImplTest {
         CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
 
         //when
-        cartDto.setActiveCart(false);
         cartDto.setFinalizedCart(true);
         cartDto.setPaidCart(false);
 
         //then
         assertTrue(cartDto.isFinalizedCart());
-        assertFalse(cartDto.isActiveCart());
         assertFalse(cartDto.isPaidCart());
     }
 }

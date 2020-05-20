@@ -108,7 +108,6 @@ public class CartServiceImpl implements CartService {
      */
     private CartDto persistCart(CartDto currentCart) {
         return CartDto.builder()
-                .activeCart(currentCart.isActiveCart())
                 .finalizedCart(currentCart.isFinalizedCart())
                 .paidCart(currentCart.isPaidCart())
                 .cartCreationDateTime(currentCart.getCartCreationDateTime())
@@ -118,7 +117,6 @@ public class CartServiceImpl implements CartService {
     }
 
     private void setCartToFinalized(CartDto cartDto) {
-        cartDto.setActiveCart(false);
         cartDto.setFinalizedCart(true);
         cartDto.setPaidCart(false);
     }

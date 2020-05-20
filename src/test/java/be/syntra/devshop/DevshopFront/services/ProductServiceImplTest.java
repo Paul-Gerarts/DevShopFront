@@ -1,7 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Category;
-import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
@@ -70,9 +69,6 @@ class ProductServiceImplTest {
 
     @MockBean
     SearchService searchService;
-
-    @Autowired
-    private DataStore dataStore;
 
     MockRestServiceServer mockServer;
 
@@ -165,7 +161,7 @@ class ProductServiceImplTest {
         // given
         final CategoryDto category = createCategoryDto();
         final List<Product> dummyAllProductList = getDummyAllProductList();
-        final ProductList expectedProductList = new ProductList(dummyAllProductList);
+        final ProductList expectedProductList = ProductList.builder().products(dummyAllProductList).build();
         final String dummyAllProductListJsonString = jsonUtils.asJsonString(expectedProductList);
         final String expectedEndpoint = baseUrl + endpoint + "/all/" + category.getId();
         mockServer

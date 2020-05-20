@@ -3,7 +3,7 @@ package be.syntra.devshop.DevshopFront.services.utils;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,12 +34,12 @@ public class ProductMapper {
                 .build();
     }
 
-    public ProductsDisplayList convertToProductDtoList(ProductList productList) {
+    public ProductsDisplayListDto convertToProductsDisplayListDto(ProductList productList) {
         List<ProductDto> productDtoList = productList.getProducts().stream()
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)
                 .collect(Collectors.toList());
-        return new ProductsDisplayList(productDtoList);
+        return new ProductsDisplayListDto(productDtoList);
     }
 
     private ProductDto setProductCountInProductDto(ProductDto productDto) {

@@ -34,6 +34,7 @@ import java.util.Set;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
+
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSet;
@@ -70,13 +71,13 @@ class ProductControllerTest {
     void displayProductOverViewTest() throws Exception {
 
         // given
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
         final CartDto dummyCartDto = getCartWithOneDummyProduct();
+        final ProductList dummyProductList = getDummyProductList();
         SearchModel searchModelDummy = new SearchModel();
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
-        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -90,7 +91,7 @@ class ProductControllerTest {
 
 
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
@@ -148,12 +149,12 @@ class ProductControllerTest {
     void addSelectedProductToCart() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        final List<Product> dummyProducts = getDummyNonArchivedProductList();
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
+        final ProductList dummyProductList = getDummyProductList();
+        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(new ProductList(dummyProducts));
-        when(productMapper.convertToProductDtoList(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when
@@ -173,7 +174,7 @@ class ProductControllerTest {
         verify(productService, times(1)).addToCart(any());
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(1)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }

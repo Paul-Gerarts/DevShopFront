@@ -6,8 +6,8 @@ import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayList;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
@@ -200,15 +200,14 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayProductArchivedOverViewTest() throws Exception {
+    void displayProductArchivedOverViewTest() throws Exception {
         // given
-        final List<Product> dummyProducts = getDummyArchivedProductList();
-        final ProductList dummyProductList = new ProductList(dummyProducts);
-        final ProductsDisplayList productsDisplayList = getDummyProductDtoList();
+        final ProductList dummyProductList = getDummyProductList();
+        final ProductsDisplayListDto productsDisplayListDto = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapper.convertToProductDtoList(any())).thenReturn(productsDisplayList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/admin/archived"));
@@ -219,19 +218,19 @@ class AdminControllerTest {
                 .andExpect(view().name("product/productOverview"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("productlist"))
-                .andExpect(model().attribute("productlist", productsDisplayList));
+                .andExpect(model().attribute("productlist", productsDisplayListDto));
 
         verify(searchService, times(1)).resetSearchModel();
         verify(searchService, times(1)).setSearchResultView(false);
         verify(searchService, times(1)).setArchivedView(true);
         verify(searchService, times(1)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(productMapper, times(1)).convertToProductDtoList(any());
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
     }
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewTest() throws Exception {
+    void displayManageCategoryViewTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -253,7 +252,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterDeleteTest() throws Exception {
+    void displayManageCategoryViewAfterDeleteTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -281,7 +280,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterUpdateTest() throws Exception {
+    void displayManageCategoryViewAfterUpdateTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -311,7 +310,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterCreatingNewCategoryTest() throws Exception {
+    void displayManageCategoryViewAfterCreatingNewCategoryTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
@@ -341,7 +340,7 @@ class AdminControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
+    void displayManageCategoryViewAfterDeleteConfirmationTest() throws Exception {
         // given
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);

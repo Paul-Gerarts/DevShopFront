@@ -94,7 +94,7 @@ public class AdminController {
         searchService.setArchivedView(true);
         ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         return "product/productOverview";
     }
 
