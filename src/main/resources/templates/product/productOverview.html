@@ -28,9 +28,10 @@
             <span class="mdl-layout-title"
                   th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
                   th:text="'After searching ' + ${searchModel.getSearchRequest().toUpperCase()} + ' we found nothing with the applied filters, so we\'re showing ALL'"></span>
-            <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
-                th:each="product : ${productlist.products}">
-                <li class="mdl-list__item mdl-list__item--three-line product-tile">
+            <div style="overflow-y: scroll; max-height: 800px;">
+                <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
+                    th:each="product : ${productlist.products}">
+                    <li class="mdl-list__item mdl-list__item--three-line product-tile">
                     <span class="mdl-list__item-primary-content">
                         <a th:href="@{/products/details/{id}(id=${product.id})}" style="text-decoration: none">
                         <em class="material-icons mdl-list__item-avatar" data-th-title="Details"
@@ -42,7 +43,7 @@
                             [[${product.description}]]
                         </span>
                     </span>
-                    <span class="mdl-list__item-secondary-content" style="padding-top: 4%">
+                        <span class="mdl-list__item-secondary-content" style="padding-top: 4%">
                         <span class="mdl-list__item-text-body"
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
@@ -57,8 +58,13 @@
                                 </span>
                         </form>
                     </span>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
+            <br>
+            <div class="mdl-shadow--8dp pagination-bar">
+                <div class="pagination-bar-content">TEST</div>
+            </div>
         </div>
         <!--search filters-->
         <div class="search-filters">

@@ -272,6 +272,20 @@ html, body, .spinner {
     margin-left: 340px;
 }
 
+.pagination-bar {
+    width: 1050px;
+    line-height: 36px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: 2px;
+}
+
+.pagination-bar-content {
+    margin: auto;
+    width: 10%;
+}
+
 ::placeholder {
     color: black;
     opacity: 1;
