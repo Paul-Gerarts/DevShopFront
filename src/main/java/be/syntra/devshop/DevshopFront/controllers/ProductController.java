@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Controller
 @RequestMapping("/products")
@@ -40,8 +42,8 @@ public class ProductController {
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
         ProductList productList = productService.findAllProductsBySearchModel();
-        searchService.setPriceFilters(productList.getProducts());
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        searchService.setPriceFilters(BigDecimal.ZERO, productList.getSearchResultMaxPrice());
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";
@@ -69,7 +71,7 @@ public class ProductController {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         ProductList productList = productService.findAllProductsBySearchModel();
-        model.addAttribute("productlist", productMapper.convertToProductDtoList(productList));
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
         return "product/productOverview";

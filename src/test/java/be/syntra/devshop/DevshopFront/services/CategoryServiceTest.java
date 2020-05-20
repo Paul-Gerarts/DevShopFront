@@ -91,7 +91,7 @@ public class CategoryServiceTest {
         final CategoryDto categoryDto = createCategoryDto();
         final long categoryToSet = 2L;
         final List<Product> dummyAllProductList = getDummyAllProductList();
-        final ProductList expectedProductList = new ProductList(dummyAllProductList);
+        final ProductList expectedProductList = ProductList.builder().products(dummyAllProductList).build();
         final String dummyAllProductListJsonString = jsonUtils.asJsonString(expectedProductList);
         final String expectedEndpoint = baseUrl + endpoint + "/categories/set_category";
 

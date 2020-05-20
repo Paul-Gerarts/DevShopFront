@@ -2,7 +2,6 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
-import be.syntra.devshop.DevshopFront.models.DataStore;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
@@ -21,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -35,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private final CartService cartService;
-    private final DataStore dataStore;
     private final ProductMapper productMapper;
     private final SearchService searchService;
 
@@ -45,12 +44,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(
             CartService cartService,
-            DataStore dataStore,
             ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
-        this.dataStore = dataStore;
         this.productMapper = productMapper;
         this.searchService = searchService;
     }
@@ -77,12 +74,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
+        log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            log.info("findAllProductsBySearchModel -> receivedFromBackEnd");
+            checkResultForSearchFailure(productListResponseEntity);
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return ProductList.builder()
+                .products(Collections.emptyList())
+                .build();
+    }
+
+    private void checkResultForSearchFailure(ResponseEntity<ProductList> productListResponseEntity) {
+        if (null != productListResponseEntity.getBody()) {
+            searchService.getSearchModel().setSearchFailure(Objects.requireNonNull(productListResponseEntity.getBody()).isSearchFailure());
+        } else {
+            searchService.getSearchModel().setSearchFailure(true);
+        }
     }
 
     @Override
@@ -92,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
-        return new ProductList(Collections.emptyList());
+        return ProductList.builder().products(Collections.emptyList()).build();
     }
 
     @Override

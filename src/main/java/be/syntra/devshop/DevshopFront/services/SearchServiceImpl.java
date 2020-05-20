@@ -1,18 +1,18 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
 
+@Slf4j
+@SessionScope
 @Service
 public class SearchServiceImpl implements SearchService {
-
     private SearchModel searchModel;
 
     @Autowired
@@ -23,6 +23,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public void setSearchRequest(String searchRequest) {
         searchModel.setSearchRequest(searchRequest);
+        searchModel.setDescription("");
     }
 
     @Override
@@ -60,6 +61,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void resetSearchModel() {
+        log.info("resetSearchModel()");
         this.searchModel = new SearchModel();
     }
 
@@ -67,7 +69,7 @@ public class SearchServiceImpl implements SearchService {
     public void setAppliedFiltersToSearchModel() {
         searchModel.setAppliedFiltersHeader(" with the applied filters");
         String searchRequest = hasSearchRequest()
-                ? getSearchModel().getSearchRequest()
+                ? searchModel.getSearchRequest()
                 : "";
         searchModel.setSearchRequest(searchRequest);
         searchModel.setSearchFailure(false);
@@ -75,16 +77,40 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private boolean hasSearchRequest() {
-        return StringUtils.hasText(getSearchModel().getSearchRequest());
+        return StringUtils.hasText(searchModel.getSearchRequest());
     }
 
     @Override
-    public void setPriceFilters(List<Product> products) {
-        BigDecimal priceHigh = products.stream()
-                .map(Product::getPrice)
-                .max(Comparator.naturalOrder())
-                .orElse(BigDecimal.ZERO);
-        searchModel.setPriceLow(BigDecimal.ZERO);
-        searchModel.setPriceHigh(priceHigh);
+    public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
+        searchModel.setPriceLow(minPrice);
+        searchModel.setPriceHigh(maxPrice);
+    }
+
+    @Override
+    public void setSortingByName() {
+        if (searchModel.isNameSortActive()) {
+            reverseNameSorting();
+        }
+        searchModel.setNameSortActive(true);
+        searchModel.setPriceSortActive(false);
+    }
+
+    @Override
+    public void setSortingByPrice() {
+        if (searchModel.isPriceSortActive()) {
+            reversePriceSorting();
+        }
+        searchModel.setPriceSortActive(true);
+        searchModel.setNameSortActive(false);
+    }
+
+    private void reverseNameSorting() {
+        boolean sortAscending = searchModel.isSortAscendingName();
+        searchModel.setSortAscendingName(!sortAscending);
+    }
+
+    private void reversePriceSorting() {
+        boolean sortAscending = searchModel.isSortAscendingPrice();
+        searchModel.setSortAscendingPrice(!sortAscending);
     }
 }

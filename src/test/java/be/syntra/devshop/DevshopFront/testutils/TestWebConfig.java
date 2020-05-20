@@ -28,7 +28,6 @@ public class TestWebConfig {
         return CartDto.builder()
                 .cartCreationDateTime(LocalDateTime.now())
                 .finalizedCart(false)
-                .activeCart(true)
                 .paidCart(false)
                 .products(productList)
                 .build();
