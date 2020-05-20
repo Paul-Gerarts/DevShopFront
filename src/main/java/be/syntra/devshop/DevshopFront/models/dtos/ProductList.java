@@ -16,5 +16,5 @@ public class ProductList {
     private List<Product> products;
     private BigDecimal searchResultMinPrice;
     private BigDecimal searchResultMaxPrice;
-    boolean searchFailure;
+    private boolean searchFailure;
 }

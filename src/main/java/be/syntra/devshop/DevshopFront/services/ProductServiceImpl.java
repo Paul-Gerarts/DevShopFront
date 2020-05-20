@@ -86,7 +86,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void checkResultForSearchFailure(ResponseEntity<ProductList> productListResponseEntity) {
-        searchService.getSearchModel().setSearchFailure(Objects.requireNonNull(productListResponseEntity.getBody()).isSearchFailure());
+        if (null != productListResponseEntity.getBody()) {
+            searchService.getSearchModel().setSearchFailure(Objects.requireNonNull(productListResponseEntity.getBody()).isSearchFailure());
+        } else {
+            searchService.getSearchModel().setSearchFailure(true);
+        }
     }
 
     @Override
