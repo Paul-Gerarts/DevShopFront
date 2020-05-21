@@ -29,4 +29,8 @@ public interface SearchService {
     void setSortingByName();
 
     void setSortingByPrice();
+
+    void requestPreviousPage();
+
+    void requestNextPage();
 }

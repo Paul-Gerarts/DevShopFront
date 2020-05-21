@@ -9,7 +9,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder
 public class ProductsDisplayListDto {
 
     private List<ProductDto> products;
+    private boolean hasNext;
+    private boolean hasPrevious;
+    private int currentPage;
+    private int totalPages;
 }

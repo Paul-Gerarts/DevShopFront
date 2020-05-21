@@ -28,6 +28,8 @@ public class SearchModel {
     private boolean searchFailure;
     private boolean activeFilters;
     private String appliedFiltersHeader;
+    private Integer pageNumber = 3;
+    private Integer pageSize = 3;
 
     @Override
     public String toString() {
@@ -45,6 +47,8 @@ public class SearchModel {
                 ", searchFailure=" + searchFailure + "\n" +
                 ", activeFilters=" + activeFilters + "\n" +
                 ", appliedFiltersHeader='" + appliedFiltersHeader + '\'' + "\n" +
+                ", pageNumber='" + pageNumber + '\'' + "\n" +
+                ", pageSize='" + pageSize + '\'' + "\n" +
                 '}';
     }
 }

@@ -22,6 +22,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setSearchRequest(String searchRequest) {
+        searchModel.setPageNumber(0);
         searchModel.setSearchRequest(searchRequest);
         searchModel.setDescription("");
     }
@@ -38,18 +39,21 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void setPriceLow(BigDecimal priceLow) {
+        searchModel.setPageNumber(0);
         setAppliedFiltersToSearchModel();
         searchModel.setPriceLow(priceLow);
     }
 
     @Override
     public void setPriceHigh(BigDecimal priceHigh) {
+        searchModel.setPageNumber(0);
         setAppliedFiltersToSearchModel();
         searchModel.setPriceHigh(priceHigh);
     }
 
     @Override
     public void setDescription(String description) {
+        searchModel.setPageNumber(0);
         setAppliedFiltersToSearchModel();
         searchModel.setDescription(description);
     }
@@ -81,7 +85,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
+    public void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice) {
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
     }
@@ -112,5 +116,15 @@ public class SearchServiceImpl implements SearchService {
     private void reversePriceSorting() {
         boolean sortAscending = searchModel.isSortAscendingPrice();
         searchModel.setSortAscendingPrice(!sortAscending);
+    }
+
+    @Override
+    public void requestPreviousPage() {
+        searchModel.setPageNumber(searchModel.getPageNumber() - 1);
+    }
+
+    @Override
+    public void requestNextPage() {
+        searchModel.setPageNumber(searchModel.getPageNumber() + 1);
     }
 }

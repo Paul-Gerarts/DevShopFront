@@ -37,7 +37,14 @@ public class ProductMapper {
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)
                 .collect(Collectors.toList());
-        return new ProductsDisplayListDto(productDtoList);
+        //return new ProductsDisplayListDto(productDtoList);
+        return ProductsDisplayListDto.builder()
+                .products(productDtoList)
+                .hasNext(productList.isHasNext())
+                .hasPrevious(productList.isHasPrevious())
+                .currentPage(productList.getCurrentPage())
+                .totalPages(productList.getTotalPages())
+                .build();
     }
 
     private ProductDto setProductCountInProductDto(ProductDto productDto) {

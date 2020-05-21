@@ -64,7 +64,7 @@
             <br>
             <div class="mdl-shadow--8dp pagination-bar">
                 <div class="pagination-bar-content">
-                    <a th:href="@{/pagination/previous}">
+                    <a th:if="${productlist.hasPrevious}" th:href="@{/pagination/previous}">
                         <em class="material-icons pagination-icons">keyboard_arrow_left</em>
                     </a>
                     <a th:href="@{/pagination/1}">
@@ -76,10 +76,21 @@
                     <a th:href="@{/pagination/3}">
                         <em>3</em>
                     </a>
-                    <a th:href="@{/pagination/next}">
+                    <a th:if="${productlist.hasNext}" th:href="@{/pagination/next}">
                         <em class="material-icons pagination-icons">keyboard_arrow_right</em>
                     </a>
+                    <label th:text="${productlist.currentPage + 1}">PAGES</label>
+                    <label> / </label>
+                    <label th:text="${productlist.totalPages}">PAGES</label>
                 </div>
+                <form th:action="@{/pagination/size/{size}(size=${pageSize})}" method="post">
+                    <label for="myselect">Products per page</label>
+                    <select id="myselect" name="pageSize" class="mdl-selectfield__select"
+                            onchange='if(this.value != 0) { this.form.submit(); }'>
+                        <option th:each="pageSize : ${pageSizeList}" th:text="${pageSize}" th:value="${pageSize}"
+                                th:selected="(${selectedPageSize} == ${pageSize})"></option>
+                    </select>
+                </form>
             </div>
         </div>
         <!--search filters-->
@@ -212,5 +223,16 @@
         </div>
     </main>
 </div>
+<!--<script th:inline="javascript">
+    const pageSizeDropdown = document.getElementById('pageSizeSelect');
+
+    pageSizeDropdown.addEventListener('change', () => {
+        const pageSize = pageSizeDropdown.value;
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", '/pagination/size/' + pageSize, true); // false for synchronous request
+        xmlHttp.send(null);
+    })
+</script>-->
 </body>
 </html>

@@ -78,7 +78,7 @@ public class ProductUtils {
     }
 
     public static ProductsDisplayListDto getDummyProductDtoList() {
-        return new ProductsDisplayListDto(getDummyListOfProductDtos());
+        return ProductsDisplayListDto.builder().products(getDummyListOfProductDtos()).build();
     }
 
     public static List<ProductDto> getDummyListOfProductDtos() {
