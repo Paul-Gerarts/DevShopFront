@@ -63,7 +63,23 @@
             </div>
             <br>
             <div class="mdl-shadow--8dp pagination-bar">
-                <div class="pagination-bar-content">TEST</div>
+                <div class="pagination-bar-content">
+                    <a th:href="@{/pagination/previous}">
+                        <em class="material-icons pagination-icons">keyboard_arrow_left</em>
+                    </a>
+                    <a th:href="@{/pagination/1}">
+                        <em>1</em>
+                    </a>
+                    <a th:href="@{/pagination/2}">
+                        <em>2</em>
+                    </a>
+                    <a th:href="@{/pagination/3}">
+                        <em>3</em>
+                    </a>
+                    <a th:href="@{/pagination/next}">
+                        <em class="material-icons pagination-icons">keyboard_arrow_right</em>
+                    </a>
+                </div>
             </div>
         </div>
         <!--search filters-->
