@@ -91,7 +91,7 @@ public class CartServiceImpl implements CartService {
     public StatusNotification payCart(String userName) {
         currentCart.setUser(userName);
         setCartToFinalized(currentCart);
-        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, persistCart(currentCart), CartDto.class);
+        ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, wrap(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);
             currentCart.getProducts().forEach(product -> product.setTotalInCart(0));
@@ -106,7 +106,7 @@ public class CartServiceImpl implements CartService {
      * instead, we're wrapping our CartDto to be able to persist without a problem
      * @Return: CartDto which is a copy of the currentCart
      */
-    private CartDto persistCart(CartDto currentCart) {
+    private CartDto wrap(CartDto currentCart) {
         return CartDto.builder()
                 .finalizedCart(currentCart.isFinalizedCart())
                 .paidCart(currentCart.isPaidCart())

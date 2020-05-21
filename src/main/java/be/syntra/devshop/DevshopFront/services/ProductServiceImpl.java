@@ -3,12 +3,12 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.exceptions.CategoryNotFoundException;
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingSet;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private final CartService cartService;
-    private final ProductMapper productMapper;
     private final SearchService searchService;
 
     @Autowired
@@ -44,11 +43,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(
             CartService cartService,
-            ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
-        this.productMapper = productMapper;
         this.searchService = searchService;
     }
 
@@ -75,13 +72,36 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductList findAllProductsBySearchModel() {
         log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
-        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", searchService.getSearchModel(), ProductList.class);
+        ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", wrap(searchService.getSearchModel()), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             checkResultForSearchFailure(productListResponseEntity);
             return productListResponseEntity.getBody();
         }
         return ProductList.builder()
                 .products(Collections.emptyList())
+                .build();
+    }
+
+    /*
+     * when using the raw searchModel, a stackOverFlowError is thrown
+     * instead, we're wrapping our SearchModel to be able to persist without a problem
+     * @Return: SearchModel which is a copy of the currentCart
+     */
+    private SearchModel wrap(SearchModel searchModel) {
+        return SearchModel.builder()
+                .archivedView(searchModel.isArchivedView())
+                .searchRequest(searchModel.getSearchRequest())
+                .searchResultView(searchModel.isSearchResultView())
+                .searchFailure(searchModel.isSearchFailure())
+                .activeFilters(searchModel.isActiveFilters())
+                .appliedFiltersHeader(searchModel.getAppliedFiltersHeader())
+                .description(searchModel.getDescription())
+                .nameSortActive(searchModel.isNameSortActive())
+                .priceHigh(searchModel.getPriceHigh())
+                .priceLow(searchModel.getPriceLow())
+                .priceSortActive(searchModel.isPriceSortActive())
+                .sortAscendingName(searchModel.isSortAscendingName())
+                .sortAscendingPrice(searchModel.isSortAscendingPrice())
                 .build();
     }
 
