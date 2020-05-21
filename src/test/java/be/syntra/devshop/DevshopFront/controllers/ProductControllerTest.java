@@ -28,13 +28,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
 import java.util.Set;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
-
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSet;
@@ -150,7 +148,7 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCartDto = CartUtils.getCartWithOneDummyProduct();
+        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);

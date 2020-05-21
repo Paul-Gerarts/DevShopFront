@@ -3,10 +3,7 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.*;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
@@ -32,6 +29,7 @@ import java.util.List;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryDto;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSetDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -201,5 +199,29 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertThat(result.getCategories().size()).isEqualTo(categories.size());
+    }
+
+    @Test
+    void canGetAllRatingsFromProductTest() {
+        // given
+        final StarRatingSet ratings = createStarRatingSetDto();
+        final String ratingsAsJson = jsonUtils.asJsonString(ratings);
+        final String expectedEndpoint = baseUrl + endpoint + "/ratings/" + 1L;
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(ratingsAsJson));
+
+        // when
+        StarRatingSet result = productService.getRatingsFromProduct(1L);
+
+        // then
+        mockServer.verify();
+        assertThat(result.getRatings().size()).isEqualTo(ratings.getRatings().size());
     }
 }

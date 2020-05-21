@@ -68,14 +68,6 @@
                     </div>
                     <input hidden class="mdl-textfield__input" type="text" id="averageRating"
                            th:field="*{averageRating}">
-                    <!--<label  class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
-                           th:each="rating, stat : *{ratings}">
-                        <input  class="mdl-checkbox__input" type="checkbox" checked th:field="*{ratings}"
-                               th:value="${rating}"/>
-                        <label  class="mdl-checkbox__label" th:for="${#ids.next('rating')}"
-                               th:text="${rating}"></label>
-                    </label>-->
-                    // TODO REMOVE AND CALL THE SET FROM CONTROLLER BEFORE SAVE FUCKING THYMELEAF
                 </div>
                 <button class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         th:disabled="${status != null && status.label.equals('Saved')}">

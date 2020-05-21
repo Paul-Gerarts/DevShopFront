@@ -85,7 +85,7 @@
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');
                         const productId = document.getElementById('productId');
-                        const rating = Math.round(averageRating.value);
+                        const rating = Math.round(averageRating.value).toFixed(2);
                         const starsMax = 5;
                         const stars = document.querySelectorAll('.star');
 

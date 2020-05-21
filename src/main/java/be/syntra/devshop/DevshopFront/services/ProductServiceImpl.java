@@ -7,6 +7,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.StarRatingSet;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +129,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public StatusNotification archiveProduct(ProductDto product) {
-        product.setArchived(true);
         ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", product, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
             log.info("updateProduct() -> saved > {} ", product);
@@ -140,5 +140,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void addToCart(Product product) {
         cartService.addToCart(product);
+    }
+
+    @Override
+    public StarRatingSet getRatingsFromProduct(Long productId) {
+        ResponseEntity<StarRatingSet> starRatingSetResponseEntity = restTemplate.getForEntity(resourceUrl + "/ratings/" + productId, StarRatingSet.class);
+        if (HttpStatus.OK.equals(starRatingSetResponseEntity.getStatusCode())) {
+            log.info("getRatingsFromProduct() -> {}", starRatingSetResponseEntity.getBody());
+            return starRatingSetResponseEntity.getBody();
+        }
+        return new StarRatingSet(Collections.emptySet());
     }
 }

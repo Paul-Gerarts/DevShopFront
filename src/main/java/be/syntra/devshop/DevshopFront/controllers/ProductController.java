@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.math.BigDecimal;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 
 @Slf4j
@@ -63,6 +63,7 @@ public class ProductController {
     @PostMapping("/details/{id}")
     public String archiveProduct(@PathVariable Long id, Model model, Principal user) {
         Product product = productService.findById(id);
+        product.setArchived(true);
         StatusNotification statusNotification = productService.archiveProduct(productMapper.convertToProductDto(product));
         StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
         model.addAttribute("rating", rating);
