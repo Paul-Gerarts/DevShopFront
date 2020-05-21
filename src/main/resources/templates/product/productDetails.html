@@ -48,44 +48,55 @@
                     </span>
                     <!--starring-->
                     <div data-th-title="'Click to submit YOUR rating'"
-                         th:if="${product.averageRating != 0 && product.archived == false}">
+                         th:if="${product.archived == false}">
                         <div class="personal-rating" th:if="${rating != null && rating.getRating() > 0}"
                              th:text="'Your rating: ' + ${rating.getRating()}"></div>
-                        <div style="margin: 0; padding: 0; background: #262626" onclick="submitRating()">
+                        <div style="margin: 0; padding: 0; background: #262626">
                             <input hidden th:value="${product.averageRating}" id="averageRating">
                             <div sec:authorize="!hasRole('ROLE_ADMIN')" class="rating">
-                                <input class="star" type="radio" name="star" id="star1">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star1"
+                                       value="5">
                                 <label for="star1"></label>
-                                <input class="star" type="radio" name="star" id="star2">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star2"
+                                       value="4">
                                 <label for="star2"></label>
-                                <input class="star" type="radio" name="star" id="star3">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star3"
+                                       value="3">
                                 <label for="star3"></label>
-                                <input class="star" type="radio" name="star" id="star4">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star4"
+                                       value="2">
                                 <label for="star4"></label>
-                                <input class="star" type="radio" name="star" id="star5">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star5"
+                                       value="1">
                                 <label for="star5"></label>
                             </div>
                             <!--the copy of the starfields has nothing to do with function, only with placement because of the admin buttons-->
                             <div sec:authorize="hasRole('ROLE_ADMIN')" class="rating" style="top: 41%">
-                                <input class="star" type="radio" name="star" id="star11">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star11"
+                                       value="5">
                                 <label for="star11"></label>
-                                <input class="star" type="radio" name="star" id="star22">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star22"
+                                       value="4">
                                 <label for="star22"></label>
-                                <input class="star" type="radio" name="star" id="star33">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star33"
+                                       value="3">
                                 <label for="star33"></label>
-                                <input class="star" type="radio" name="star" id="star44">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star44"
+                                       value="2">
                                 <label for="star44"></label>
-                                <input class="star" type="radio" name="star" id="star55">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star55"
+                                       value="1">
                                 <label for="star55"></label>
                             </div>
                         </div>
                         <div class="personal-rating overall-rating"
-                             th:text="'(' + ${product.averageRating} + ') ' + ${product.ratings.size() + ' users voted'}"></div>
+                             th:text="'(' + ${product.averageRating} + ') ' + ${product.ratings.size() + ' users voted'}">
+                        </div>
                     </div>
                     <script th:inline="javascript">
                         const averageRating = document.getElementById('averageRating');
                         const productId = document.getElementById('productId');
-                        const rating = Math.round(averageRating.value).toFixed(2);
+                        const rating = Math.round(averageRating.value);
                         const starsMax = 5;
                         const stars = document.querySelectorAll('.star');
 
@@ -94,22 +105,17 @@
                         }
 
                         /*
-                         * the stars consist of two layers on top of each other, one of which is inverted.
-                         * so we're using a reverse for-loop to check the stars (which are radiobuttons)
+                         * radiobutton index = left -> right {4, 3, 2, 1, 0}
+                         * radiobutton starValue = left -> right {1, 2, 3, 4, 5}
                          */
                         function getRating() {
-                            for (let i = starsMax; i >= rating; i--) {
-                                stars[i - 1].checked = true
+                            if (rating !== 0) {
+                                stars[starsMax - rating].checked = true;
                             }
                         }
 
-                        function submitRating() {
-                            let count = 0;
-                            for (let i = starsMax; i >= rating; i--) {
-                                if (stars[i - 1].checked === true) {
-                                    count++;
-                                }
-                            }
+                        function submitRating(element) {
+                            const count = element.value;
                             const form = document.createElement('form');
                             form.method = 'post';
                             form.action = "/products/" + productId.value + "/ratings/" + count;
