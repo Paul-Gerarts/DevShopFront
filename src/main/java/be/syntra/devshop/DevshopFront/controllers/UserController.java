@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class UserController {
     private static final String REDIRECT_CART_DETAIL_URL = "redirect:/users/cart/detail";
 
-    private CartService cartService;
+    private final CartService cartService;
 
     @Autowired
     public UserController(CartService cartService) {
