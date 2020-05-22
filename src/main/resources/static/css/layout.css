@@ -277,3 +277,14 @@ html, body, .spinner {
     opacity: 1;
 }
 
+.average-rating {
+    color: goldenrod;
+    padding-top: 320px;
+    padding-right: 30px;
+    margin-left: 800px;
+    font-size: x-large;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+}
+

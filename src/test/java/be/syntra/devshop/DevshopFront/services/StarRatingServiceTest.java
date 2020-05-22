@@ -72,7 +72,7 @@ public class StarRatingServiceTest {
                 .andRespond(withSuccess(dummyRatingDtoJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        StarRatingDto result = ratingService.findBy(product.getId(), ratingDto.getUserName());
+        StarRatingDto result = ratingService.findByUserNameAndId(product.getId(), ratingDto.getUserName());
 
         // then
         mockServer.verify();

@@ -36,7 +36,7 @@ public class StarRatingServiceImpl implements StarRatingService {
     }
 
     @Override
-    public StarRatingDto findBy(Long productId, String userName) {
+    public StarRatingDto findByUserNameAndId(Long productId, String userName) {
         ResponseEntity<StarRatingDto> ratingResponseEntity = restTemplate.getForEntity(resourceUrl + "/" + userName + "/ratings/" + productId, StarRatingDto.class);
         if (HttpStatus.OK.equals(ratingResponseEntity.getStatusCode())) {
             log.info("findBy() -> rating retrieved from backEnd");

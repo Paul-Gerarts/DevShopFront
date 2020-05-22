@@ -5,7 +5,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 
 public interface StarRatingService {
 
-    StarRatingDto findBy(Long productId, String userName);
+    StarRatingDto findByUserNameAndId(Long productId, String userName);
 
     StatusNotification submitRating(Long productId, Double count, String userName);
 }

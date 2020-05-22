@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @GetMapping("/details/{id}")
-    public String handleGet(@PathVariable Long id, Model model, Principal user) {
+    public String getProductDetailsById(@PathVariable Long id, Model model, Principal user) {
         return getProductDetails(id, model, user);
     }
 
@@ -65,7 +65,7 @@ public class ProductController {
         Product product = productService.findById(id);
         product.setArchived(true);
         StatusNotification statusNotification = productService.archiveProduct(productMapper.convertToProductDto(product));
-        StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
+        StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
         model.addAttribute("rating", rating);
         model.addAttribute("product", product);
         model.addAttribute("status", statusNotification);
@@ -99,7 +99,7 @@ public class ProductController {
 
     private String getProductDetails(Long id, Model model, Principal user) {
         Product product = productService.findById(id);
-        StarRatingDto rating = starRatingService.findBy(id, nullSafe(user));
+        StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
         model.addAttribute("rating", rating);
         model.addAttribute("product", product);
         model.addAttribute("cart", cartService.getCart());

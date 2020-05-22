@@ -101,7 +101,7 @@ class ProductControllerTest {
         final Product dummyProduct = getDummyNonArchivedProduct();
         final StarRatingDto ratingDto = createStarRatingDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
-        when(ratingService.findBy(dummyProduct.getId(), "user")).thenReturn(ratingDto);
+        when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -115,7 +115,7 @@ class ProductControllerTest {
                 .andExpect(model().attribute("product", dummyProduct));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
-        verify(ratingService, times(1)).findBy(dummyProduct.getId(), "user");
+        verify(ratingService, times(1)).findByUserNameAndId(dummyProduct.getId(), "user");
     }
 
     @Test
@@ -186,7 +186,7 @@ class ProductControllerTest {
         final Set<StarRating> ratings = createStarRatingSet();
         dummyProduct.setRatings(ratings);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
-        when(ratingService.findBy(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
+        when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
         when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
         when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
 
@@ -207,7 +207,7 @@ class ProductControllerTest {
                 .andExpect(model().attribute("rating", starRatingDto));
 
         verify(productService, times(1)).findById(dummyProduct.getId());
-        verify(ratingService, times(1)).findBy(dummyProduct.getId(), "user");
+        verify(ratingService, times(1)).findByUserNameAndId(dummyProduct.getId(), "user");
         verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user");
         verify(cartService, times(1)).getCart();
     }
