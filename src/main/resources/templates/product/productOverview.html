@@ -70,27 +70,8 @@
                 </ul>
             </div>
             <br>
-            <div class="mdl-shadow--8dp pagination-bar">
-                <div class="pagination-bar-content">
-                    <a th:if="${productlist.hasPrevious}" th:href="@{/pagination/previous}">
-                        <em class="material-icons pagination-icons">keyboard_arrow_left</em>
-                    </a>
-                    <a th:href="@{/pagination/1}">
-                        <em>1</em>
-                    </a>
-                    <a th:href="@{/pagination/2}">
-                        <em>2</em>
-                    </a>
-                    <a th:href="@{/pagination/3}">
-                        <em>3</em>
-                    </a>
-                    <a th:if="${productlist.hasNext}" th:href="@{/pagination/next}">
-                        <em class="material-icons pagination-icons">keyboard_arrow_right</em>
-                    </a>
-                    <label th:text="${productlist.currentPage + 1}">PAGES</label>
-                    <label> / </label>
-                    <label th:text="${productlist.totalPages}">PAGES</label>
-                </div>
+            <div class="mdl-shadow--8dp pagination-bar pagination-href">
+                <span class="pagination-sizeselect pagination-numbers">
                 <form th:action="@{/pagination/size/{size}(size=${pageSize})}" method="post">
                     <label for="myselect">Products per page</label>
                     <select id="myselect" name="pageSize" class="mdl-selectfield__select"
@@ -99,6 +80,45 @@
                                 th:selected="(${selectedPageSize} == ${pageSize})"></option>
                     </select>
                 </form>
+                </span>
+                <span class="pagination-bar-pagenavigation">
+                    <span class="pagination-bar-pagenavigation-first">
+                        <a th:class="${productlist.hasPrevious} ? 'pagination-link' : 'pagination-link-disabled'"
+                           th:href="@{/pagination/first}" style="text-decoration: none;">
+                            <em class="material-icons pagination-icons">skip_previous</em>
+                        </a>
+                    </span>
+                    <span class="pagination-bar-pagenavigation-previous">
+                        <a th:if="${productlist.hasPrevious}" class="pagination-link"
+                           th:href="@{/pagination/previous}" style="text-decoration: none;">
+                            <em class="pagination-numbers" th:text="${productlist.currentPage}">1</em>
+                        </a>
+                    </span>
+                    <span class="pagination-bar-pagenavigation-current">
+                        <a class="pagination-link-disabled" href="" style="text-decoration: none;">
+                            <em class="pagination-numbers" th:text="${productlist.currentPage} + 1"></em>
+                        </a>
+                    </span>
+                    <span class="pagination-bar-pagenavigation-next">
+                        <a th:if="${productlist.hasNext}" class="pagination-link"
+                           th:href="@{/pagination/next}" style="text-decoration: none;">
+                            <em class="pagination-numbers" th:text="${productlist.currentPage} + 2">3</em>
+                        </a>
+                    </span>
+                    <span class="pagination-bar-pagenavigation-last">
+                        <a th:class="${productlist.hasNext} ? 'pagination-link' : 'pagination-link-disabled'"
+                           th:href="@{/pagination/last/{lastPage}(lastPage=${productlist.totalPages} -1)}"
+                           style="text-decoration: none;">
+                            <em class="material-icons pagination-icons">skip_next</em>
+                        </a>
+                    </span>
+                </span>
+                <span class="pagination-bar-pagecount pagination-numbers">
+                    <label th:text="${productlist.currentPage + 1}">PAGES</label>
+                    <label> / </label>
+                    <label th:text="${productlist.totalPages}">PAGES</label>
+                </span>
+
             </div>
         </div>
         <!--search filters-->

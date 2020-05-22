@@ -273,24 +273,93 @@ html, body, .spinner {
 }
 
 .pagination-bar {
-    width: 1050px;
     line-height: 36px;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: .04em;
-    padding: 2px;
+    padding: 0px;
+    width: 1055px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    color: dodgerblue;
 }
 
-.pagination-bar-content {
-    margin: auto;
-    width: 30%;
+.pagination-sizeselect {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 10px;
+    color: dodgerblue;
+}
+
+.pagination-bar-pagenavigation {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+}
+
+.pagination-bar-pagenavigation-first {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.pagination-bar-pagenavigation-previous {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-current {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-next {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-last {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.pagination-bar-pagecount {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 10px;
 }
 
 .pagination-icons {
     font-size: 36px;
     font-weight: 600;
     letter-spacing: .04em;
-    padding: 2px;
+}
+
+.pagination-numbers {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.pagination-link {
+    color: dodgerblue;
+}
+
+.pagination-link-disabled {
+    color: darkgrey;
+    pointer-events: none;
+    cursor: default;
 }
 
 ::placeholder {

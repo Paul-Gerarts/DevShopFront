@@ -33,4 +33,8 @@ public interface SearchService {
     void requestPreviousPage();
 
     void requestNextPage();
+
+    void requestFirstPage();
+
+    void requestLastPage(int lastPageNumber);
 }

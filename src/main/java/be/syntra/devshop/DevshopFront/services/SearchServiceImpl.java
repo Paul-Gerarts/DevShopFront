@@ -127,4 +127,14 @@ public class SearchServiceImpl implements SearchService {
     public void requestNextPage() {
         searchModel.setPageNumber(searchModel.getPageNumber() + 1);
     }
+
+    @Override
+    public void requestFirstPage() {
+        searchModel.setPageNumber(0);
+    }
+
+    @Override
+    public void requestLastPage(int lastPageNumber) {
+        searchModel.setPageNumber(lastPageNumber);
+    }
 }

@@ -28,8 +28,8 @@ public class SearchModel {
     private boolean searchFailure;
     private boolean activeFilters;
     private String appliedFiltersHeader;
-    private Integer pageNumber = 3;
-    private Integer pageSize = 3;
+    private Integer pageNumber = 0;
+    private Integer pageSize = 5;
 
     @Override
     public String toString() {

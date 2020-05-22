@@ -5,17 +5,12 @@ import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @Controller
 @RequestMapping("/pagination")
 public class PaginationController {
@@ -46,15 +41,25 @@ public class PaginationController {
 
     @GetMapping("/previous")
     public String requestPreviousPage(Model model) {
-        log.info("previous page requested");
         searchService.requestPreviousPage();
         return setTemplateModel(model, applySearch());
     }
 
     @GetMapping("/next")
     public String requestNextPage(Model model) {
-        log.info("next page requested");
         searchService.requestNextPage();
+        return setTemplateModel(model, applySearch());
+    }
+
+    @GetMapping("/first")
+    public String requestFirstPage(Model model) {
+        searchService.requestFirstPage();
+        return setTemplateModel(model, applySearch());
+    }
+
+    @GetMapping("/last/{pageNumber}")
+    public String requestLastPage(@PathVariable("pageNumber") Integer pageNumber, Model model) {
+        searchService.requestLastPage(pageNumber);
         return setTemplateModel(model, applySearch());
     }
 
