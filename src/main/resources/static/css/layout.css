@@ -45,7 +45,7 @@
 }
 
 .mdl-list__item-primary-content {
-    width: 85%;
+    width: 75%;
     font-size: xx-large;
     height: 0;
     padding-top: 25px;
@@ -298,7 +298,7 @@ html, body, .spinner {
     opacity: 1;
 }
 
-.average-rating {
+/*.average-rating {
     color: goldenrod;
     padding-top: 320px;
     padding-right: 30px;
@@ -307,5 +307,14 @@ html, body, .spinner {
     display: flex;
     flex-direction: row;
     position: absolute;
+}*/
+
+.average-rating {
+    color: goldenrod;
+    padding-top: 315px;
+    font-size: x-large;
+    display: flex;
+    flex-direction: row;
+    position: relative;
 }
 

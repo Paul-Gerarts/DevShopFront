@@ -102,29 +102,6 @@ public class ProductServiceImpl implements ProductService {
                 .priceSortActive(searchModel.isPriceSortActive())
                 .sortAscendingName(searchModel.isSortAscendingName())
                 .sortAscendingPrice(searchModel.isSortAscendingPrice())
-                .build();
-    }
-
-    /*
-     * when using the raw searchModel, a stackOverFlowError is thrown
-     * instead, we're wrapping our SearchModel to be able to persist without a problem
-     * @Return: SearchModel which is a copy of the currentCart
-     */
-    private SearchModel wrap(SearchModel searchModel) {
-        return SearchModel.builder()
-                .archivedView(searchModel.isArchivedView())
-                .searchRequest(searchModel.getSearchRequest())
-                .searchResultView(searchModel.isSearchResultView())
-                .searchFailure(searchModel.isSearchFailure())
-                .activeFilters(searchModel.isActiveFilters())
-                .appliedFiltersHeader(searchModel.getAppliedFiltersHeader())
-                .description(searchModel.getDescription())
-                .nameSortActive(searchModel.isNameSortActive())
-                .priceHigh(searchModel.getPriceHigh())
-                .priceLow(searchModel.getPriceLow())
-                .priceSortActive(searchModel.isPriceSortActive())
-                .sortAscendingName(searchModel.isSortAscendingName())
-                .sortAscendingPrice(searchModel.isSortAscendingPrice())
                 .pageNumber(searchModel.getPageNumber())
                 .pageSize(searchModel.getPageSize())
                 .build();

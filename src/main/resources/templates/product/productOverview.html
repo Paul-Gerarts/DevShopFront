@@ -43,14 +43,15 @@
                             [[${product.description}]]
                         </span>
                     </span>
+                        <div class="average-rating" th:if="${product.averageRating != 0}">
+                            <em class="material-icons mdl-list__item-secondary-content"
+                                style="font-size: 36px">grade</em>
+                            <span class="mdl-list__item-secondary-content"
+                                  style="padding-bottom: 50px; padding-top: 7px"
+                                  th:text="${product.averageRating}">
+                            </span>
+                        </div>
                         <span class="mdl-list__item-secondary-content" style="padding-top: 4%">
-                    <div class="average-rating" th:if="${product.averageRating != 0}">
-                        <em class="material-icons mdl-list__item-secondary-content" style="font-size: 36px">grade</em>
-                        <span class="mdl-list__item-secondary-content" style="padding-bottom: 50px; padding-top: 7px"
-                              th:text="${product.averageRating}">
-                    </span>
-                    </div>
-                    <span class="mdl-list__item-secondary-content" style="padding-top: 4%">
                         <span class="mdl-list__item-text-body"
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
