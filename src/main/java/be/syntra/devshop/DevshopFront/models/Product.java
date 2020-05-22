@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,4 +35,9 @@ public class Product {
 
     @NotEmpty
     private List<Category> categories;
+
+    private Set<StarRating> ratings;
+
+    @PositiveOrZero
+    private double averageRating;
 }

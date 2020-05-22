@@ -136,5 +136,64 @@ html, body, .spinner {
     font-size: 80px;
     font-weight: bold;
     transform: rotate(-35deg);
-    z-index: 1;
+    z-index: 5;
+}
+
+.rating {
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    transform: translate(-50%, -50%) rotateY(180deg);
+    display: flex;
+    margin-top: 100px;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    display: block;
+    cursor: pointer;
+    width: 50px;
+}
+
+.rating label:before {
+    content: '\f005';
+    font-family: fontAwesome;
+    position: relative;
+    display: block;
+    font-size: 40px;
+    color: #101010;
+}
+
+.rating label:after {
+    content: '\f005';
+    font-family: fontAwesome;
+    position: absolute;
+    display: block;
+    font-size: 40px;
+    color: #1f9cff;
+    top: 0;
+    opacity: 0;
+    transition: .5s;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after,
+.rating input:checked ~ label:after {
+    opacity: 1;
+}
+
+.personal-rating {
+    position: absolute;
+    margin-top: 150px;
+    left: 355px;
+    font-weight: bold;
+    color: goldenrod;
+}
+
+.overall-rating {
+    left: 760px;
 }

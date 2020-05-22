@@ -66,6 +66,8 @@
                                    th:errors="*{categoryNames}"></small>
                         </label>
                     </div>
+                    <input hidden class="mdl-textfield__input" type="text" id="averageRating"
+                           th:field="*{averageRating}">
                 </div>
                 <button class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         th:disabled="${status != null && status.label.equals('Saved')}">

@@ -18,7 +18,9 @@ public enum StatusNotification {
     DELETE_FAIL("deletion failed"),
     PAYMENT_FAIL("Payment cart failed."),
     UPDATE_FAIL("Failed to change the category"),
-    CATEGORY_EXISTS("Creation failed. Category already excists");
+    RATING_FAIL("Failed to submit the rating"),
+    CATEGORY_EXISTS("Creation failed. Category already exists"),
+    NOT_AUTHORIZED("You must first login before this functionality becomes available");
 
     private final String label;
 

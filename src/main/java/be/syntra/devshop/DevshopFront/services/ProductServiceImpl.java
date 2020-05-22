@@ -8,11 +8,10 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
+import be.syntra.devshop.DevshopFront.models.dtos.StarRatingSet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private String resourceUrl = null;
 
     private final CartService cartService;
-    private final ProductMapper productMapper;
     private final SearchService searchService;
 
     @Autowired
@@ -45,11 +43,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(
             CartService cartService,
-            ProductMapper productMapper,
             SearchService searchService
     ) {
         this.cartService = cartService;
-        this.productMapper = productMapper;
         this.searchService = searchService;
     }
 
@@ -83,6 +79,29 @@ public class ProductServiceImpl implements ProductService {
         }
         return ProductList.builder()
                 .products(Collections.emptyList())
+                .build();
+    }
+
+    /*
+     * when using the raw searchModel, a stackOverFlowError is thrown
+     * instead, we're wrapping our SearchModel to be able to persist without a problem
+     * @Return: SearchModel which is a copy of the currentCart
+     */
+    private SearchModel wrap(SearchModel searchModel) {
+        return SearchModel.builder()
+                .archivedView(searchModel.isArchivedView())
+                .searchRequest(searchModel.getSearchRequest())
+                .searchResultView(searchModel.isSearchResultView())
+                .searchFailure(searchModel.isSearchFailure())
+                .activeFilters(searchModel.isActiveFilters())
+                .appliedFiltersHeader(searchModel.getAppliedFiltersHeader())
+                .description(searchModel.getDescription())
+                .nameSortActive(searchModel.isNameSortActive())
+                .priceHigh(searchModel.getPriceHigh())
+                .priceLow(searchModel.getPriceLow())
+                .priceSortActive(searchModel.isPriceSortActive())
+                .sortAscendingName(searchModel.isSortAscendingName())
+                .sortAscendingPrice(searchModel.isSortAscendingPrice())
                 .build();
     }
 
@@ -154,11 +173,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public StatusNotification archiveProduct(Product product) {
-        product.setArchived(true);
-        ProductDto productDto = productMapper.convertToProductDto(product);
-        HttpEntity<ProductDto> request = new HttpEntity<>(productDto);
-        ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", request, ProductDto.class);
+    public StatusNotification archiveProduct(ProductDto product) {
+        ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", product, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
             log.info("updateProduct() -> saved > {} ", product);
             return StatusNotification.UPDATED;
@@ -169,5 +185,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void addToCart(Product product) {
         cartService.addToCart(product);
+    }
+
+    @Override
+    public StarRatingSet getRatingsFromProduct(Long productId) {
+        ResponseEntity<StarRatingSet> starRatingSetResponseEntity = restTemplate.getForEntity(resourceUrl + "/ratings/" + productId, StarRatingSet.class);
+        if (HttpStatus.OK.equals(starRatingSetResponseEntity.getStatusCode())) {
+            log.info("getRatingsFromProduct() -> {}", starRatingSetResponseEntity.getBody());
+            return starRatingSetResponseEntity.getBody();
+        }
+        return new StarRatingSet(Collections.emptySet());
     }
 }

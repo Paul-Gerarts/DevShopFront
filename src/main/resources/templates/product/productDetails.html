@@ -10,6 +10,7 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
     <link type="text/css" href="../static/css/productDetail.css" th:href="@{/css/productDetail.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -34,7 +35,7 @@
                             <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action" href="#">
                                 <form method="post" th:object="${product}"
                                       th:action="@{/products/details/addtocart/{id}(id=${product.id})}">
-                            <input type="hidden" name="id" th:value="${product.id}"/>
+                            <input hidden id="productId" name="id" th:value="${product.id}"/>
                             <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
                                     <button th:disabled="${product.totalInCart > 0}">
                                         <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
@@ -45,6 +46,83 @@
                         </form>
                             </a>
                     </span>
+                    <!--starring-->
+                    <div data-th-title="'Click to submit YOUR rating'"
+                         th:if="${product.archived == false}">
+                        <div class="personal-rating" th:if="${rating != null && rating.getRating() > 0}"
+                             th:text="'Your rating: ' + ${rating.getRating()}"></div>
+                        <div style="margin: 0; padding: 0; background: #262626">
+                            <input hidden th:value="${product.averageRating}" id="averageRating">
+                            <div sec:authorize="!hasRole('ROLE_ADMIN')" class="rating">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star1"
+                                       value="5">
+                                <label for="star1"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star2"
+                                       value="4">
+                                <label for="star2"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star3"
+                                       value="3">
+                                <label for="star3"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star4"
+                                       value="2">
+                                <label for="star4"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star5"
+                                       value="1">
+                                <label for="star5"></label>
+                            </div>
+                            <!--the copy of the starfields has nothing to do with function, only with placement because of the admin buttons-->
+                            <div sec:authorize="hasRole('ROLE_ADMIN')" class="rating" style="top: 41%">
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star11"
+                                       value="5">
+                                <label for="star11"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star22"
+                                       value="4">
+                                <label for="star22"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star33"
+                                       value="3">
+                                <label for="star33"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star44"
+                                       value="2">
+                                <label for="star44"></label>
+                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star55"
+                                       value="1">
+                                <label for="star55"></label>
+                            </div>
+                        </div>
+                        <div class="personal-rating overall-rating"
+                             th:text="'(' + ${product.averageRating} + ') ' + ${product.ratings.size() + ' users voted'}">
+                        </div>
+                    </div>
+                    <script th:inline="javascript">
+                        const averageRating = document.getElementById('averageRating');
+                        const productId = document.getElementById('productId');
+                        const rating = Math.round(averageRating.value);
+                        const starsMax = 5;
+                        const stars = document.querySelectorAll('.star');
+
+                        window.onload = () => {
+                            getRating();
+                        }
+
+                        /*
+                         * radiobutton index = left -> right {4, 3, 2, 1, 0}
+                         * radiobutton starValue = left -> right {1, 2, 3, 4, 5}
+                         */
+                        function getRating() {
+                            if (rating !== 0) {
+                                stars[starsMax - rating].checked = true;
+                            }
+                        }
+
+                        function submitRating(element) {
+                            const count = element.value;
+                            const form = document.createElement('form');
+                            form.method = 'post';
+                            form.action = "/products/" + productId.value + "/ratings/" + count;
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    </script>
                 </li>
             </ul>
             <div sec:authorize="hasRole('ROLE_ADMIN')"
@@ -56,14 +134,14 @@
                    class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
             </div>
-            <!-- Chip -->
-            <div th:if="${status != null}">
-                <br>
-                <span class="mdl-chip mdl-chip--deletable">
+        </div>
+        <!-- Chip -->
+        <div style="margin-top: 200px; margin-left: 450px" th:if="${status != null}">
+            <br>
+            <span class="mdl-chip mdl-chip--deletable">
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
-            </div>
         </div>
     </main>
 </div>
