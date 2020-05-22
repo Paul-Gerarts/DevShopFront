@@ -3,10 +3,7 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
-import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
-import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
+import be.syntra.devshop.DevshopFront.models.dtos.*;
 import be.syntra.devshop.DevshopFront.services.CategoryService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
 import be.syntra.devshop.DevshopFront.services.SearchService;
@@ -27,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
@@ -105,7 +103,8 @@ class AdminControllerTest {
                         .param("price", "88")
                         .param("description", "description")
                         .param("archived", String.valueOf(false))
-                        .param("categoryNames", categoryNames));
+                        .param("categoryNames", categoryNames)
+                        .param("averageRating", String.valueOf(0D)));
 
         // then
         postRestult
@@ -116,6 +115,7 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProductDto));
 
+        verify(productService, times(1)).findAllCategories();
         verify(productService, times(1)).addProduct(dummyProductDto);
         verify(productService, times(0)).createEmptyProduct();
     }
@@ -171,10 +171,12 @@ class AdminControllerTest {
     void getUpdatedProductTest() throws Exception {
         // given
         ProductDto dummyProductDto = getDummyProductDto();
+        dummyProductDto.setRatings(Collections.emptySet());
         List<Category> categories = createCategoryList();
         String[] categoryNames = {"Headphones"};
         when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
         when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
+        when(productService.getRatingsFromProduct(dummyProductDto.getId())).thenReturn(new StarRatingSet(Collections.emptySet()));
 
         // when
         final ResultActions postRestult = mockMvc.perform(
@@ -184,7 +186,8 @@ class AdminControllerTest {
                         .param("price", "88")
                         .param("description", "description")
                         .param("archived", String.valueOf(false))
-                        .param("categoryNames", categoryNames));
+                        .param("categoryNames", categoryNames)
+                        .param("averageRating", String.valueOf(0D)));
 
         // then
         postRestult
@@ -195,7 +198,9 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("product"))
                 .andExpect(model().attribute("product", dummyProductDto));
 
-        verify(productService, times(1)).addProduct(dummyProductDto);
+        verify(productService, times(1)).findAllCategories();
+        verify(productService, times(1)).getRatingsFromProduct(dummyProductDto.getId());
+        verify(productService, times(1)).addProduct(any());
     }
 
     @Test

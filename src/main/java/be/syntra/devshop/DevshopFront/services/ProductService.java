@@ -5,6 +5,7 @@ import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
+import be.syntra.devshop.DevshopFront.models.dtos.StarRatingSet;
 
 public interface ProductService {
 
@@ -28,7 +29,7 @@ public interface ProductService {
 
     ProductList findAllWithOnlyCategory(Long id);
 
-    StatusNotification archiveProduct(Product product);
+    StatusNotification archiveProduct(ProductDto product);
 
     /***
      * adds a poduct to the cart
@@ -39,4 +40,6 @@ public interface ProductService {
     void addSelectableCategoriesToSearchModel();
 
     CategoryList findAllCategories();
+
+    StarRatingSet getRatingsFromProduct(Long productId);
 }

@@ -6,6 +6,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
@@ -20,6 +21,7 @@ public class ProductUtils {
                 .description("description")
                 .archived(false)
                 .categoryNames(List.of("Headphones"))
+                .averageRating(0D)
                 .build();
     }
 
@@ -39,6 +41,8 @@ public class ProductUtils {
                 .description("description")
                 .archived(false)
                 .categories(createCategoryList())
+                .averageRating(0D)
+                .ratings(Collections.emptySet())
                 .totalInCart(1)
                 .build();
     }
