@@ -106,7 +106,7 @@ public class ProductController {
         Product product = productService.findById(id);
         StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
         model.addAttribute("rating", rating);
-        model.addAttribute("product", product);
+        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
     }

@@ -13,12 +13,17 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductMapper {
-
-    @Autowired
     private CategoryMapper categoryMapper;
+    private CartService cartService;
 
     @Autowired
-    private CartService cartService;
+    public ProductMapper(
+            CategoryMapper categoryMapper,
+            CartService cartService
+    ) {
+        this.categoryMapper = categoryMapper;
+        this.cartService = cartService;
+    }
 
     public ProductDto convertToProductDto(Product product) {
         return ProductDto.builder()
@@ -39,7 +44,6 @@ public class ProductMapper {
                 .map(this::convertToProductDto)
                 .map(this::setProductCountInProductDto)
                 .collect(Collectors.toList());
-        //return new ProductsDisplayListDto(productDtoList);
         return ProductsDisplayListDto.builder()
                 .products(productDtoList)
                 .hasNext(productList.isHasNext())
@@ -47,6 +51,10 @@ public class ProductMapper {
                 .currentPage(productList.getCurrentPage())
                 .totalPages(productList.getTotalPages())
                 .build();
+    }
+
+    public ProductDto convertToDisplayProductDto(Product product) {
+        return setProductCountInProductDto(convertToProductDto(product));
     }
 
     private ProductDto setProductCountInProductDto(ProductDto productDto) {
