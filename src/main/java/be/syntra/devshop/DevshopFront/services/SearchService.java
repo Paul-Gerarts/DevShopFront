@@ -31,4 +31,6 @@ public interface SearchService {
     void setSortingByPrice();
 
     void setSelectedCategory(String category);
+
+    void setRemainingCategories(String category);
 }

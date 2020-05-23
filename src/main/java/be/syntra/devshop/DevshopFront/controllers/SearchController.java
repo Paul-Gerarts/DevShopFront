@@ -68,6 +68,7 @@ public class SearchController {
     @GetMapping("/category/")
     public String searchProductCategory(@RequestParam String category, Model model) {
         searchService.setSelectedCategory(category);
+        searchService.setRemainingCategories(category);
         return setTemplateModel(model, applySearch(true));
     }
 

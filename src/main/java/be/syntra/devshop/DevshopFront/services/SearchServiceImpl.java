@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @SessionScope
@@ -95,6 +97,14 @@ public class SearchServiceImpl implements SearchService {
         List<String> selectedCategories = getSelectedCategoriesList();
         selectedCategories.add(category);
         searchModel.setSelectedCategories(selectedCategories);
+    }
+
+    @Override
+    public void setRemainingCategories(String category) {
+        List<Category> categories = searchModel.getCategories();
+        searchModel.setCategories(categories.parallelStream()
+                .filter(originalCategory -> !originalCategory.getName().equals(category))
+                .collect(Collectors.toUnmodifiableList()));
     }
 
     private List<String> getSelectedCategoriesList() {
