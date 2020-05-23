@@ -13,6 +13,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static junit.framework.TestCase.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -217,5 +218,20 @@ class SearchServiceTest {
         assertFalse(searchModelDummy.isNameSortActive());
         assertTrue(searchModelDummy.isPriceSortActive());
         assertFalse(searchModelDummy.isSortAscendingPrice());
+    }
+
+    @Test
+    void canSetSelectedCategoriesTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        List<String> selectedCategory = List.of("Headphones");
+
+        // when
+        searchModelDummy.setSelectedCategories(selectedCategory);
+        List<String> result = searchService.getSearchModel().getSelectedCategories();
+
+        // then
+        assertThat(result.size()).isEqualTo(selectedCategory.size());
+        assertThat(result.get(0)).isEqualTo(selectedCategory.get(0));
     }
 }

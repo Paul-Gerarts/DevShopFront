@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,6 +31,7 @@ public class SearchModel {
     private boolean activeFilters;
     private String appliedFiltersHeader;
     private List<Category> categories;
+    private List<String> selectedCategories = new ArrayList<>();
 
     @Override
     public String toString() {

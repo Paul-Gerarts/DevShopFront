@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @SessionScope
@@ -83,9 +85,22 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
+    public void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice) {
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
+    }
+
+    @Override
+    public void setSelectedCategory(String category) {
+        List<String> selectedCategories = getSelectedCategoriesList();
+        selectedCategories.add(category);
+        searchModel.setSelectedCategories(selectedCategories);
+    }
+
+    private List<String> getSelectedCategoriesList() {
+        return (null == searchModel.getSelectedCategories())
+                ? new ArrayList<>()
+                : searchModel.getSelectedCategories();
     }
 
     @Override

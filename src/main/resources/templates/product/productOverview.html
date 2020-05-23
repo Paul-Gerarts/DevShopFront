@@ -172,7 +172,7 @@
                         </script>
                         <!--description-search-->
                         <div class="searchbar description search-filters">
-                            <form class="searchbar" id="searchForm" method="get"
+                            <form class="searchbar" id="searchDescriptionForm" method="get"
                                   th:action="@{/search/description/}">
                                 <em class="material-icons description-icon">search</em>
                                 <input th:if="${searchModel.description == ''}"
@@ -186,15 +186,31 @@
                             </form>
                         </div>
                     </div>
-                    <select class="category-dropdown category-select" id="categorySelect" name="categorySelect">
+                    <!--category-filter-->
+                    <select onchange="selectCategory(this)" class="category-dropdown category-select"
+                            id="categorySelect" name="categorySelect">
                         <option disabled selected value="none" style="color: black">Search for a category here...
                         </option>
                         <option th:each="category : ${searchModel.getCategories()}" style="color: black"
                                 th:value="${category}"
                                 th:text="${category.name}">
                         </option>
-                        <input hidden id="selectedCategoryID">
                     </select>
+                    <script th:inline="javascript">
+                        function selectCategory(selectedCategory) {
+                            const category = selectedCategory.options[selectedCategory.selectedIndex].text;
+                            location = "/search/category/?category=" + category;
+                        }
+                    </script>
+                    <div th:if="${searchModel.selectedCategories.size() > 0}"
+                         th:each="selectedCategory : ${searchModel.selectedCategories}"
+                         style="position: absolute; margin-top: 350px; min-width: 520px">
+                        <a th:href="${'#'}" style="text-decoration: none; color: dodgerblue"><em class="material-icons"
+                                                                                                 style="padding-right: 0">backspace</em>
+                            <span th:value="${selectedCategory}"
+                                  th:text="${selectedCategory}" style="font-size: large; color: dodgerblue">
+                    </span></a>
+                    </div>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
                             <em class="material-icons">clear</em>Reset all filters
