@@ -89,6 +89,8 @@ public class ProductController {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());

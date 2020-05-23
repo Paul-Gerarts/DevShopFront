@@ -70,6 +70,7 @@
                 </ul>
             </div>
             <br>
+            <!-- pagination bar -->
             <div class="mdl-shadow--8dp pagination-bar pagination-href">
                 <span class="pagination-sizeselect pagination-numbers">
                 <form th:action="@{/pagination/size/{size}(size=${pageSize})}" method="post">
@@ -114,7 +115,7 @@
                     </span>
                 </span>
                 <span class="pagination-bar-pagecount pagination-numbers">
-                    <label th:text="${productlist.currentPage + 1}">PAGES</label>
+                    <label th:text="${productlist.totalPages > 0} ? ${productlist.currentPage + 1} : 0">PAGES</label>
                     <label> / </label>
                     <label th:text="${productlist.totalPages}">PAGES</label>
                 </span>
@@ -230,7 +231,7 @@
                             <form class="searchbar" id="searchForm" method="get"
                                   th:action="@{/search/description/}">
                                 <em class="material-icons description-icon">search</em>
-                                <input th:if="${searchModel.description == ''}"
+                                <input th:if="${searchModel.description == null}"
                                        class="searchbar-input description-search" type="text" id="descriptionNull"
                                        th:name="description"
                                        placeholder="Search for a product description here...">
@@ -251,16 +252,5 @@
         </div>
     </main>
 </div>
-<!--<script th:inline="javascript">
-    const pageSizeDropdown = document.getElementById('pageSizeSelect');
-
-    pageSizeDropdown.addEventListener('change', () => {
-        const pageSize = pageSizeDropdown.value;
-
-        let xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", '/pagination/size/' + pageSize, true); // false for synchronous request
-        xmlHttp.send(null);
-    })
-</script>-->
 </body>
 </html>
