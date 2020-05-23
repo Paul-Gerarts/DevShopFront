@@ -65,8 +65,10 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void resetSearchModel() {
+        int pageSize = searchModel.getPageSize();
         log.info("resetSearchModel()");
         this.searchModel = new SearchModel();
+        searchModel.setPageSize(pageSize);
     }
 
     @Override
