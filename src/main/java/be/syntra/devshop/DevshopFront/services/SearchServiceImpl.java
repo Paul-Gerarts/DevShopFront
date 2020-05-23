@@ -100,6 +100,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void deleteSelectedCategory(String category) {
+        List<String> selectedCategories = getSelectedCategoriesList();
+        selectedCategories.remove(category);
+        searchModel.setSelectedCategories(selectedCategories);
+        List<Category> categories = searchModel.getCategories();
+        List<Category> categoriesToSelect = new ArrayList<>();
+        categoriesToSelect.add(Category.builder().name(category).build());
+        categoriesToSelect.addAll(categories);
+        searchModel.setCategories(categoriesToSelect);
+    }
+
+    @Override
     public void setRemainingCategories(String category) {
         List<Category> categories = searchModel.getCategories();
         searchModel.setCategories(categories.parallelStream()

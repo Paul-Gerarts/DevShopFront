@@ -72,6 +72,12 @@ public class SearchController {
         return setTemplateModel(model, applySearch(true));
     }
 
+    @GetMapping("/delete/")
+    public String deleteSelectedCategory(@RequestParam String category, Model model) {
+        searchService.deleteSelectedCategory(category);
+        return setTemplateModel(model, applySearch(true));
+    }
+
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
         searchService.setSortingByName();

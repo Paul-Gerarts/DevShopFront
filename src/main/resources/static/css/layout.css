@@ -297,3 +297,13 @@ html, body, .spinner {
     position: absolute;
 }
 
+.selected-categories {
+    position: absolute;
+    margin-top: 370px;
+    min-width: 520px;
+    max-width: 520px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+

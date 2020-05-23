@@ -33,4 +33,6 @@ public interface SearchService {
     void setSelectedCategory(String category);
 
     void setRemainingCategories(String category);
+
+    void deleteSelectedCategory(String category);
 }

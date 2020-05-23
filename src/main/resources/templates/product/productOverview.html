@@ -67,7 +67,7 @@
             </ul>
         </div>
         <!--search filters-->
-        <div class="search-filters">
+        <div class="search-filters" style="min-height: 1000px;">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <!--sort-icons-->
@@ -202,17 +202,30 @@
                             location = "/search/category/?category=" + category;
                         }
                     </script>
-                    <div th:if="${searchModel.selectedCategories.size() > 0}"
-                         th:each="selectedCategory : ${searchModel.selectedCategories}"
-                         style="position: absolute; margin-top: 350px; min-width: 520px">
-                        <a th:href="${'#'}" style="text-decoration: none; color: dodgerblue"><em class="material-icons"
-                                                                                                 style="padding-right: 0">backspace</em>
-                            <span th:value="${selectedCategory}"
-                                  th:text="${selectedCategory}" style="font-size: large; color: dodgerblue">
-                    </span></a>
+                    <div class="selected-categories">
+                        <div th:if="${searchModel.selectedCategories.size() > 0}"
+                             th:each="selectedCategory : ${searchModel.selectedCategories}">
+                            <div onclick="deleteCategory()"
+                                 style="text-decoration: none; color: dodgerblue; padding-right: 10px; display: flex; flex-direction: row">
+                                <em
+                                        class="material-icons"
+                                        style="padding-right: 0; transform: rotateY(-180deg)">backspace</em>
+                                <div th:value="${selectedCategory}" id="selectedCategoryText"
+                                     th:text="${selectedCategory}"
+                                     style="font-size: large; color: dodgerblue; padding-left: 5px; padding-top: 3px">
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <script th:inline="javascript">
+                        function deleteCategory() {
+                            const category = document.getElementById('selectedCategoryText').innerHTML;
+                            location = "/search/delete/?category=" + category;
+                        }
+                    </script>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white"
+                                style="margin-top: 30px">
                             <em class="material-icons">clear</em>Reset all filters
                         </button>
                     </form>
