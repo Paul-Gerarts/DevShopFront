@@ -25,6 +25,20 @@ public class ProductUtils {
                 .build();
     }
 
+    public static ProductDto getDummyRatedProductDto() {
+        return ProductDto.builder()
+                .id(1L)
+                .name("product")
+                .price(new BigDecimal("88"))
+                .description("description")
+                .archived(false)
+                .categoryNames(List.of("Headphones"))
+                .averageRating(0D)
+                .ratings(Collections.emptySet())
+                .totalInCart(1)
+                .build();
+    }
+
     public static ProductDto getOtherDummyProductDto() {
         return ProductDto.builder()
                 .name("name of prod")

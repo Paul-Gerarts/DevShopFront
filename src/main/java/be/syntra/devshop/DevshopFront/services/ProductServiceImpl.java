@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
+        log.info("findAllProductsBySearchModel() -> SearchModel sent to BE-> {}", searchService.getSearchModel());
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", wrap(searchService.getSearchModel()), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             checkResultForSearchFailure(productListResponseEntity);

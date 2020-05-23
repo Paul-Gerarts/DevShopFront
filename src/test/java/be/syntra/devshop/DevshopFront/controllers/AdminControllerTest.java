@@ -86,11 +86,10 @@ class AdminControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void getProductEntry() throws Exception {
-
         // given
-        ProductDto dummyProductDto = getDummyProductDto();
-        List<Category> categories = createCategoryList();
-        String[] categoryNames = {"Headphones"};
+        final ProductDto dummyProductDto = getDummyProductDto();
+        final List<Category> categories = createCategoryList();
+        final String[] categoryNames = {"Headphones"};
         when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
         when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
 
