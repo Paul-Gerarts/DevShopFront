@@ -24,9 +24,15 @@ public interface SearchService {
 
     void setAppliedFiltersToSearchModel();
 
-    void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice);
+    void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice);
 
     void setSortingByName();
 
     void setSortingByPrice();
+
+    void addToSelectedCategories(String category);
+
+    void setRemainingCategories(String category);
+
+    void removeFromSelectedCategories(String category);
 }

@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum PaymentOption {
-    PAY("regular payment");
+
+    REGULAR("regular payment"),
+    CREDIT("creditcard payment"),
+    WIRE_TRANSFER("wire-transfer payment");
 
     private final String description;
 

@@ -10,9 +10,13 @@ public class CategoryUtils {
 
     public static List<Category> createCategoryList() {
         return List.of(Category.builder()
-                .id(1L)
-                .name("Headphones")
-                .build());
+                        .id(1L)
+                        .name("Headphones")
+                        .build(),
+                Category.builder()
+                        .id(1L)
+                        .name("Office")
+                        .build());
     }
 
     public static CategoryDto createCategoryDto() {

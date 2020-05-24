@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDtoList;
@@ -168,7 +170,7 @@ class SearchControllerTest {
     void canSortProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -196,7 +198,7 @@ class SearchControllerTest {
     void canSortArchivedProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -218,4 +220,65 @@ class SearchControllerTest {
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
+    @Test
+    void searchProductCategoryTest() throws Exception {
+        //given
+        final String category = "Accessories";
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .selectedCategories(List.of(category))
+                .searchResultView(true).build();
+        final ProductList dummyProductList = getDummyProductList();
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/category/?category=" + category));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).addToSelectedCategories(category);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void adaptSearchProductCategoryTest() throws Exception {
+        //given
+        final String category = "Accessories";
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .selectedCategories(List.of(category))
+                .searchResultView(true).build();
+        final ProductList dummyProductList = getDummyProductList();
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/delete/?category=" + category));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).removeFromSelectedCategories(category);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
 }

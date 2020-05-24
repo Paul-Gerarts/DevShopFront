@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @SessionScope
@@ -16,7 +22,9 @@ public class SearchServiceImpl implements SearchService {
     private SearchModel searchModel;
 
     @Autowired
-    public SearchServiceImpl(SearchModel searchModel) {
+    public SearchServiceImpl(
+            SearchModel searchModel
+    ) {
         this.searchModel = searchModel;
     }
 
@@ -81,9 +89,46 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice) {
+    public void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice) {
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
+    }
+
+    @Override
+    public void addToSelectedCategories(String category) {
+        Set<String> selectedCategories = new HashSet<>(getSelectedCategoriesList());
+        selectedCategories.add(category);
+        searchModel.setSelectedCategories(selectedCategories.parallelStream()
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public void removeFromSelectedCategories(String category) {
+        List<String> selectedCategories = getSelectedCategoriesList();
+        selectedCategories.remove(category);
+        searchModel.setSelectedCategories(selectedCategories);
+        restoreCategoryDropdown(category);
+    }
+
+    private void restoreCategoryDropdown(String category) {
+        Set<Category> categoriesToSelect = new HashSet<>(searchModel.getCategories());
+        categoriesToSelect.add(Category.builder().name(category).build());
+        searchModel.setCategories(categoriesToSelect.parallelStream()
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public void setRemainingCategories(String category) {
+        List<Category> categories = searchModel.getCategories();
+        searchModel.setCategories(categories.parallelStream()
+                .filter(originalCategory -> !originalCategory.getName().equals(category))
+                .collect(Collectors.toUnmodifiableList()));
+    }
+
+    private List<String> getSelectedCategoriesList() {
+        return (null == searchModel.getSelectedCategories())
+                ? new ArrayList<>()
+                : searchModel.getSelectedCategories();
     }
 
     @Override
