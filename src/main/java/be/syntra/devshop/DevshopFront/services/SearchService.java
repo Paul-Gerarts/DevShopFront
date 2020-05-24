@@ -30,9 +30,9 @@ public interface SearchService {
 
     void setSortingByPrice();
 
-    void setSelectedCategory(String category);
+    void addToSelectedCategories(String category);
 
     void setRemainingCategories(String category);
 
-    void deleteSelectedCategory(String category);
+    void removeFromSelectedCategories(String category);
 }

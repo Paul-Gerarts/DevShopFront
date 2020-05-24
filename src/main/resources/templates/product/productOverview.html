@@ -202,24 +202,24 @@
                             location = "/search/category/?category=" + category;
                         }
                     </script>
-                    <div class="selected-categories">
-                        <div th:if="${searchModel.selectedCategories.size() > 0}"
-                             th:each="selectedCategory : ${searchModel.selectedCategories}">
-                            <div onclick="deleteCategory()"
-                                 style="text-decoration: none; color: dodgerblue; padding-right: 10px; display: flex; flex-direction: row">
+                    <div class="selected-categories" th:if="${searchModel.selectedCategories.size() > 0}">
+                        <div th:each="selectedCategory, index : ${searchModel.selectedCategories}">
+                            <div class="category-remove" onclick="deleteCategory(this)" th:id="${index.count}">
                                 <em
                                         class="material-icons"
                                         style="padding-right: 0; transform: rotateY(-180deg)">backspace</em>
-                                <div th:value="${selectedCategory}" id="selectedCategoryText"
-                                     th:text="${selectedCategory}"
-                                     style="font-size: large; color: dodgerblue; padding-left: 5px; padding-top: 3px">
+                                <div class="category-element-remove"
+                                     th:id="${'selectedCategoryText' + index.count}"
+                                     th:value="${selectedCategory}"
+                                     th:text="${selectedCategory}">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <script th:inline="javascript">
-                        function deleteCategory() {
-                            const category = document.getElementById('selectedCategoryText').innerHTML;
+                        function deleteCategory(element) {
+                            const clickedElement = element.getAttribute('id');
+                            const category = document.getElementById('selectedCategoryText' + clickedElement).innerHTML;
                             location = "/search/delete/?category=" + category;
                         }
                     </script>

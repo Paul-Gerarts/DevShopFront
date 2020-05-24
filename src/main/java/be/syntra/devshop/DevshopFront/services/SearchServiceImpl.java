@@ -10,7 +10,9 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -93,22 +95,26 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void setSelectedCategory(String category) {
-        List<String> selectedCategories = getSelectedCategoriesList();
+    public void addToSelectedCategories(String category) {
+        Set<String> selectedCategories = new HashSet<>(getSelectedCategoriesList());
         selectedCategories.add(category);
-        searchModel.setSelectedCategories(selectedCategories);
+        searchModel.setSelectedCategories(selectedCategories.parallelStream()
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public void deleteSelectedCategory(String category) {
+    public void removeFromSelectedCategories(String category) {
         List<String> selectedCategories = getSelectedCategoriesList();
         selectedCategories.remove(category);
         searchModel.setSelectedCategories(selectedCategories);
-        List<Category> categories = searchModel.getCategories();
-        List<Category> categoriesToSelect = new ArrayList<>();
+        restoreCategoryDropdown(category);
+    }
+
+    private void restoreCategoryDropdown(String category) {
+        Set<Category> categoriesToSelect = new HashSet<>(searchModel.getCategories());
         categoriesToSelect.add(Category.builder().name(category).build());
-        categoriesToSelect.addAll(categories);
-        searchModel.setCategories(categoriesToSelect);
+        searchModel.setCategories(categoriesToSelect.parallelStream()
+                .collect(Collectors.toList()));
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
@@ -169,7 +170,7 @@ class SearchControllerTest {
     void canSortProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -197,7 +198,7 @@ class SearchControllerTest {
     void canSortArchivedProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).build();
+        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -244,7 +245,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setSelectedCategory(category);
+        verify(searchService, times(1)).addToSelectedCategories(category);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -275,7 +276,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).deleteSelectedCategory(category);
+        verify(searchService, times(1)).removeFromSelectedCategories(category);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
