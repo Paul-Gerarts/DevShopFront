@@ -28,7 +28,7 @@
             <span class="mdl-layout-title"
                   th:if="${searchModel != null && searchModel.isSearchResultView() && searchModel.isSearchFailure()}"
                   th:text="'After searching ' + ${searchModel.getSearchRequest().toUpperCase()} + ' we found nothing with the applied filters, so we\'re showing ALL'"></span>
-            <div style="overflow-y: scroll; max-height: 800px; min-height: 800px;">
+            <div style="overflow-y: scroll; max-height: 700px; min-height: 700px;">
                 <ul class="product-list-item mdl-list mdl-color--grey-100 mdl-shadow--8dp"
                     th:each="product : ${productlist.products}">
                     <li class="mdl-list__item mdl-list__item--three-line product-tile">

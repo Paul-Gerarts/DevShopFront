@@ -100,7 +100,7 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final StarRatingDto ratingDto = createStarRatingDto();
-        final ProductDto dummyProductDto = getDummyRatedProductDto();
+        final ProductDto dummyProductDto = getDummyNonArchivedProductDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
         when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
@@ -187,7 +187,7 @@ class ProductControllerTest {
         final StarRatingDto starRatingDto = createStarRatingDto();
         final Product dummyProduct = getDummyNonArchivedProduct();
         final Set<StarRating> ratings = createStarRatingSet();
-        final ProductDto dummyProductDto = getDummyRatedProductDto();
+        final ProductDto dummyProductDto = getDummyNonArchivedProductDto();
         dummyProduct.setRatings(ratings);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(starRatingDto);

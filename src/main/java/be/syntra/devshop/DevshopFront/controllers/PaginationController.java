@@ -58,7 +58,7 @@ public class PaginationController {
     }
 
     @GetMapping("/last/{pageNumber}")
-    public String requestLastPage(@PathVariable("pageNumber") Integer pageNumber, Model model) {
+    public String requestLastPage(@PathVariable Integer pageNumber, Model model) {
         searchService.requestLastPage(pageNumber);
         return setTemplateModel(model, applySearch());
     }

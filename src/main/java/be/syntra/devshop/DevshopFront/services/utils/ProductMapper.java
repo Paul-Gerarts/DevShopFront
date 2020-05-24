@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductMapper {
-    private CategoryMapper categoryMapper;
-    private CartService cartService;
+    private final CategoryMapper categoryMapper;
+    private final CartService cartService;
 
     @Autowired
     public ProductMapper(

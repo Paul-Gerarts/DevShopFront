@@ -61,7 +61,7 @@ public class PaginationControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/pagination/previous", "/pagination/next", "/pagination/first", "/pagination/last/5"})
-    void canRequestFirstPreviousNextPages() throws Exception {
+    void canRequestFirstPreviousNextPages(String url) throws Exception {
         // given
         SearchModel searchModel = new SearchModel();
         searchModel.setPageSize(5);
@@ -76,7 +76,7 @@ public class PaginationControllerTest {
         doNothing().when(searchService).requestLastPage(5);
 
         // when
-        final ResultActions getResult = mockMvc.perform(get("/pagination/next"));
+        final ResultActions getResult = mockMvc.perform(get(url));
 
         // then
         getResult

@@ -25,7 +25,7 @@ public class ProductUtils {
                 .build();
     }
 
-    public static ProductDto getDummyRatedProductDto() {
+    public static ProductDto getDummyNonArchivedProductDto() {
         return ProductDto.builder()
                 .id(1L)
                 .name("product")
