@@ -48,10 +48,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    ProductMapper productMapper;
+    private ProductMapper productMapper;
 
     @MockBean
     private ProductService productService;
@@ -90,7 +90,7 @@ class ProductControllerTest {
 
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(searchService, times(1)).getSearchModel();
+        verify(searchService, times(2)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
 
@@ -100,8 +100,10 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final StarRatingDto ratingDto = createStarRatingDto();
+        final ProductDto dummyProductDto = getDummyProductDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
+        when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -112,7 +114,8 @@ class ProductControllerTest {
                 .andExpect(view().name("product/productDetails"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("product"))
-                .andExpect(model().attribute("product", dummyProduct));
+                .andExpect(model().attribute("product", dummyProductDto));
+
 
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(ratingService, times(1)).findByUserNameAndId(dummyProduct.getId(), "user");
@@ -173,7 +176,7 @@ class ProductControllerTest {
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(searchService, times(1)).getSearchModel();
+        verify(searchService, times(2)).getSearchModel();
         verify(cartService, times(1)).getCart();
     }
 
@@ -184,11 +187,13 @@ class ProductControllerTest {
         final StarRatingDto starRatingDto = createStarRatingDto();
         final Product dummyProduct = getDummyNonArchivedProduct();
         final Set<StarRating> ratings = createStarRatingSet();
+        final ProductDto dummyProductDto = getDummyProductDto();
         dummyProduct.setRatings(ratings);
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
         when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
         when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
+        when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/"
@@ -202,7 +207,7 @@ class ProductControllerTest {
                 .andExpect(view().name("product/productDetails"))
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("product", "status", "rating"))
-                .andExpect(model().attribute("product", dummyProduct))
+                .andExpect(model().attribute("product", dummyProductDto))
                 .andExpect(model().attribute("status", SUCCESS))
                 .andExpect(model().attribute("rating", starRatingDto));
 

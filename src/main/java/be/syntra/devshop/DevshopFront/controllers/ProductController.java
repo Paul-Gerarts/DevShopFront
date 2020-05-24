@@ -11,6 +11,7 @@ import be.syntra.devshop.DevshopFront.services.StarRatingService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
+    @Value("${pagination.page.size}")
+    private int[] pageSizes;
 
     private final ProductService productService;
     private final CartService cartService;
@@ -50,6 +53,8 @@ public class ProductController {
         productService.addSelectableCategoriesToSearchModel();
         ProductList productList = productService.findAllProductsBySearchModel();
         searchService.setPriceFilters(BigDecimal.ZERO, productList.getSearchResultMaxPrice());
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
@@ -85,6 +90,8 @@ public class ProductController {
         log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("cart", cartService.getCart());
@@ -102,7 +109,7 @@ public class ProductController {
         Product product = productService.findById(id);
         StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
         model.addAttribute("rating", rating);
-        model.addAttribute("product", product);
+        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
         model.addAttribute("cart", cartService.getCart());
         return "product/productDetails";
     }

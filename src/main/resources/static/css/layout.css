@@ -45,7 +45,7 @@
 }
 
 .mdl-list__item-primary-content {
-    width: 85%;
+    width: 75%;
     font-size: xx-large;
     height: 0;
     padding-top: 25px;
@@ -281,20 +281,13 @@ html, body, .spinner {
     margin-left: 340px;
 }
 
-::placeholder {
-    color: black;
-    opacity: 1;
-}
-
 .average-rating {
     color: goldenrod;
-    padding-top: 320px;
-    padding-right: 30px;
-    margin-left: 800px;
+    padding-top: 315px;
     font-size: x-large;
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: relative;
 }
 
 .selected-categories {
@@ -320,5 +313,117 @@ html, body, .spinner {
     color: dodgerblue;
     padding-left: 5px;
     padding-top: 3px;
+}
+
+.pagination-bar {
+    line-height: 36px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: 0px;
+    width: 1055px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    color: dodgerblue;
+}
+
+.pagination-sizeselect {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 10px;
+    color: dodgerblue;
+}
+
+.pagination-sizeselect-dropdown {
+    height: 30px;
+    font-size: 18px;
+    border: solid;
+}
+
+.pagination-sizeselect-dropdown-select {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 4px;
+    font-weight: 600;
+    color: dodgerblue;
+    border-color: dodgerblue;
+    border-radius: 15px;
+    padding-left: 10px;
+}
+
+.pagination-bar-pagenavigation {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+}
+
+.pagination-bar-pagenavigation-first {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.pagination-bar-pagenavigation-previous {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-current {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-next {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.pagination-bar-pagenavigation-last {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.pagination-bar-pagecount {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.pagination-icons {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.pagination-numbers {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.pagination-link {
+    color: dodgerblue;
+}
+
+.pagination-link-disabled {
+    color: darkgrey;
+    pointer-events: none;
+    cursor: default;
+}
+
+::placeholder {
+    color: black;
+    opacity: 1;
 }
 

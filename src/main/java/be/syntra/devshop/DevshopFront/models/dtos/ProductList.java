@@ -17,4 +17,8 @@ public class ProductList {
     private BigDecimal searchResultMinPrice;
     private BigDecimal searchResultMaxPrice;
     private boolean searchFailure;
+    private boolean hasNext;
+    private boolean hasPrevious;
+    private int currentPage;
+    private int totalPages;
 }

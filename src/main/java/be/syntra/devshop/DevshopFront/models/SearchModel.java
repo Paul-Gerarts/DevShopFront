@@ -30,6 +30,8 @@ public class SearchModel {
     private boolean searchFailure;
     private boolean activeFilters;
     private String appliedFiltersHeader;
+    private Integer pageNumber = 0;
+    private Integer pageSize = 5;
     private List<Category> categories;
     private List<String> selectedCategories = new ArrayList<>();
 
@@ -49,6 +51,8 @@ public class SearchModel {
                 ", searchFailure=" + searchFailure + "\n" +
                 ", activeFilters=" + activeFilters + "\n" +
                 ", appliedFiltersHeader='" + appliedFiltersHeader + '\'' + "\n" +
+                ", pageNumber='" + pageNumber + '\'' + "\n" +
+                ", pageSize='" + pageSize + '\'' + "\n" +
                 '}';
     }
 }

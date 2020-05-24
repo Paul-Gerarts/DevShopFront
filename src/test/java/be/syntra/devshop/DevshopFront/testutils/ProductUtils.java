@@ -22,6 +22,8 @@ public class ProductUtils {
                 .archived(false)
                 .categoryNames(List.of("Headphones"))
                 .averageRating(0D)
+                .ratings(Collections.emptySet())
+                .totalInCart(1)
                 .build();
     }
 
@@ -82,7 +84,7 @@ public class ProductUtils {
     }
 
     public static ProductsDisplayListDto getDummyProductDtoList() {
-        return new ProductsDisplayListDto(getDummyListOfProductDtos());
+        return ProductsDisplayListDto.builder().products(getDummyListOfProductDtos()).build();
     }
 
     public static List<ProductDto> getDummyListOfProductDtos() {

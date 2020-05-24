@@ -30,6 +30,14 @@ public interface SearchService {
 
     void setSortingByPrice();
 
+    void requestPreviousPage();
+
+    void requestNextPage();
+
+    void requestFirstPage();
+
+    void requestLastPage(int lastPageNumber);
+
     void addToSelectedCategories(String category);
 
     void setRemainingCategories(String category);

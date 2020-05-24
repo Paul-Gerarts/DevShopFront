@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        log.info("findAllProductsBySearchModel() -> SearchModel -> {}", searchService.getSearchModel());
+        log.info("findAllProductsBySearchModel() -> SearchModel sent to BE-> {}", searchService.getSearchModel());
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", wrap(searchService.getSearchModel()), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             checkResultForSearchFailure(productListResponseEntity);
@@ -107,6 +107,8 @@ public class ProductServiceImpl implements ProductService {
                 .priceSortActive(searchModel.isPriceSortActive())
                 .sortAscendingName(searchModel.isSortAscendingName())
                 .sortAscendingPrice(searchModel.isSortAscendingPrice())
+                .pageNumber(searchModel.getPageNumber())
+                .pageSize(searchModel.getPageSize())
                 .selectedCategories(searchModel.getSelectedCategories())
                 .build();
     }

@@ -223,6 +223,56 @@ class SearchServiceTest {
     }
 
     @Test
+    void canRequestPreviousPage() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        searchModelDummy.setPageNumber(2);
+
+        // when
+        searchService.requestPreviousPage();
+
+        // then
+        assertThat(searchModelDummy.getPageNumber().intValue()).isEqualTo(1);
+    }
+
+    @Test
+    void canRequestNextPage() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        searchModelDummy.setPageNumber(2);
+
+        // when
+        searchService.requestNextPage();
+
+        // then
+        assertThat(searchModelDummy.getPageNumber().intValue()).isEqualTo(3);
+    }
+
+    @Test
+    void canRequestFirstPage() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+
+        // when
+        searchService.requestFirstPage();
+
+        // then
+        assertThat(searchModelDummy.getPageNumber().intValue()).isEqualTo(0);
+    }
+
+    @Test
+    void canRequestLastPage() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+
+        // when
+        searchService.requestLastPage(5);
+
+        // then
+        assertThat(searchModelDummy.getPageNumber().intValue()).isEqualTo(5);
+    }
+
+    @Test
     void canSetSelectedCategoriesTest() {
         // given
         SearchModel searchModelDummy = searchService.getSearchModel();

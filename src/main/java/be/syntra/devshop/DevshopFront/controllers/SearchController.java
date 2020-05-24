@@ -7,6 +7,7 @@ import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import java.math.BigDecimal;
 @Controller
 @RequestMapping("/search")
 public class SearchController {
+    @Value("${pagination.page.size}")
+    private int[] pageSizes;
 
     private final CartService cartService;
     private final SearchService searchService;
@@ -111,6 +114,8 @@ public class SearchController {
     }
 
     private String setTemplateModel(Model model, ProductList productList) {
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("cart", cartService.getCart());
