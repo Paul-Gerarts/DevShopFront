@@ -75,7 +75,8 @@
                 <span class="pagination-sizeselect pagination-numbers">
                 <form th:action="@{/pagination/size/{size}(size=${pageSize})}" method="post">
                     <label for="myselect">Products per page</label>
-                    <select id="myselect" name="pageSize" class="mdl-selectfield__select"
+                    <select id="myselect" name="pageSize"
+                            class="pagination-sizeselect-dropdown pagination-sizeselect-dropdown-select"
                             onchange='if(this.value != 0) { this.form.submit(); }'>
                         <option th:each="pageSize : ${pageSizeList}" th:text="${pageSize}" th:value="${pageSize}"
                                 th:selected="(${selectedPageSize} == ${pageSize})"></option>
@@ -231,11 +232,11 @@
                             <form class="searchbar" id="searchDescriptionForm" method="get"
                                   th:action="@{/search/description/}">
                                 <em class="material-icons description-icon">search</em>
-                                <input th:if="${searchModel.description == null}"
+                                <input th:if="${searchModel.description == null || searchModel.description == ''}"
                                        class="searchbar-input description-search" type="text" id="descriptionNull"
                                        th:name="description"
                                        placeholder="Search for a product description here...">
-                                <input th:if="${searchModel.description != null}"
+                                <input th:if="${searchModel.description != null && searchModel.description != ''}"
                                        class="searchbar-input description-search" type="text" id="descriptionEntered"
                                        th:name="description"
                                        th:placeholder="${searchModel.getDescription()}">

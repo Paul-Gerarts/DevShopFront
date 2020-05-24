@@ -281,6 +281,40 @@ html, body, .spinner {
     margin-left: 340px;
 }
 
+.average-rating {
+    color: goldenrod;
+    padding-top: 315px;
+    font-size: x-large;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.selected-categories {
+    position: absolute;
+    margin-top: 370px;
+    min-width: 520px;
+    max-width: 520px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.category-remove {
+    text-decoration: none;
+    color: dodgerblue;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.category-element-remove {
+    font-size: large;
+    color: dodgerblue;
+    padding-left: 5px;
+    padding-top: 3px;
+}
+
 .pagination-bar {
     line-height: 36px;
     font-size: 16px;
@@ -301,6 +335,23 @@ html, body, .spinner {
     align-items: center;
     padding-left: 10px;
     color: dodgerblue;
+}
+
+.pagination-sizeselect-dropdown {
+    height: 30px;
+    font-size: 18px;
+    border: solid;
+}
+
+.pagination-sizeselect-dropdown-select {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 4px;
+    font-weight: 600;
+    color: dodgerblue;
+    border-color: dodgerblue;
+    border-radius: 15px;
+    padding-left: 10px;
 }
 
 .pagination-bar-pagenavigation {
@@ -374,50 +425,5 @@ html, body, .spinner {
 ::placeholder {
     color: black;
     opacity: 1;
-}
-
-/*.average-rating {
-    color: goldenrod;
-    padding-top: 320px;
-    padding-right: 30px;
-    margin-left: 800px;
-    font-size: x-large;
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-}*/
-
-.average-rating {
-    color: goldenrod;
-    padding-top: 315px;
-    font-size: x-large;
-    display: flex;
-    flex-direction: row;
-    position: relative;
-}
-
-.selected-categories {
-    position: absolute;
-    margin-top: 370px;
-    min-width: 520px;
-    max-width: 520px;
-    display: flex;
-    flex-direction: row;
-    overflow-x: scroll;
-}
-
-.category-remove {
-    text-decoration: none;
-    color: dodgerblue;
-    padding-right: 10px;
-    display: flex;
-    flex-direction: row;
-}
-
-.category-element-remove {
-    font-size: large;
-    color: dodgerblue;
-    padding-left: 5px;
-    padding-top: 3px;
 }
 
