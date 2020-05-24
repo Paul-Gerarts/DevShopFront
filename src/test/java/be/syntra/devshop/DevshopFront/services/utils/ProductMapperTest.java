@@ -36,7 +36,7 @@ class ProductMapperTest {
     void convertToProductDtoTest() {
         // given
         Product product = getDummyNonArchivedProduct();
-        List<String> categoryNames = List.of("Headphones");
+        List<String> categoryNames = List.of("Headphones", "Office");
         when(categoryMapper.mapToCategoryNames(product.getCategories())).thenReturn(categoryNames);
 
         // when

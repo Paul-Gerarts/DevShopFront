@@ -135,7 +135,7 @@ html, body, .spinner {
     justify-content: right;
     position: fixed;
     width: 30%;
-    height: 85%;
+    height: 100%;
     left: 65%;
     top: 125px;
     text-decoration: none;
@@ -243,7 +243,7 @@ html, body, .spinner {
 
 .reset-filters {
     max-width: 210px;
-    top: 500px;
+    top: 570px;
     left: 75%;
 }
 
@@ -252,6 +252,15 @@ html, body, .spinner {
     font-size: 18px;
     width: 270px;
     border: solid;
+}
+
+.category-select {
+    position: absolute;
+    margin-top: 315px;
+    margin-left: 140px;
+    border-color: dodgerblue;
+    border-radius: 25px;
+    padding-left: 10px;
 }
 
 .category-update-field {
@@ -385,5 +394,30 @@ html, body, .spinner {
     display: flex;
     flex-direction: row;
     position: relative;
+}
+
+.selected-categories {
+    position: absolute;
+    margin-top: 370px;
+    min-width: 520px;
+    max-width: 520px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.category-remove {
+    text-decoration: none;
+    color: dodgerblue;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.category-element-remove {
+    font-size: large;
+    color: dodgerblue;
+    padding-left: 5px;
+    padding-top: 3px;
 }
 

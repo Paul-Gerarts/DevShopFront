@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
@@ -13,7 +14,9 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static junit.framework.TestCase.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -267,5 +270,35 @@ class SearchServiceTest {
 
         // then
         assertThat(searchModelDummy.getPageNumber().intValue()).isEqualTo(5);
+    }
+
+    @Test
+    void canSetSelectedCategoriesTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        List<String> selectedCategory = List.of("Headphones");
+
+        // when
+        searchModelDummy.setSelectedCategories(selectedCategory);
+        List<String> result = searchService.getSearchModel().getSelectedCategories();
+
+        // then
+        assertThat(result.size()).isEqualTo(selectedCategory.size());
+        assertThat(result.get(0)).isEqualTo(selectedCategory.get(0));
+    }
+
+    @Test
+    void canSetRemainingCategoriesTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        List<Category> categories = createCategoryList();
+
+        // when
+        searchModelDummy.setCategories(categories);
+        List<Category> result = searchService.getSearchModel().getCategories();
+
+        // then
+        assertThat(result.size()).isEqualTo(categories.size());
+        assertThat(result.get(0)).isEqualTo(categories.get(0));
     }
 }

@@ -60,7 +60,6 @@ public class SecurityUser implements UserDetails {
 
     public void setAuthorities(List<UserRole> userRoles){
         this.userRoles = userRoles;
-
     }
 
     public void setFullName(String fullName){

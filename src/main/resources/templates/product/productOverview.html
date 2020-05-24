@@ -123,7 +123,7 @@
             </div>
         </div>
         <!--search filters-->
-        <div class="search-filters">
+        <div class="search-filters" style="min-height: 1000px;">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
                 <li class="mdl-list__item mdl-list__item--three-line">
                     <!--sort-icons-->
@@ -228,7 +228,7 @@
                         </script>
                         <!--description-search-->
                         <div class="searchbar description search-filters">
-                            <form class="searchbar" id="searchForm" method="get"
+                            <form class="searchbar" id="searchDescriptionForm" method="get"
                                   th:action="@{/search/description/}">
                                 <em class="material-icons description-icon">search</em>
                                 <input th:if="${searchModel.description == null}"
@@ -242,8 +242,46 @@
                             </form>
                         </div>
                     </div>
+                    <!--category-filter-->
+                    <select onchange="selectCategory(this)" class="category-dropdown category-select"
+                            id="categorySelect" name="categorySelect">
+                        <option disabled selected value="none" style="color: black">Search for a category here...
+                        </option>
+                        <option th:each="category : ${searchModel.getCategories()}" style="color: black"
+                                th:value="${category}"
+                                th:text="${category.name}">
+                        </option>
+                    </select>
+                    <script th:inline="javascript">
+                        function selectCategory(selectedCategory) {
+                            const category = selectedCategory.options[selectedCategory.selectedIndex].text;
+                            location = "/search/category/?category=" + category;
+                        }
+                    </script>
+                    <div class="selected-categories" th:if="${searchModel.selectedCategories.size() > 0}">
+                        <div th:each="selectedCategory, index : ${searchModel.selectedCategories}">
+                            <div class="category-remove" onclick="deleteCategory(this)" th:id="${index.count}">
+                                <em
+                                        class="material-icons"
+                                        style="padding-right: 0; transform: rotateY(-180deg)">backspace</em>
+                                <div class="category-element-remove"
+                                     th:id="${'selectedCategoryText' + index.count}"
+                                     th:value="${selectedCategory}"
+                                     th:text="${selectedCategory}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script th:inline="javascript">
+                        function deleteCategory(element) {
+                            const clickedElement = element.getAttribute('id');
+                            const category = document.getElementById('selectedCategoryText' + clickedElement).innerHTML;
+                            location = "/search/delete/?category=" + category;
+                        }
+                    </script>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white"
+                                style="margin-top: 30px">
                             <em class="material-icons">clear</em>Reset all filters
                         </button>
                     </form>

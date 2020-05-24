@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -187,7 +188,11 @@ public class AdminController {
 
     private void handleDeleteFail(Long id, Model model, StatusNotification deletedCategory) {
         if (deletedCategory.equals(StatusNotification.DELETE_FAIL)) {
-            List<Product> productList = productService.findAllWithOnlyCategory(id).getProducts();
+            List<Product> productList = productService.findAllWithOnlyCategory(id)
+                    .getProducts()
+                    .stream()
+                    .sorted(Comparator.comparing(Product::getName))
+                    .collect(Collectors.toUnmodifiableList());
             List<Category> categories = productService.findAllCategories()
                     .getCategories()
                     .parallelStream()

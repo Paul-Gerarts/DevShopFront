@@ -24,7 +24,7 @@ public interface SearchService {
 
     void setAppliedFiltersToSearchModel();
 
-    void setPriceFilters(BigDecimal minPrice,BigDecimal maxPrice);
+    void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice);
 
     void setSortingByName();
 
@@ -37,4 +37,10 @@ public interface SearchService {
     void requestFirstPage();
 
     void requestLastPage(int lastPageNumber);
+
+    void addToSelectedCategories(String category);
+
+    void setRemainingCategories(String category);
+
+    void removeFromSelectedCategories(String category);
 }

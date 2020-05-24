@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
                 .errorHandler(new RestTemplateResponseErrorHandler())
-                .interceptors(Collections.singleton(interceptor))
+                .additionalInterceptors(Collections.singleton(interceptor))
                 .build();
     }
 

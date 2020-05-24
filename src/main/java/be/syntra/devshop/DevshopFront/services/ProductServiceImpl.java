@@ -60,6 +60,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void addSelectableCategoriesToSearchModel() {
+        this.searchService.getSearchModel().setCategories(findAllCategories().getCategories());
+    }
+
+    @Override
     public StatusNotification addProduct(@Valid ProductDto productDto) {
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, productDto, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
@@ -85,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
     /*
      * when using the raw searchModel, a stackOverFlowError is thrown
      * instead, we're wrapping our SearchModel to be able to persist without a problem
-     * @Return: SearchModel which is a copy of the currentCart
+     * @Return: SearchModel which is a copy of the active searchModel
      */
     private SearchModel wrap(SearchModel searchModel) {
         return SearchModel.builder()
@@ -104,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
                 .sortAscendingPrice(searchModel.isSortAscendingPrice())
                 .pageNumber(searchModel.getPageNumber())
                 .pageSize(searchModel.getPageSize())
+                .selectedCategories(searchModel.getSelectedCategories())
                 .build();
     }
 

@@ -50,6 +50,7 @@ public class ProductController {
     @GetMapping
     public String displayProductOverview(Model model) {
         searchService.resetSearchModel();
+        productService.addSelectableCategoriesToSearchModel();
         ProductList productList = productService.findAllProductsBySearchModel();
         searchService.setPriceFilters(BigDecimal.ZERO, productList.getSearchResultMaxPrice());
         model.addAttribute("pageSizeList", pageSizes);

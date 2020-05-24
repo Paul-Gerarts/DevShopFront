@@ -37,6 +37,8 @@ public interface ProductService {
      */
     void addToCart(Product product);
 
+    void addSelectableCategoriesToSearchModel();
+
     CategoryList findAllCategories();
 
     StarRatingSet getRatingsFromProduct(Long productId);
