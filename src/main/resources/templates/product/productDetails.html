@@ -134,6 +134,12 @@
                    class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
             </div>
+            <div class="add-review">
+                <a><label>Add Your Review</label>
+                    <em class="material-icons"
+                        style="font-size: 40px;">add_comment</em>
+                </a>
+            </div>
         </div>
         <!-- Chip -->
         <div style="margin-top: 200px; margin-left: 450px" th:if="${status != null}">
@@ -142,6 +148,19 @@
                     <span class="mdl-chip__text" th:text="${status.label}">Chip</span>
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
+        </div>
+        <!-- reviews -->
+        <div style="margin-top: 200px; margin-left: 450px" th:if="${null != product.reviews}">
+            <ul>
+                <li th:each="review : ${product.reviews}">
+                    <label th:text="${review.userName}">
+                    </label>
+                    <div class="talkbubble">
+                    <textarea th:text="${review.reviewText}">
+                            </textarea>
+                    </div>
+                </li>
+            </ul>
         </div>
     </main>
 </div>

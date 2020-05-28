@@ -141,7 +141,8 @@ html, body, .spinner {
 
 .rating {
     position: absolute;
-    top: 50%;
+    /*top: 50%;*/
+    top: 43%;
     left: 32%;
     transform: translate(-50%, -50%) rotateY(180deg);
     display: flex;
@@ -196,4 +197,49 @@ html, body, .spinner {
 
 .overall-rating {
     left: 760px;
+}
+
+.add-review {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    max-width: 1060px;
+}
+
+.talkbubble {
+    position: relative;
+    width: 800px;
+    height: 85px;
+
+    padding: 10px;
+    border-radius: 20px;
+    border: solid darkslategray;
+    background: lightblue;
+    margin: 10px;
+}
+
+.talkbubble:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 26px;
+    width: 0;
+    height: 0;
+
+    border-top: 13px solid transparent;
+    border-right: 26px solid lightblue;
+    border-bottom: 13px solid transparent;
+}
+
+.talkbubble textarea {
+    position: inherit;
+    width: inherit;
+    height: inherit;
+    background: inherit;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    resize: none;
 }
