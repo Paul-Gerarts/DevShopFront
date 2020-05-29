@@ -53,7 +53,6 @@ public class CartServiceImpl implements CartService {
         List<Product> productList = getCart().getProducts();
         productList.add(product);
         getCart().setProducts(productList);
-        log.info("addToCart() -> {}", currentCart.getProducts().size());
     }
 
     @Override

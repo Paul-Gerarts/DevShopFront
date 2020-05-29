@@ -66,17 +66,17 @@ public class DataFillerImpl {
         if (userRepository.count() == 0) {
             userRepository.saveAll(List.of(
                     userFactory.ofSecurity(
-                            List.of(retrieveUserRole(), retrieveAdminRole()),
+                            List.of(retrieveAdminRole(), retrieveUserRole()),
                             "lens.huygh@gmail.com",
                             new BCryptPasswordEncoder().encode("Lens"),
                             "Lens Huygh"),
                     userFactory.ofSecurity(
-                            List.of(retrieveUserRole(), retrieveAdminRole()),
+                            List.of(retrieveAdminRole(), retrieveUserRole()),
                             "thomasf0n7a1n3@gmail.com",
                             new BCryptPasswordEncoder().encode("Thomas"),
                             "Thomas Fontaine"),
                     userFactory.ofSecurity(
-                            List.of(retrieveUserRole(), retrieveAdminRole()),
+                            List.of(retrieveAdminRole(), retrieveUserRole()),
                             "paul.gerarts@juvo.be",
                             new BCryptPasswordEncoder().encode("Paul"),
                             "Paul Gerarts"),

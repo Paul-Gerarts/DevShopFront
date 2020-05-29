@@ -87,7 +87,6 @@ public class ProductController {
 
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
-        log.info("addSelectedProductToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("pageSizeList", pageSizes);
@@ -100,7 +99,6 @@ public class ProductController {
 
     @PostMapping("/details/addtocart/{id}")
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
-        log.info("addSelectedProductFromDetailToCart()-> {}", id);
         productService.addToCart(productService.findById(id));
         return "redirect:/products/details/" + id;
     }

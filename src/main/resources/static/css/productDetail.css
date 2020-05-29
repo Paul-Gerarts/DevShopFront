@@ -148,6 +148,10 @@ html, body, .spinner {
     margin-top: 100px;
 }
 
+.admin-rating {
+    padding-bottom: 55px;
+}
+
 .rating input {
     display: none;
 }

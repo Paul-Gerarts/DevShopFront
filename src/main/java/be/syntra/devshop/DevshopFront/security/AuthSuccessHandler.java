@@ -45,7 +45,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 return "/admin/overview";
             } else if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
                 if (checkDataStoreForRedirectStrategyAfterLogin()) {
-                    log.info("determineTargetUrl()");
                     disableDataStoreRedirectStrategyAfterLogin();
                     return "/users/cart";
                 }

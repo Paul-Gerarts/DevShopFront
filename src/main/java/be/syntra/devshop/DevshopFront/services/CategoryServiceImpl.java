@@ -71,7 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
         ResponseEntity<CategoryChangeDto> categoryResponseEntity = restTemplate.postForEntity(resourceUrl + "/categories/update_category", categoryChangeDto, CategoryChangeDto.class);
         if (HttpStatus.OK.equals(categoryResponseEntity.getStatusCode())) {
-            log.info("updateCategory() -> category update successful");
             return SUCCESS;
         }
         return UPDATE_FAIL;

@@ -32,13 +32,11 @@ public class UserController {
 
     @GetMapping("/cart")
     public String displayCartWhenLoggedIn() {
-        log.info("displayCartWhenLoggedIn()");
         return REDIRECT_CART_DETAIL_URL;
     }
 
     @GetMapping("/cart/detail")
     public String displayCartOverview(Model model) {
-        log.info("displayCartOverview()");
         addModelAttributesOfCartAndPayment(model);
         return "user/cartOverview";
     }
