@@ -59,7 +59,6 @@ public class AuthorisationServiceImpl implements AuthorisationService {
 
             ResponseEntity<RegisterUserDto> loginDtoResponseEntity = restTemplate.postForEntity(resourceUrl, request, RegisterUserDto.class);
             if (HttpStatus.CREATED.equals(loginDtoResponseEntity.getStatusCode())) {
-                log.info("register() -> successful {}", registerUserDto.getUserName());
                 createNewUserLogin(registerUserDto);
                 return StatusNotification.SUCCESS;
             }

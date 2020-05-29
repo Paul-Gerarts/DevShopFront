@@ -39,7 +39,6 @@ public class StarRatingServiceImpl implements StarRatingService {
     public StarRatingDto findByUserNameAndId(Long productId, String userName) {
         ResponseEntity<StarRatingDto> ratingResponseEntity = restTemplate.getForEntity(resourceUrl + "/" + userName + "/ratings/" + productId, StarRatingDto.class);
         if (HttpStatus.OK.equals(ratingResponseEntity.getStatusCode())) {
-            log.info("findBy() -> rating retrieved from backEnd");
             return ratingResponseEntity.getBody();
         }
         return new StarRatingDto();
