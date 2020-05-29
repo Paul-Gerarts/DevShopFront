@@ -32,7 +32,7 @@
                         <span class="mdl-list__item-text-body"
                               style="font-size: x-large; padding-top: 55px; padding-bottom: 30px"
                               th:text="'€ ' + ${product.price}">Product Price</span>
-                            <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action" href="#">
+                            <a th:if="${product.archived == false}" class="mdl-list__item-secondary-action">
                                 <form method="post" th:object="${product}"
                                       th:action="@{/products/details/addtocart/{id}(id=${product.id})}">
                             <input hidden id="productId" name="id" th:value="${product.id}"/>
@@ -53,7 +53,7 @@
                              th:text="'Your rating: ' + ${rating.getRating()}"></div>
                         <div style="margin: 0; padding: 0; background: #262626">
                             <input hidden th:value="${product.averageRating}" id="averageRating">
-                            <div sec:authorize="!hasRole('ROLE_ADMIN')" class="rating">
+                            <div class="rating" th:classappend="${#request.isUserInRole('ADMIN')} ? 'admin-rating'">
                                 <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star1"
                                        value="5">
                                 <label for="star1"></label>
@@ -69,24 +69,6 @@
                                 <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star5"
                                        value="1">
                                 <label for="star5"></label>
-                            </div>
-                            <!--the copy of the starfields has nothing to do with function, only with placement because of the admin buttons-->
-                            <div sec:authorize="hasRole('ROLE_ADMIN')" class="rating" style="top: 41%">
-                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star11"
-                                       value="5">
-                                <label for="star11"></label>
-                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star22"
-                                       value="4">
-                                <label for="star22"></label>
-                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star33"
-                                       value="3">
-                                <label for="star33"></label>
-                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star44"
-                                       value="2">
-                                <label for="star44"></label>
-                                <input onclick="submitRating(this)" class="star" type="radio" name="star" id="star55"
-                                       value="1">
-                                <label for="star55"></label>
                             </div>
                         </div>
                         <div class="personal-rating overall-rating"

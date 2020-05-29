@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     public StatusNotification addProduct(@Valid ProductDto productDto) {
         ResponseEntity<ProductDto> productDtoResponseEntity = restTemplate.postForEntity(resourceUrl, productDto, ProductDto.class);
         if (HttpStatus.CREATED.equals(productDtoResponseEntity.getStatusCode())) {
-            log.info("addProduct() -> saved > {} ", productDto);
+            log.info("addProduct() -> saved -> {} ", productDto);
             return StatusNotification.SAVED;
         }
         return StatusNotification.FORM_ERROR;
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductList findAllProductsBySearchModel() {
-        log.info("findAllProductsBySearchModel() -> SearchModel sent to BE-> {}", searchService.getSearchModel());
+        log.info("findAllProductsBySearchModel() -> {}", searchService.getSearchModel());
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.postForEntity(resourceUrl + "/searching/", wrap(searchService.getSearchModel()), ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
             checkResultForSearchFailure(productListResponseEntity);
@@ -125,7 +125,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductList findAllWithOnlyCategory(Long id) {
         ResponseEntity<ProductList> productListResponseEntity = restTemplate.getForEntity(resourceUrl + "/all/" + id, ProductList.class);
         if (HttpStatus.OK.equals(productListResponseEntity.getStatusCode())) {
-            log.info("findAllWithCorrespondingCategory -> receivedFromBackEnd");
             return productListResponseEntity.getBody();
         }
         return ProductList.builder().products(Collections.emptyList()).build();
@@ -135,7 +134,6 @@ public class ProductServiceImpl implements ProductService {
     public Product findById(Long id) {
         ResponseEntity<Product> productResponseEntity = restTemplate.getForEntity(resourceUrl + "/details/" + id, Product.class);
         if (HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
-            log.info("findById() -> product retrieved from backEnd");
             return productResponseEntity.getBody();
         } else if (HttpStatus.NOT_FOUND.equals(productResponseEntity.getStatusCode())) {
             throw new ProductNotFoundException("Product with id: " + id + " was not found");
@@ -147,7 +145,6 @@ public class ProductServiceImpl implements ProductService {
     public CategoryList findAllCategories() {
         ResponseEntity<CategoryList> categoryListResponseEntity = restTemplate.getForEntity(resourceUrl + "/categories", CategoryList.class);
         if (HttpStatus.OK.equals(categoryListResponseEntity.getStatusCode())) {
-            log.info("findAllCategories() -> {}", categoryListResponseEntity.getBody());
             return categoryListResponseEntity.getBody();
         } else if (HttpStatus.NOT_FOUND.equals(categoryListResponseEntity.getStatusCode())) {
             throw new CategoryNotFoundException("No categories found");
@@ -159,7 +156,7 @@ public class ProductServiceImpl implements ProductService {
     public StatusNotification archiveProduct(ProductDto product) {
         ResponseEntity<ProductDto> productResponseEntity = restTemplate.postForEntity(resourceUrl + "/update", product, ProductDto.class);
         if (HttpStatus.CREATED.equals(productResponseEntity.getStatusCode())) {
-            log.info("updateProduct() -> saved > {} ", product);
+            log.info("updateProduct() -> saved -> {} ", product);
             return StatusNotification.UPDATED;
         }
         return StatusNotification.FORM_ERROR;
