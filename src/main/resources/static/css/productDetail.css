@@ -141,8 +141,8 @@ html, body, .spinner {
 
 .rating {
     position: absolute;
-    /*top: 50%;*/
-    top: 43%;
+    top: 50%;
+    /*top: 43%;*/
     left: 32%;
     transform: translate(-50%, -50%) rotateY(180deg);
     display: flex;
@@ -204,17 +204,41 @@ html, body, .spinner {
 }
 
 .add-review {
+    padding-top: 135px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     max-width: 1060px;
 }
 
+.add-review-link {
+    display: flex;
+    align-content: center;
+    cursor: pointer;
+}
+
+.add-review-text {
+    display: flex;
+    font-size: 22px;
+    font-weight: bold;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.add-review-icon {
+    font-size: 32px;
+    display: flex;
+}
+
+.review-list {
+    margin-top: 25px;
+    margin-left: 450px;
+}
+
 .talkbubble {
     position: relative;
     width: 800px;
-    height: 85px;
-
+    height: 45px;
     padding: 10px;
     border-radius: 20px;
     border: solid darkslategray;
@@ -226,12 +250,12 @@ html, body, .spinner {
     content: "";
     position: absolute;
     right: 100%;
-    top: 26px;
+    top: 20px;
     width: 0;
     height: 0;
 
     border-top: 13px solid transparent;
-    border-right: 26px solid lightblue;
+    border-right: 26px solid darkslategray;
     border-bottom: 13px solid transparent;
 }
 
@@ -246,4 +270,9 @@ html, body, .spinner {
 
     border: none;
     resize: none;
+}
+
+.review-list-icons {
+    position: relative;
+    cursor: pointer;
 }

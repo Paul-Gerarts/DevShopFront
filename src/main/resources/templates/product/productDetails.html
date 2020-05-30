@@ -116,12 +116,6 @@
                    class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                     <em class="material-icons">archive</em>Archive Product</a>
             </div>
-            <div class="add-review">
-                <a><label>Add Your Review</label>
-                    <em class="material-icons"
-                        style="font-size: 40px;">add_comment</em>
-                </a>
-            </div>
         </div>
         <!-- Chip -->
         <div style="margin-top: 200px; margin-left: 450px" th:if="${status != null}">
@@ -131,8 +125,35 @@
                     <button class="mdl-chip__action" type="button"><i class="material-icons">info</i></button>
                 </span>
         </div>
-        <!-- reviews -->
-        <div style="margin-top: 200px; margin-left: 450px" th:if="${null != product.reviews}">
+        <!-- review button -->
+        <div sec:authorize="hasRole('USER')" class="add-review">
+            <a th:if="${review.reviewText} == null" class="add-review-link" onclick="showReviewForm()">
+                <label style="cursor: pointer;" class="add-review-text">Add Your Review</label>
+                <em class="material-icons">chat</em>
+            </a>
+            <a th:if="${review.reviewText} != null" class="add-review-link" onclick="showReviewForm()">
+                <label style="cursor: pointer;" class="add-review-text">Update Your Review</label>
+                <em class="material-icons">chat</em>
+            </a>
+        </div>
+        <!-- review form -->
+        <div style="display: none" sec:authorize="hasRole('USER')" class="review-form">
+            <form method="post" th:object="${review}"
+                  th:action="${review.reviewText} == null ?
+                  @{/products/details/{id}/addreview(id=${product.id})} :
+                  @{/products/details/{id}/updatereview(id=${product.id})}">
+                <input type="hidden" id="userName" th:field="*{userName}">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <textarea rows="4" class="mdl-textfield__input" type="text" id="reviewText"
+                              th:field="*{reviewText}"></textarea>
+                    <label class="mdl-textfield__label" for="reviewText">Review</label>
+                </div>
+                <button th:if="${review.reviewText} == null" type="submit">Save Review</button>
+                <button th:if="${review.reviewText} != null" type="submit">Update Review</button>
+            </form>
+        </div>
+        <!-- review list -->
+        <div class="review-list" th:if="${null != product.reviews}">
             <ul>
                 <li th:each="review : ${product.reviews}">
                     <label th:text="${review.userName}">
@@ -140,6 +161,12 @@
                     <div class="talkbubble">
                     <textarea th:text="${review.reviewText}">
                             </textarea>
+                    </div>
+                    <div class="review-list-icons">
+                        <a title="Update review" class="material-icons review-list-icons-update"
+                           onclick="showReviewForm()">autorenew</a>
+                        <a title="Remove review" class="material-icons review-list-icons-delete"
+                           onclick="showDeleteDialog()">delete</a>
                     </div>
                 </li>
             </ul>
@@ -151,7 +178,7 @@
     ARCHIVED
 </div>
 <!--popup for delete button-->
-<dialog class="mdl-dialog">
+<dialog class="mdl-dialog archivedialog">
     <h4 class="mdl-dialog__title">Archive this product?</h4>
     <div class="mdl-dialog__content">
         <p>
@@ -171,10 +198,31 @@
         </form>
     </div>
 </dialog>
+<!--popup for delete review -->
+<!--<dialog2 class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Delte this review?</h4>
+    <div class="mdl-dialog__content">
+        <p>
+            Are you sure you want to delte your review of this product?.
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button"
+                class="mdl-button close  mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent mdl-js-ripple-effect mdl-color&#45;&#45;grey mdl-color-text&#45;&#45;white">
+            <em class="material-icons">undo</em>Back
+        </button>
+        <form method="post" th:object="${product}" th:action="@{/products/details/{id}/delete(id=${product.id})}">
+            <button type="submit"
+                    class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent mdl-js-ripple-effect mdl-color&#45;&#45;red mdl-color-text&#45;&#45;white">
+                <em class="material-icons">archive</em>Delete Eview
+            </button>
+        </form>
+    </div>
+</dialog2>-->
 <!--logic for showing popup-->
 <script>
-    var dialog = document.querySelector('dialog');
-    var showModalButton = document.querySelector('.show-modal');
+    let dialog = document.querySelector('.archivedialog');
+    let showModalButton = document.querySelector('.show-modal');
     if (!dialog.showModal) {
         dialogPolyfill.registerDialog(dialog);
     }
@@ -184,6 +232,14 @@
     dialog.querySelector('.close').addEventListener('click', function () {
         dialog.close();
     });
+
+    /* logic for displaying review form */
+    function showReviewForm() {
+        let formSection = document.querySelector(".review-form");
+        if (formSection.style.display === "none") {
+            formSection.style.display = "block";
+        }
+    }
 </script>
 </body>
 </html>

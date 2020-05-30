@@ -1,13 +1,11 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductService;
-import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.StarRatingService;
+import be.syntra.devshop.DevshopFront.services.*;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,7 @@ public class ProductController {
     private final SearchService searchService;
     private final StarRatingService starRatingService;
     private final ProductMapper productMapper;
+    private final ReviewService reviewService;
 
     @Autowired
     public ProductController(
@@ -38,13 +37,15 @@ public class ProductController {
             CartService cartService,
             SearchService searchService,
             StarRatingService starRatingService,
-            ProductMapper productMapper
+            ProductMapper productMapper,
+            ReviewService reviewService
     ) {
         this.productService = productService;
         this.cartService = cartService;
         this.searchService = searchService;
         this.starRatingService = starRatingService;
         this.productMapper = productMapper;
+        this.reviewService = reviewService;
     }
 
     @GetMapping
@@ -103,12 +104,44 @@ public class ProductController {
         return "redirect:/products/details/" + id;
     }
 
+    @PostMapping("/details/{id}/addreview")
+    public String addReviewToProduct(@PathVariable Long id, @ModelAttribute("review") Review review) {
+        log.info("addReviewToProduct() -> id = " + id);
+        log.info("addReviewToProduct() -> review.username = " + review.getUserName());
+        log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
+        reviewService.submitReview(id, review);
+        return "redirect:/products/details/" + id;
+    }
+
+    @PostMapping("/details/{id}/updatereview")
+    public String updateReviewForProduct(@PathVariable Long id, @ModelAttribute("review") Review review) {
+        log.info("addReviewToProduct() -> id = " + id);
+        log.info("addReviewToProduct() -> review.username = " + review.getUserName());
+        log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
+        reviewService.updateReview(id, review);
+        return "redirect:/products/details/" + id;
+    }
+
+    @PostMapping("/details/{id}/deletereview")
+    public String removeReviewFromProduct(@PathVariable Long id, @ModelAttribute("review") Review review) {
+        log.info("addReviewToProduct() -> id = " + id);
+        log.info("addReviewToProduct() -> review.username = " + review.getUserName());
+        log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
+        reviewService.updateReview(id, review);
+        return "redirect:/products/details/" + id;
+    }
+
     private String getProductDetails(Long id, Model model, Principal user) {
         Product product = productService.findById(id);
         StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
-        model.addAttribute("rating", rating);
+        if (null != user) {
+            Review review = product.getReviews().stream().filter(r -> r.getUserName().equals(user.getName())).findFirst().orElse(Review.builder().userName(user.getName()).build());
+            model.addAttribute("review", review);
+            model.addAttribute("loggedInUser", user.getName());
+        }
         model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
         model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("rating", rating);
         return "product/productDetails";
     }
 
