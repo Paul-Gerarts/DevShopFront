@@ -6,6 +6,8 @@ import be.syntra.devshop.DevshopFront.models.dtos.ReviewDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,9 @@ public class ReviewServiceImpl implements ReviewService {
         restTemplate.put(resourceUrl + "/reviews", reviewDto);
     }
 
+    /*
+    using .exchange() method otherwise with .delete() the body is not sent along
+     */
     @Override
     public void removeReview(Long productId, Review review) {
         ReviewDto reviewDto = ReviewDto.builder()
@@ -68,7 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .userName(review.getUserName())
                 .productId(productId)
                 .build();
-        restTemplate.delete(resourceUrl + "/reviews", reviewDto);
+        restTemplate.exchange(resourceUrl + "/reviews", HttpMethod.DELETE, new HttpEntity<ReviewDto>(reviewDto), ReviewDto.class);
     }
 }
 

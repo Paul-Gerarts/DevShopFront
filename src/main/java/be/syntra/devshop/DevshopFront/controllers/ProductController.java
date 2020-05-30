@@ -127,7 +127,7 @@ public class ProductController {
         log.info("addReviewToProduct() -> id = " + id);
         log.info("addReviewToProduct() -> review.username = " + review.getUserName());
         log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
-        reviewService.updateReview(id, review);
+        reviewService.removeReview(id, review);
         return "redirect:/products/details/" + id;
     }
 
