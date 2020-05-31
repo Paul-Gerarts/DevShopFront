@@ -131,10 +131,10 @@
                 <label style="cursor: pointer;" class="add-review-text">Add Your Review</label>
                 <em class="material-icons">chat</em>
             </a>
-            <a th:if="${review.reviewText} != null" class="add-review-link" onclick="showReviewForm()">
+            <!--<a th:if="${review.reviewText} != null" class="add-review-link" onclick="showReviewForm()">
                 <label style="cursor: pointer;" class="add-review-text">Update Your Review</label>
                 <em class="material-icons">chat</em>
-            </a>
+            </a>-->
         </div>
         <!-- review form -->
         <div style="display: none" sec:authorize="hasRole('USER')" class="review-form">
@@ -162,13 +162,15 @@
                     <textarea th:text="${review.reviewText}">
                             </textarea>
                     </div>
-                    <div th:if="${review.userName} == ${loggedInUser}" class="review-list-icons">
+                    <div th:if="${#authorization.expression('hasRole(''ADMIN'')')} OR ${review.userName} == ${loggedInUser}"
+                         class="review-list-icons">
                         <a title="Update review" class="material-icons review-list-icons-update"
                            onclick="showReviewForm()">autorenew</a>
                         <form method="post"
                               th:action="@{/products/details/{id}/deletereview(id=${product.id})}">
-                            <input type="hidden" id="userName" th:field="*{review.userName}">
-                            <input type="hidden" id="reviewText" th:field="*{review.reviewText}">
+                            <input type="hidden" th:name="userName" th:id="userName" th:value="${review.userName}">
+                            <input type="hidden" th:name="reviewText" th:id="reviewText"
+                                   th:value="${review.reviewText}">
                             <button type="submit"
                                     class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                                 <a title="Remove review" class="material-icons review-list-icons-delete">delete</a>

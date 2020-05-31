@@ -115,18 +115,18 @@ public class ProductController {
 
     @PostMapping("/details/{id}/updatereview")
     public String updateReviewForProduct(@PathVariable Long id, @ModelAttribute("review") Review review) {
-        log.info("addReviewToProduct() -> id = " + id);
-        log.info("addReviewToProduct() -> review.username = " + review.getUserName());
-        log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
+        log.info("updateReviewForProduct() -> id = " + id);
+        log.info("updateReviewForProduct() -> review.username = " + review.getUserName());
+        log.info("updateReviewForProduct() -> review.reviewtext = " + review.getReviewText());
         reviewService.updateReview(id, review);
         return "redirect:/products/details/" + id;
     }
 
     @PostMapping("/details/{id}/deletereview")
     public String removeReviewFromProduct(@PathVariable Long id, @ModelAttribute("review") Review review) {
-        log.info("addReviewToProduct() -> id = " + id);
-        log.info("addReviewToProduct() -> review.username = " + review.getUserName());
-        log.info("addReviewToProduct() -> review.reviewtext = " + review.getReviewText());
+        log.info("removeReviewFromProduct() -> id = " + id);
+        log.info("removeReviewFromProduct() -> review.username = " + review.getUserName());
+        log.info("removeReviewFromProduct() -> review.reviewtext = " + review.getReviewText());
         reviewService.removeReview(id, review);
         return "redirect:/products/details/" + id;
     }
