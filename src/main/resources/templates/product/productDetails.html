@@ -131,13 +131,9 @@
                 <label style="cursor: pointer;" class="add-review-text">Add Your Review</label>
                 <em class="material-icons">chat</em>
             </a>
-            <!--<a th:if="${review.reviewText} != null" class="add-review-link" onclick="showReviewForm()">
-                <label style="cursor: pointer;" class="add-review-text">Update Your Review</label>
-                <em class="material-icons">chat</em>
-            </a>-->
         </div>
         <!-- review form -->
-        <div style="display: none" sec:authorize="hasRole('USER')" class="review-form">
+        <div class="review-form" style="display: none" sec:authorize="hasRole('USER')">
             <form method="post" th:object="${review}"
                   th:action="${review.reviewText} == null ?
                   @{/products/details/{id}/addreview(id=${product.id})} :
@@ -148,37 +144,43 @@
                               th:field="*{reviewText}"></textarea>
                     <label class="mdl-textfield__label" for="reviewText">Review</label>
                 </div>
-                <button th:if="${review.reviewText} == null" type="submit">Save Review</button>
-                <button th:if="${review.reviewText} != null" type="submit">Update Review</button>
+                <div class="review-form-submit-div">
+                    <button class="mdl-button--colored review-form-submit" type="submit">
+                        <a title="Submit review" class="material-icons review-form-submit-icon">check</a>
+                    </button>
+                    <a th:href="@{/products/details/{id}(id=${product.id})}"
+                       title="Submit review" class="material-icons review-form-cancel-icon">close</a>
+                </div>
             </form>
         </div>
         <!-- review list -->
         <div class="review-list" th:if="${null != product.reviews}">
-            <ul>
-                <li th:each="review : ${product.reviews}">
-                    <label th:text="${review.userName}">
-                    </label>
-                    <div class="talkbubble">
-                    <textarea th:text="${review.reviewText}">
-                            </textarea>
+            <ul style="list-style: none;">
+                <li class="review-list-review-item" th:each="review : ${product.reviews}">
+                    <div class="review-list-review-item-talkbubble"
+                         th:classappend="${#authorization.expression('hasRole(''ADMIN'')')} OR ${review.userName} == ${loggedInUser} ? 'review-list-review-item-talkbubble-active'">
+                        <textarea disabled="true" th:text="${review.reviewText}"></textarea>
+                    </div>
+                    <div class="review-list-review-item-label-div">
+                        <label class="review-list-review-item-label"
+                               th:classappend="${#authorization.expression('hasRole(''ADMIN'')')} OR ${review.userName} == ${loggedInUser} ? 'review-list-review-item-label-active'"
+                               th:text="${#strings.substring(review.userName,0,#strings.indexOf(review.userName,'@'))}">
+                        </label>
                     </div>
                     <div th:if="${#authorization.expression('hasRole(''ADMIN'')')} OR ${review.userName} == ${loggedInUser}"
-                         class="review-list-icons">
-                        <a title="Update review" class="material-icons review-list-icons-update"
+                         class="review-list-review-item-icons">
+                        <a th:if="${#authorization.expression('hasRole(''USER'')')}" title="Update review"
+                           class="material-icons review-list-icons-update"
                            onclick="showReviewForm()">autorenew</a>
                         <form method="post"
                               th:action="@{/products/details/{id}/deletereview(id=${product.id})}">
                             <input type="hidden" th:name="userName" th:id="userName" th:value="${review.userName}">
                             <input type="hidden" th:name="reviewText" th:id="reviewText"
                                    th:value="${review.reviewText}">
-                            <button type="submit"
-                                    class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
-                                <a title="Remove review" class="material-icons review-list-icons-delete">delete</a>
+                            <button class="mdl-button--colored delete-review-button" type="submit">
+                                <a title="Remove review" class="material-icons">delete</a>
                             </button>
                         </form>
-                        <!--<a th:id="${review.userName}" title="Remove review"
-                           class="material-icons review-list-icons-delete"
-                        >delete</a>-->
                     </div>
                 </li>
             </ul>
@@ -190,7 +192,7 @@
     ARCHIVED
 </div>
 <!--popup for delete button-->
-<dialog class="mdl-dialog archivedialog">
+<dialog class="mdl-dialog">
     <h4 class="mdl-dialog__title">Archive this product?</h4>
     <div class="mdl-dialog__content">
         <p>
@@ -210,46 +212,9 @@
         </form>
     </div>
 </dialog>
-<!--popup for delete review -->
-<!--<dialog class="mdl-dialog deletereviewdialog">
-    <h4 class="mdl-dialog__title">Delete this review?</h4>
-    <div class="mdl-dialog__content">
-        <p>
-            Are you sure you want to delte your review of this product?.
-        </p>
-    </div>
-    <div class="mdl-dialog__actions">
-        <button type="button"
-                class="mdl-button close  mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent mdl-js-ripple-effect mdl-color&#45;&#45;grey mdl-color-text&#45;&#45;white">
-            <em class="material-icons">undo</em>Back
-        </button>
-        <form method="post" th:object="${product}" th:action="@{/products/details/{id}/delete(id=${product.id})}">
-            <button type="submit"
-                    class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent mdl-js-ripple-effect mdl-color&#45;&#45;red mdl-color-text&#45;&#45;white">
-                <em class="material-icons">delete</em>Delete Review
-            </button>
-        </form>
-    </div>
-</dialog>-->
 <!--logic for showing popup-->
 <script>
-    /* logic for clicking on the delete review icon */
-    /*let deleteReviewDialog = document.querySelector('.deletereviewdialog');
-    let showDeleteReviewIcon = document.querySelector('.review-list-icons-delete');
-    if(!deleteReviewDialog.showModal){
-        dialogPolyfill.registerDialog(deleteReviewDialog);
-    }
-    showDeleteReviewIcon.addEventListener('click', function() {
-        console.log("CLICKED THE DELETE ICON");
-        let userNameForReviewToDelete = showDeleteReviewIcon.getAttribute('id');
-        console.log("username of review to delete -> ",userNameForReviewToDelete)
-        deleteReviewDialog.showModal();
-    });
-    deleteReviewDialog.querySelector('.close').addEventListener('click', function() {
-        deleteReviewDialog.close();
-    });
-*/
-    let dialog = document.querySelector('.archivedialog');
+    let dialog = document.querySelector('dialog');
     let showModalButton = document.querySelector('.show-modal');
     if (!dialog.showModal) {
         dialogPolyfill.registerDialog(dialog);
@@ -265,10 +230,9 @@
     function showReviewForm() {
         let formSection = document.querySelector(".review-form");
         if (formSection.style.display === "none") {
-            formSection.style.display = "block";
+            formSection.style.display = "flex";
         }
     }
-
 </script>
 </body>
 </html>

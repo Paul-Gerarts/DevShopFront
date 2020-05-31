@@ -64,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     /*
-    using .exchange() method otherwise with .delete() the body is not sent along
+    using .exchange() method otherwise with .delete() the body is not sent
      */
     @Override
     public void removeReview(Long productId, Review review) {
@@ -73,7 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .userName(review.getUserName())
                 .productId(productId)
                 .build();
-        restTemplate.exchange(resourceUrl + "/reviews", HttpMethod.DELETE, new HttpEntity<ReviewDto>(reviewDto), ReviewDto.class);
+        restTemplate.exchange(resourceUrl + "/reviews", HttpMethod.DELETE, new HttpEntity<>(reviewDto), ReviewDto.class);
     }
 }
 
