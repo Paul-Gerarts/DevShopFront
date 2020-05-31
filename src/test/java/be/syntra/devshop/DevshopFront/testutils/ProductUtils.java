@@ -24,6 +24,7 @@ public class ProductUtils {
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
                 .totalInCart(1)
+                .reviews(Collections.emptySet())
                 .build();
     }
 
@@ -46,6 +47,7 @@ public class ProductUtils {
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
                 .totalInCart(1)
+                .reviews(Collections.emptySet())
                 .build();
     }
 

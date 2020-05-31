@@ -50,6 +50,7 @@ class ProductMapperTest {
         assertEquals(mappedProductDto.isArchived(), product.isArchived());
         assertEquals(mappedProductDto.getCategoryNames().size(), product.getCategories().size());
         assertEquals(mappedProductDto.getCategoryNames().get(0), product.getCategories().get(0).getName());
+        assertEquals(mappedProductDto.getReviews(), product.getReviews());
     }
 
     @Test

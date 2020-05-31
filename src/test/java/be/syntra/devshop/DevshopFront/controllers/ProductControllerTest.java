@@ -2,21 +2,18 @@ package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
-import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.StarRating;
+import be.syntra.devshop.DevshopFront.models.*;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductService;
-import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.StarRatingService;
+import be.syntra.devshop.DevshopFront.services.*;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,6 +31,7 @@ import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getDummyReview;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSet;
 import static org.mockito.Mockito.*;
@@ -64,6 +62,9 @@ class ProductControllerTest {
 
     @MockBean
     private StarRatingService ratingService;
+
+    @MockBean
+    private ReviewService reviewService;
 
     @Test
     void displayProductOverViewTest() throws Exception {
@@ -215,5 +216,52 @@ class ProductControllerTest {
         verify(ratingService, times(1)).findByUserNameAndId(dummyProduct.getId(), "user");
         verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user");
         verify(cartService, times(1)).getCart();
+    }
+
+    @Test
+    @WithMockUser
+    void addSelectedProductToCartFromDetailsPageTest() throws Exception {
+        // given
+        final Product dummyProduct = getDummyNonArchivedProduct();
+        final ProductList dummyProductList = getDummyProductList();
+        final CartDto dummyCartDto = getCartWithOneDummyProduct();
+        SearchModel searchModelDummy = new SearchModel();
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(cartService.getCart()).thenReturn(dummyCartDto);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/products/details/addtocart/" + dummyProduct.getId()));
+
+        // then
+        getResult
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/products/details/" + dummyProduct.getId()));
+
+        verify(productService, times(1)).addToCart(any());
+        verify(productService, times(1)).findById(dummyProduct.getId());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/deletereview", "/updatereview", "/addreview"})
+    @WithMockUser
+    void removeReviewFromProductTest(String endPoint) throws Exception {
+        // given
+        final Product dummyProduct = getDummyNonArchivedProduct();
+        final Review dummyReview = getDummyReview();
+        when(reviewService.submitReview(dummyProduct.getId(), dummyReview)).thenReturn(StatusNotification.SAVED);
+        doNothing().when(reviewService).updateReview(dummyProduct.getId(), dummyReview);
+        doNothing().when(reviewService).removeReview(dummyProduct.getId(), dummyReview);
+        // when
+        final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId() + endPoint)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("userName", dummyReview.getUserName())
+                .param("reviewText", dummyReview.getReviewText()));
+
+        // then
+        getResult
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/products/details/" + dummyProduct.getId()));
     }
 }

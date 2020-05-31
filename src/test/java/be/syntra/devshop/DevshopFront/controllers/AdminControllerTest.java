@@ -89,6 +89,7 @@ class AdminControllerTest {
         // given
         final ProductDto dummyProductDto = getDummyProductDto();
         dummyProductDto.setRatings(null);
+        dummyProductDto.setReviews(null);
         final List<Category> categories = createCategoryList();
         final String[] categoryNames = {"Headphones"};
         when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
@@ -173,11 +174,13 @@ class AdminControllerTest {
         // given
         ProductDto dummyProductDto = getDummyProductDto();
         dummyProductDto.setRatings(Collections.emptySet());
+        Product dummyProduct = getDummyNonArchivedProduct();
         List<Category> categories = createCategoryList();
         String[] categoryNames = {"Headphones"};
         when(productService.findAllCategories()).thenReturn(new CategoryList(categories));
         when(productService.addProduct(dummyProductDto)).thenReturn(StatusNotification.SAVED);
         when(productService.getRatingsFromProduct(dummyProductDto.getId())).thenReturn(new StarRatingSet(Collections.emptySet()));
+        when((productService.findById(any()))).thenReturn(dummyProduct);
 
         // when
         final ResultActions postRestult = mockMvc.perform(

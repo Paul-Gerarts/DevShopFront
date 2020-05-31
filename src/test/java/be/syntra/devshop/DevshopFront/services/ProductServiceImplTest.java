@@ -38,7 +38,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RestClientTest(ProductServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
-@Import({TestWebConfig.class, JsonUtils.class, ProductMapper.class})
+@Import({TestWebConfig.class, JsonUtils.class})
 class ProductServiceImplTest {
 
     @Autowired
