@@ -201,3 +201,170 @@ html, body, .spinner {
 .overall-rating {
     left: 760px;
 }
+
+.chip-div {
+    position: relative;
+    left: 23%;
+    top: 14%;
+}
+
+.add-review {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    top: 15%;
+    padding-left: 20px;
+}
+
+.add-review-link {
+    display: flex;
+    align-content: center;
+    cursor: pointer;
+}
+
+.add-review-text {
+    display: flex;
+    font-size: 22px;
+    font-weight: bold;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.add-review-icon {
+    font-size: 32px;
+    display: flex;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    top: 15%;
+    padding-left: 20px;
+}
+
+.review-form-submit-div {
+    display: flex;
+    justify-content: center;
+}
+
+.review-form-submit {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    padding-top: 6px;
+}
+
+.review-form-submit-icon {
+    display: flex;
+    color: green;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.review-form-cancel-icon {
+    display: flex;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    padding-top: 6px;
+    text-decoration: none;
+}
+
+.review-list {
+    position: relative;
+    left: 22%;
+    top: 15%;
+}
+
+.review-list-review-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.review-list-review-item-talkbubble {
+    position: relative;
+    width: 800px;
+    height: 45px;
+    padding: 10px;
+    border-radius: 20px;
+    border: solid darkslategray;
+    background: #F5F5F5;
+    margin: 10px;
+}
+
+.review-list-review-item-talkbubble:before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-left: 26px solid darkslategray;
+    border-bottom: 13px solid transparent;
+}
+
+.review-list-review-item-talkbubble-active {
+    border-color: rgb(255, 82, 82);
+}
+
+.review-list-review-item-talkbubble-active:before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-left: 26px solid rgb(255, 82, 82);
+    border-bottom: 13px solid transparent;
+}
+
+.review-list-review-item-talkbubble textarea {
+    position: inherit;
+    width: inherit;
+    height: inherit;
+    background: inherit;
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    resize: none;
+}
+
+.review-list-review-item-label-div {
+    display: flex;
+    align-items: center;
+}
+
+.review-list-review-item-label {
+    font-size: 20px;
+    font-weight: bold;
+    color: darkslategray;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+.review-list-review-item-label-active {
+    color: rgb(255, 82, 82);
+}
+
+.review-list-review-item-icons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.delete-review-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    padding-top: 6px;
+}

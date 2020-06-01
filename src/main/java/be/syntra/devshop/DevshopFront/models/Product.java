@@ -40,4 +40,6 @@ public class Product {
 
     @PositiveOrZero
     private double averageRating;
+
+    private Set<Review> reviews;
 }

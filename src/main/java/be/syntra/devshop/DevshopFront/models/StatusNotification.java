@@ -20,7 +20,13 @@ public enum StatusNotification {
     UPDATE_FAIL("Failed to change the category"),
     RATING_FAIL("Failed to submit the rating"),
     CATEGORY_EXISTS("Creation failed. Category already exists"),
-    NOT_AUTHORIZED("You must first login before this functionality becomes available");
+    NOT_AUTHORIZED("You must first login before this functionality becomes available"),
+    REVIEW_ADD_FAIL("Failed to submit review"),
+    REVIEW_ADDED("Successfully submitted review"),
+    REVIEW_DELETE_FAIL("Failed to delete review"),
+    REVIEW_DELETED("Successfully deleted review"),
+    REVIEW_UPDATE_FAIL("Failed to update review"),
+    REVIEW_UPDATED("Successfully updated review");
 
     private final String label;
 

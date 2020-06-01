@@ -86,6 +86,7 @@ public class AdminController {
     @PostMapping("product/{id}/edit")
     public String getUpdatedProduct(@ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
         productDto.setRatings(productService.getRatingsFromProduct(productDto.getId()).getRatings());
+        productDto.setReviews(productService.findById(productDto.getId()).getReviews());
         return handleChangedProductForm(productDto, bindingResult, model);
     }
 

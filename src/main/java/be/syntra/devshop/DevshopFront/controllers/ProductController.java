@@ -1,13 +1,11 @@
 package be.syntra.devshop.DevshopFront.controllers;
 
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.services.ProductService;
-import be.syntra.devshop.DevshopFront.services.SearchService;
-import be.syntra.devshop.DevshopFront.services.StarRatingService;
+import be.syntra.devshop.DevshopFront.services.*;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 
@@ -25,12 +24,15 @@ import java.security.Principal;
 public class ProductController {
     @Value("${pagination.page.size}")
     private int[] pageSizes;
+    private static final String REDIRECT_PRODUCT_DETAILS = "redirect:/products/details/";
+
 
     private final ProductService productService;
     private final CartService cartService;
     private final SearchService searchService;
     private final StarRatingService starRatingService;
     private final ProductMapper productMapper;
+    private final ReviewService reviewService;
 
     @Autowired
     public ProductController(
@@ -38,13 +40,15 @@ public class ProductController {
             CartService cartService,
             SearchService searchService,
             StarRatingService starRatingService,
-            ProductMapper productMapper
+            ProductMapper productMapper,
+            ReviewService reviewService
     ) {
         this.productService = productService;
         this.cartService = cartService;
         this.searchService = searchService;
         this.starRatingService = starRatingService;
         this.productMapper = productMapper;
+        this.reviewService = reviewService;
     }
 
     @GetMapping
@@ -100,15 +104,49 @@ public class ProductController {
     @PostMapping("/details/addtocart/{id}")
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
         productService.addToCart(productService.findById(id));
-        return "redirect:/products/details/" + id;
+        return REDIRECT_PRODUCT_DETAILS + id;
+    }
+
+    @PostMapping("/details/{id}/add_review")
+    public String addReviewToProduct(@Valid @PathVariable Long id, @ModelAttribute("review") Review review, Model model, Principal user) {
+        final StatusNotification statusNotification = reviewService.submitReview(id, review);
+        return getProductDetails(id, model, user, statusNotification);
+    }
+
+    @PostMapping("/details/{id}/update_review")
+    public String updateReviewForProduct(@Valid @PathVariable Long id, @ModelAttribute("review") Review review, Model model, Principal user) {
+        final StatusNotification statusNotification = reviewService.updateReview(id, review);
+        return getProductDetails(id, model, user, statusNotification);
+    }
+
+    @PostMapping("/details/{id}/delete_review")
+    public String removeReviewFromProduct(@PathVariable Long id, @ModelAttribute("review") Review review, Model model, Principal user) {
+        final StatusNotification statusNotification = reviewService.removeReview(id, review);
+        return getProductDetails(id, model, user, statusNotification);
     }
 
     private String getProductDetails(Long id, Model model, Principal user) {
         Product product = productService.findById(id);
         StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
-        model.addAttribute("rating", rating);
+        if (null != user) {
+            model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
+        }
         model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
         model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("rating", rating);
+        return "product/productDetails";
+    }
+
+    private String getProductDetails(Long id, Model model, Principal user, StatusNotification statusNotification) {
+        Product product = productService.findById(id);
+        StarRatingDto rating = starRatingService.findByUserNameAndId(id, nullSafe(user));
+        if (null != user) {
+            model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
+        }
+        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
+        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("rating", rating);
+        model.addAttribute("status", statusNotification);
         return "product/productDetails";
     }
 

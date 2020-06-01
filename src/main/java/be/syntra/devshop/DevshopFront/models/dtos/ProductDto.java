@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
+import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StarRating;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,4 +42,6 @@ public class ProductDto {
 
     @Builder.Default
     private int totalInCart = 0;
+
+    private Set<Review> reviews;
 }

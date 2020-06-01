@@ -36,6 +36,7 @@ public class ProductMapper {
                 .categoryNames(categoryMapper.mapToCategoryNames(product.getCategories()))
                 .averageRating(product.getAverageRating())
                 .ratings(product.getRatings())
+                .reviews(product.getReviews())
                 .build();
     }
 
