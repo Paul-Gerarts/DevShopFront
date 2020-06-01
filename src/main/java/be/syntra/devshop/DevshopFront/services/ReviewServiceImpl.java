@@ -15,8 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 
-import static be.syntra.devshop.DevshopFront.models.StatusNotification.REVIEW_FAIL;
-import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
+import static be.syntra.devshop.DevshopFront.models.StatusNotification.*;
 
 @Slf4j
 @Service
@@ -29,9 +28,18 @@ public class ReviewServiceImpl implements ReviewService {
     private String endpoint;
 
     private String resourceUrl = null;
+    private final static String REVIEW_ENDPOINT = "/reviews";
+
 
     @Autowired
     private RestTemplate restTemplate;
+
+    private ProductService productService;
+
+    @Autowired
+    public ReviewServiceImpl(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostConstruct
     private void init() {
@@ -40,40 +48,54 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public StatusNotification submitReview(Long productId, Review review) {
-        ReviewDto reviewDto = ReviewDto.builder()
-                .reviewText(review.getReviewText())
-                .userName(review.getUserName())
-                .productId(productId)
-                .build();
-        ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.postForEntity(resourceUrl + "/reviews", reviewDto, ReviewDto.class);
+        ReviewDto reviewDto = buildReviewDto(productId, review);
+        ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.postForEntity(resourceUrl + REVIEW_ENDPOINT, reviewDto, ReviewDto.class);
         if (HttpStatus.CREATED.equals(reviewDtoResponseEntity.getStatusCode())) {
-            log.info("submitReview() -> saved {} ", reviewDto);
-            return SUCCESS;
+            return REVIEW_ADDED;
         }
-        return REVIEW_FAIL;
+        return REVIEW_ADD_FAIL;
     }
 
     @Override
-    public void updateReview(Long productId, Review review) {
-        ReviewDto reviewDto = ReviewDto.builder()
-                .reviewText(review.getReviewText())
-                .userName(review.getUserName())
-                .productId(productId)
-                .build();
-        restTemplate.put(resourceUrl + "/reviews", reviewDto);
+    public StatusNotification updateReview(Long productId, Review review) {
+        ReviewDto reviewDto = buildReviewDto(productId, review);
+        final ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.exchange(resourceUrl + REVIEW_ENDPOINT, HttpMethod.PUT, new HttpEntity<>(reviewDto), ReviewDto.class);
+        if (HttpStatus.OK.equals(reviewDtoResponseEntity.getStatusCode())) {
+            return REVIEW_UPDATED;
+        }
+        return REVIEW_UPDATE_FAIL;
     }
 
     /*
-    using .exchange() method otherwise with .delete() the body is not sent
+     *  using .exchange() method otherwise with .delete() the body is not sent
      */
+
     @Override
-    public void removeReview(Long productId, Review review) {
-        ReviewDto reviewDto = ReviewDto.builder()
+    public StatusNotification removeReview(Long productId, Review review) {
+        ReviewDto reviewDto = buildReviewDto(productId, review);
+        final ResponseEntity<ReviewDto> reviewDtoResponseEntity = restTemplate.exchange(resourceUrl + REVIEW_ENDPOINT, HttpMethod.DELETE, new HttpEntity<>(reviewDto), ReviewDto.class);
+        if (HttpStatus.OK.equals(reviewDtoResponseEntity.getStatusCode())) {
+            return REVIEW_DELETED;
+        }
+        return REVIEW_DELETE_FAIL;
+    }
+    @Override
+    public Review findByUserNameAndId(Long id, String userName) {
+        return productService.findById(id).getReviews().stream()
+                .filter(r -> r.getUserName().equals(userName))
+                .findFirst()
+                .orElse(
+                        Review.builder()
+                                .userName(userName)
+                                .build());
+    }
+
+    private ReviewDto buildReviewDto(Long productId, Review review) {
+        return ReviewDto.builder()
                 .reviewText(review.getReviewText())
                 .userName(review.getUserName())
                 .productId(productId)
                 .build();
-        restTemplate.exchange(resourceUrl + "/reviews", HttpMethod.DELETE, new HttpEntity<>(reviewDto), ReviewDto.class);
     }
 }
 

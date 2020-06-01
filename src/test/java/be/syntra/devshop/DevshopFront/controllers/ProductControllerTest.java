@@ -105,7 +105,7 @@ class ProductControllerTest {
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
         when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
-
+        when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
 
@@ -195,6 +195,7 @@ class ProductControllerTest {
         when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
         when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
         when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
+        when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/"
@@ -244,15 +245,24 @@ class ProductControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"/deletereview", "/updatereview", "/addreview"})
+    @ValueSource(strings = {"/delete_review", "/update_review", "/add_review"})
     @WithMockUser
-    void removeReviewFromProductTest(String endPoint) throws Exception {
+    void removeAddUpdateReviewTest(String endPoint) throws Exception {
         // given
-        final Product dummyProduct = getDummyNonArchivedProduct();
+        final Product dummyProduct = getDummyProductWithReview();
         final Review dummyReview = getDummyReview();
-        when(reviewService.submitReview(dummyProduct.getId(), dummyReview)).thenReturn(StatusNotification.SAVED);
-        doNothing().when(reviewService).updateReview(dummyProduct.getId(), dummyReview);
-        doNothing().when(reviewService).removeReview(dummyProduct.getId(), dummyReview);
+        final StarRatingDto starRatingDto = createStarRatingDto();
+        final ProductDto dummyProductDto = getDummyProductDtoWithReview();
+        final CartDto dummyCartDto = getCartWithOneDummyProduct();
+        when(reviewService.submitReview(anyLong(), any())).thenReturn(StatusNotification.SAVED);
+        when(reviewService.updateReview(anyLong(), any())).thenReturn(StatusNotification.REVIEW_UPDATED);
+        when(reviewService.removeReview(anyLong(), any())).thenReturn(StatusNotification.REVIEW_DELETED);
+        when(productService.findById(any())).thenReturn(dummyProduct);
+        when(ratingService.findByUserNameAndId(anyLong(), anyString())).thenReturn(starRatingDto);
+        when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(dummyReview);
+        when(productMapper.convertToDisplayProductDto(any())).thenReturn(dummyProductDto);
+        when(cartService.getCart()).thenReturn(dummyCartDto);
+
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId() + endPoint)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -261,7 +271,8 @@ class ProductControllerTest {
 
         // then
         getResult
-                .andExpect(status().isFound())
-                .andExpect(view().name("redirect:/products/details/" + dummyProduct.getId()));
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productDetails"))
+                .andExpect(model().attributeExists("product", "cart", "rating", "status"));
     }
 }

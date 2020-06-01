@@ -203,6 +203,12 @@ html, body, .spinner {
     left: 760px;
 }
 
+.chip-div {
+    position: relative;
+    left: 23%;
+    top: 14%;
+}
+
 .add-review {
     display: flex;
     flex-direction: row;

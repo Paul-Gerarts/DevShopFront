@@ -1,5 +1,6 @@
 package be.syntra.devshop.DevshopFront.services;
 
+import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.Review;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.ReviewDto;
@@ -23,9 +24,12 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductWithReview;
 import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getDummyReview;
 import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getDummyReviewDto;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 
@@ -94,7 +98,7 @@ public class ReviewServiceImplTest {
 
         // then
         mockServer.verify();
-        assertEquals(StatusNotification.SUCCESS, statusNotification);
+        assertEquals(StatusNotification.REVIEW_ADDED, statusNotification);
     }
 
     @Test
@@ -102,7 +106,6 @@ public class ReviewServiceImplTest {
         // given
         final Long productId = 1L;
         final Review dummyReview = getDummyReview();
-        final ReviewDto dummyReviewDto = getDummyReviewDto();
         final String expectedEndpoint = baseUrl + endpoint + "/reviews";
 
         // when
@@ -113,10 +116,11 @@ public class ReviewServiceImplTest {
                         MockRestResponseCreators
                                 .withStatus(HttpStatus.OK)
                 );
-        reviewService.updateReview(productId, dummyReview);
+        final StatusNotification statusNotification = reviewService.updateReview(productId, dummyReview);
 
         // then
         mockServer.verify();
+        assertEquals(StatusNotification.REVIEW_UPDATED, statusNotification);
     }
 
     @Test
@@ -138,9 +142,24 @@ public class ReviewServiceImplTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(reviewDtoAsJson)
                 );
-        reviewService.removeReview(productId, dummyReview);
+        final StatusNotification statusNotification = reviewService.removeReview(productId, dummyReview);
 
         // then
         mockServer.verify();
+        assertEquals(StatusNotification.REVIEW_DELETED, statusNotification);
+    }
+
+    @Test
+    void canFindReviewByUserNameAndId() {
+        // given
+        final Long productId = 1L;
+        final Product dummyProduct = getDummyProductWithReview();
+        final String userName = "dummy@user.com";
+        when(productService.findById(1L)).thenReturn(dummyProduct);
+        // when
+        final Review foundReview = reviewService.findByUserNameAndId(productId, userName);
+
+        // then
+        assertTrue(dummyProduct.getReviews().contains(foundReview));
     }
 }

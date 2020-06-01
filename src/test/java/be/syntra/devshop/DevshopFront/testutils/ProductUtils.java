@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
+import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getReviewSetWithDummyReview;
 
 public class ProductUtils {
 
@@ -48,6 +49,36 @@ public class ProductUtils {
                 .ratings(Collections.emptySet())
                 .totalInCart(1)
                 .reviews(Collections.emptySet())
+                .build();
+    }
+
+    public static Product getDummyProductWithReview() {
+        return Product.builder()
+                .id(1L)
+                .name("product")
+                .price(new BigDecimal("88"))
+                .description("description")
+                .archived(false)
+                .categories(createCategoryList())
+                .averageRating(0D)
+                .ratings(Collections.emptySet())
+                .totalInCart(1)
+                .reviews(getReviewSetWithDummyReview())
+                .build();
+    }
+
+    public static ProductDto getDummyProductDtoWithReview() {
+        return ProductDto.builder()
+                .id(1L)
+                .name("product")
+                .price(new BigDecimal("88"))
+                .description("description")
+                .archived(false)
+                .categoryNames(List.of("Headphones"))
+                .averageRating(0D)
+                .ratings(Collections.emptySet())
+                .totalInCart(1)
+                .reviews(getReviewSetWithDummyReview())
                 .build();
     }
 
