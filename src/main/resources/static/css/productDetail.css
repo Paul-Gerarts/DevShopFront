@@ -142,7 +142,6 @@ html, body, .spinner {
 .rating {
     position: absolute;
     top: 50%;
-    /*top: 43%;*/
     left: 32%;
     transform: translate(-50%, -50%) rotateY(180deg);
     display: flex;
@@ -332,9 +331,7 @@ html, body, .spinner {
     height: inherit;
     background: inherit;
     font-size: 14px;
-    margin: 0;
     padding: 0;
-
     border: none;
     resize: none;
 }
