@@ -4,7 +4,6 @@ import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +13,15 @@ import java.util.stream.Collectors;
 @Component
 public class ProductMapper {
     private final CategoryMapper categoryMapper;
-    private final CartService cartService;
+    //private final CartService cartService;
 
     @Autowired
     public ProductMapper(
-            CategoryMapper categoryMapper,
-            CartService cartService
+            CategoryMapper categoryMapper/*,
+            CartService cartService*/
     ) {
         this.categoryMapper = categoryMapper;
-        this.cartService = cartService;
+        //this.cartService = cartService;
     }
 
     public ProductDto convertToProductDto(Product product) {
@@ -37,6 +36,21 @@ public class ProductMapper {
                 .averageRating(product.getAverageRating())
                 .ratings(product.getRatings())
                 .reviews(product.getReviews())
+                .build();
+    }
+
+    public Product convertToProduct(ProductDto productDto) {
+        return Product.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .price(productDto.getPrice())
+                .description(productDto.getDescription())
+                .archived(productDto.isArchived())
+                .totalInCart(productDto.getTotalInCart())
+                .categories(categoryMapper.mapToCategories(productDto.getCategoryNames()))
+                .averageRating(productDto.getAverageRating())
+                .ratings(productDto.getRatings())
+                .reviews(productDto.getReviews())
                 .build();
     }
 
@@ -64,10 +78,13 @@ public class ProductMapper {
     }
 
     private int getCountFromProductInCart(Long id) {
-        return cartService.getCart().getProducts()
+        /*return cartService.getCart().getProductDtos()
                 .parallelStream().filter(p -> p.getId().equals(id))
                 .findFirst()
-                .map(Product::getTotalInCart)
-                .orElse(0);
+                //.map(Product::getTotalInCart)
+                .map(ProductDto::getTotalInCart)
+                .orElse(0);*/
+
+        return 0;
     }
 }

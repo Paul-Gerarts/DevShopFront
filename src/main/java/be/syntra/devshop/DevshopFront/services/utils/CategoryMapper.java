@@ -14,4 +14,13 @@ public class CategoryMapper {
         categories.forEach(category -> categoryNames.add(category.getName()));
         return categoryNames;
     }
+
+    public List<Category> mapToCategories(List<String> categoryNames) {
+        List<Category> categories = new ArrayList<>();
+        categoryNames.forEach(name -> categories.add(Category.builder().name(name).build()));
+        return categories;
+        /*List<String> categoryNames = new ArrayList<>();
+        categories.forEach(category -> categoryNames.add(category.getName()));
+        return categoryNames;*/
+    }
 }

@@ -31,12 +31,6 @@ public interface ProductService {
 
     StatusNotification archiveProduct(ProductDto product);
 
-    /***
-     * adds a poduct to the cart
-     * @param product
-     */
-    void addToCart(Product product);
-
     void addSelectableCategoriesToSearchModel();
 
     CategoryList findAllCategories();

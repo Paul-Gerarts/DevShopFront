@@ -1,8 +1,8 @@
 package be.syntra.devshop.DevshopFront.services;
 
-import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CartProductsDto;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,9 @@ public interface CartService {
 
     CartDto getCart();
 
-    void addToCart(Product product);
+    //void addToCart(Product product);
+
+    void addToCart(Long id);
 
     void addOneToProductInCart(Long productId);
 
@@ -22,4 +24,6 @@ public interface CartService {
     StatusNotification payCart(String username);
 
     BigDecimal getCartTotalPrice(CartDto currentCart);
+
+    CartProductsDto getCartProductsDto();
 }

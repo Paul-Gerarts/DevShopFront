@@ -3,9 +3,9 @@ package be.syntra.devshop.DevshopFront.services;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
-import be.syntra.devshop.DevshopFront.testutils.ProductUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,7 @@ import java.security.Principal;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
 import static be.syntra.devshop.DevshopFront.testutils.PaymentUtils.createPaymentDtoWithTotalCartPrice;
+import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getOtherDummyProductDto;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -75,19 +76,22 @@ class CartServiceImplTest {
         // then
         assertEquals(false,newCart.isFinalizedCart());
         assertEquals(false,newCart.isPaidCart());
-        assertEquals(0,newCart.getProducts().size());
+        assertEquals(0, newCart.getProductDtos().size());
     }
 
     @Test
     public void getExistingCartTest() {
         // given
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
+        ProductDto dummyProductDto = getOtherDummyProductDto();
+
+        //cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
+        cartService.addToCart(dummyProductDto.getId());
 
         // when
         CartDto getCart = cartService.getCart();
 
         // then
-        assertEquals(getCart.getProducts().size(), 1);
+        assertEquals(getCart.getProductDtos().size(), 1);
         assertEquals(getCart.isFinalizedCart(), false);
         assertEquals(getCart.isPaidCart(), false);
     }
@@ -95,51 +99,55 @@ class CartServiceImplTest {
     @Test
     void canAddOneToProductInCartTest() {
         // given
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
+        ProductDto dummyProductDto = getOtherDummyProductDto();
+        cartService.addToCart(dummyProductDto.getId());
 
         // when
         cartService.addOneToProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 3);
+        assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 3);
     }
 
     @Test
     void canRemoveOneFromProductInCartTest() {
         // given
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
-        currentCart.getProducts().get(0).setTotalInCart(3);
+        ProductDto dummyProductDto = getOtherDummyProductDto();
+        cartService.addToCart(dummyProductDto.getId());
+        currentCart.getProductDtos().get(0).setTotalInCart(3);
 
         // when
         cartService.removeOneFromProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().get(0).getTotalInCart(), 2);
+        assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 2);
     }
 
     @Test
     void canRemoveProductFromCartTest() {
         // given
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
+        ProductDto dummyProductDto = getOtherDummyProductDto();
+        cartService.addToCart(dummyProductDto.getId());
 
         // when
         cartService.removeProductFromCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().size(), 0);
+        assertEquals(currentCart.getProductDtos().size(), 0);
     }
 
     @Test
     void willRemoveProductIfNumberInCartIsZeroWhenRemovingOneTest() {
         // given
-        cartService.addToCart(ProductUtils.getDummyNonArchivedProduct());
-        currentCart.getProducts().get(0).setTotalInCart(1);
+        ProductDto dummyProductDto = getOtherDummyProductDto();
+        cartService.addToCart(dummyProductDto.getId());
+        currentCart.getProductDtos().get(0).setTotalInCart(1);
 
         // when
         cartService.removeOneFromProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProducts().size(), 0);
+        assertEquals(currentCart.getProductDtos().size(), 0);
     }
 
     @Test

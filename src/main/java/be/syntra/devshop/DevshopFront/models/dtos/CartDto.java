@@ -1,6 +1,5 @@
 package be.syntra.devshop.DevshopFront.models.dtos;
 
-import be.syntra.devshop.DevshopFront.models.Product;
 import lombok.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,7 +20,9 @@ import java.util.List;
 public class CartDto {
     private String user;
     private LocalDateTime cartCreationDateTime = LocalDateTime.now();
-    private List<Product> products = new ArrayList<>();
+    //private List<Product> products = new ArrayList<>();
+    private List<ProductDto> productDtos = new ArrayList<>();
     private boolean finalizedCart;
     private boolean paidCart;
+    private List<CartContentDto> cartContentDtoList = new ArrayList<>();
 }
