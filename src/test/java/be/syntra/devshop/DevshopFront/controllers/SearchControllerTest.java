@@ -170,7 +170,11 @@ class SearchControllerTest {
     void canSortProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .searchResultView(true)
+                .selectedCategories(new ArrayList<>())
+                .build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -258,7 +262,8 @@ class SearchControllerTest {
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
                 .selectedCategories(List.of(category))
-                .searchResultView(true).build();
+                .searchResultView(true)
+                .build();
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -277,6 +282,38 @@ class SearchControllerTest {
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
         verify(searchService, times(1)).removeFromSelectedCategories(category);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
+    }
+
+    @Test
+    void searchStarRatingTest() throws Exception {
+        //given
+        final Double rating = 4.0D;
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .starRating(rating)
+                .searchResultView(true)
+                .build();
+        final ProductList dummyProductList = getDummyProductList();
+        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(cartService.getCart()).thenReturn(dummyCart);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/star_rating/?rating=" + rating));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setStarRating(rating);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();

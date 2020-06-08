@@ -26,6 +26,7 @@ public class SearchModel {
     private boolean nameSortActive = true;
     private boolean priceSortActive;
     private boolean archivedView;
+    private boolean archivedSearchSwitch;
     private boolean searchResultView;
     private boolean searchFailure;
     private boolean activeFilters;
@@ -34,6 +35,7 @@ public class SearchModel {
     private Integer pageSize = 5;
     private List<Category> categories;
     private List<String> selectedCategories = new ArrayList<>();
+    private Double starRating;
 
     @Override
     public String toString() {

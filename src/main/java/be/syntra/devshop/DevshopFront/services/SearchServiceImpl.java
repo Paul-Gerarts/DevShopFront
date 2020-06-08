@@ -41,6 +41,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void setArchivedSearchSwitch(boolean archivedSearchSwitch) {
+        searchModel.setArchivedSearchSwitch(archivedSearchSwitch);
+    }
+
+    @Override
     public void setSearchResultView(boolean searchResultView) {
         searchModel.setSearchResultView(searchResultView);
     }
@@ -97,6 +102,11 @@ public class SearchServiceImpl implements SearchService {
     public void setPriceFilters(BigDecimal minPrice, BigDecimal maxPrice) {
         searchModel.setPriceLow(minPrice);
         searchModel.setPriceHigh(maxPrice);
+    }
+
+    @Override
+    public void setStarRating(Double rating) {
+        searchModel.setStarRating(rating);
     }
 
     @Override

@@ -90,15 +90,19 @@ public class AdminController {
         return handleChangedProductForm(productDto, bindingResult, model);
     }
 
+    @GetMapping("/toggle")
+    public String toggleArchivedSearch(Model model, boolean searchSwitch) {
+        searchService.setArchivedSearchSwitch(searchSwitch);
+        return getProductOverview(model);
+        // TODO: add controllerTest. All the rest is already tested.
+    }
+
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
         searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
-        ProductList productList = productService.findAllProductsBySearchModel();
-        model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
-        return "product/productOverview";
+        return getProductOverview(model);
     }
 
     @GetMapping("/manage_category")
@@ -145,6 +149,13 @@ public class AdminController {
         addCategoriesModel(model);
         addCategoryChangeDto(model);
         return CATEGORY_FORM;
+    }
+
+    private String getProductOverview(Model model) {
+        ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("searchModel", searchService.getSearchModel());
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
+        return "product/productOverview";
     }
 
     private String newCategory(Model model, String newCategory) {

@@ -123,6 +123,14 @@
 
             </div>
         </div>
+        <!--admin-archived-search-switch-->
+        <div class="search-filters admin-archived-switch">
+            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch">
+                <input type="checkbox" id="switch" class="mdl-switch__input">
+                <span class="mdl-switch__label"></span>
+            </label>
+            <div class="admin-archived-switch-text">toggle archived product search</div>
+        </div>
         <!--search filters-->
         <div class="search-filters" style="min-height: 1000px;">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
@@ -282,7 +290,7 @@
                     </script>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white"
-                                style="margin-top: 30px">
+                                style="margin-top: 80px">
                             <em class="material-icons">clear</em>Reset all filters
                         </button>
                     </form>

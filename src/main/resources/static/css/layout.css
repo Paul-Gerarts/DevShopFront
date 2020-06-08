@@ -142,7 +142,8 @@ html, body, .spinner {
 }
 
 .search-filters-list-box {
-    height: 50%;
+    height: 60%;
+    /*TODO: make this admin-conditional?*/
 }
 
 .sorting {
@@ -427,3 +428,21 @@ html, body, .spinner {
     opacity: 1;
 }
 
+.mdl-switch.is-checked .mdl-switch__thumb {
+    background-color: dodgerblue;
+}
+
+.admin-archived-switch {
+    display: flex;
+    flex-direction: row;
+    top: 650px;
+    position: absolute;
+    font-size: x-large;
+    padding-left: 60px;
+    z-index: 1;
+}
+
+.admin-archived-switch-text {
+    padding-left: 20px;
+    min-width: 500px;
+}
