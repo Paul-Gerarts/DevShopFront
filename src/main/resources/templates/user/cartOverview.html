@@ -118,7 +118,7 @@
                     </div>
                     <div class="cart-product-item-flex-product-minus">
                         <!-- show the regular link when numberInCart is > 1 -->
-                        <span th:if="${countedProduct.product.totalInCart > 1}">
+                        <span th:if="${countedProduct.productCount > 1}">
                             <a th:href="@{/users/cart/details/minus_one/{id}(id=${countedProduct.product.id})}"
                                style="text-decoration: none;">
                                 <label class="cart-product-item-content cart-detail-href">
@@ -127,7 +127,7 @@
                             </a>
                         </span>
                         <!-- if above is not true show this link that just links to the modal by the css class name -->
-                        <span th:unless="${countedProduct.product.totalInCart > 1}">
+                        <span th:unless="${countedProduct.productCount > 1}">
                             <a style="text-decoration: none;">
                                 <label class="cart-product-item-content cart-detail-href ">
                                     <em th:id="${'minusid'+index.count}" class="material-icons show-modal"
@@ -138,7 +138,7 @@
                     </div>
                     <div class="cart-product-item-flex-product-count">
                         <label class="cart-product-item-content"
-                               th:text="${countedProduct.product.totalInCart}">99</label>
+                               th:text="${countedProduct.productCount}">99</label>
                     </div>
                     <div class="cart-product-item-flex-product-plus">
                         <a th:href="@{/users/cart/details/plus_one/{id}(id=${countedProduct.product.id})}"
@@ -151,7 +151,7 @@
                     </div>
                     <div class="cart-product-item-flex-product-total">
                         <label class="cart-product-item-title"
-                               th:text="'€ ' + ${countedProduct.product.totalInCart * countedProduct.product.price}">€
+                               th:text="'€ ' + ${countedProduct.productCount * countedProduct.product.price}">€
                             999.99</label>
                     </div>
                     <div class="cart-product-item-flex-product-delete">
@@ -163,7 +163,7 @@
                             </label>
                         </a>
                     </div>
-                    <dialog th:if="${countedProduct.product.totalInCart == 1}" th:id="${'dialogid'+index.count}"
+                    <dialog th:if="${countedProduct.productCount == 1}" th:id="${'dialogid'+index.count}"
                             class="mdl-dialog">
                         <h4 class="mdl-dialog__title">Remove this product from the Cart?</h4>
                         <div class="mdl-dialog__content">
@@ -206,7 +206,7 @@
             <form method="post" th:object="${cart}">
                 <button type="submit"
                         class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button mdl-color--blue mdl-title__margin"
-                        th:disabled="${status != null && status.label.equals('Success') && cart.getProductDtos().isEmpty() }">
+                        th:disabled="${status != null && status.label.equals('Success') && cart.cartCountedProductDtoList.isEmpty() }">
                     <label style="color: white" th:text="CHECKOUT"></label>
                 </button>
             </form>
