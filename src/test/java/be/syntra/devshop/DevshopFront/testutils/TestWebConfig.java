@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +22,16 @@ public class TestWebConfig {
 
     @Bean
     CartDto currentCart() {
+        /*return CartDto.builder()
+                .cartCreationDateTime(LocalDateTime.now())
+                .finalizedCart(false)
+                .paidCart(false)
+                .build();*/
         return CartDto.builder()
                 .cartCreationDateTime(LocalDateTime.now())
                 .finalizedCart(false)
                 .paidCart(false)
+                .cartContentDtoList(new ArrayList<>())
                 .build();
     }
 

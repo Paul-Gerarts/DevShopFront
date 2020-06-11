@@ -7,7 +7,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class CartProductsDto {
+public class CartProductsDisplayDto {
     private List<CartCountedProductDto> cartCountedProductDtoList;
     private List<Long> cartProductsIdList;
 }

@@ -157,8 +157,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartProductsDto getCartProductsDto() {
-        return CartProductsDto.builder().cartCountedProductDtoList(
+    public CartProductsDisplayDto getCartProductsDto() {
+        return CartProductsDisplayDto.builder().cartCountedProductDtoList(
                 getCart().getCartContentDtoList().stream()
                         .map(this::createCartCountedProduct)
                         .collect(Collectors.toList()))
