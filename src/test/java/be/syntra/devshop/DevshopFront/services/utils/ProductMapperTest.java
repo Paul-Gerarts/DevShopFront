@@ -67,6 +67,5 @@ class ProductMapperTest {
         // then
         assertEquals(productsDisplayList.getClass(), ProductsDisplayListDto.class);
         assertEquals(productsDisplayList.getProducts().size(), dummyProductList.getProducts().size());
-        assertEquals(productsDisplayList.getProducts().get(0).getTotalInCart(), dummyProductList.getProducts().get(0).getTotalInCart());
     }
 }

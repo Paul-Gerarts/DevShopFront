@@ -20,8 +20,6 @@ import java.util.List;
 public class CartDto {
     private String user;
     private LocalDateTime cartCreationDateTime = LocalDateTime.now();
-    //private List<Product> products = new ArrayList<>();
-    private List<ProductDto> productDtos = new ArrayList<>();
     private boolean finalizedCart;
     private boolean paidCart;
     private List<CartContentDto> cartContentDtoList = new ArrayList<>();

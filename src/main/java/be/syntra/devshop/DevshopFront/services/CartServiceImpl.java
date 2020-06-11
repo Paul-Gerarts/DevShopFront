@@ -136,7 +136,6 @@ public class CartServiceImpl implements CartService {
                 .paidCart(currentCart.isPaidCart())
                 .cartCreationDateTime(currentCart.getCartCreationDateTime())
                 .user(currentCart.getUser())
-                .productDtos(currentCart.getProductDtos())
                 .cartContentDtoList(currentCart.getCartContentDtoList())
                 .build();
     }

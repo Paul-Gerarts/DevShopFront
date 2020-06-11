@@ -131,7 +131,7 @@ public class ProductController {
         if (null != user) {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
-        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
+        model.addAttribute("product", productMapper.convertToProductDto(product));
         model.addAttribute("cart", cartService.getCartProductsDto());
         model.addAttribute("rating", rating);
         return "product/productDetails";
@@ -143,7 +143,7 @@ public class ProductController {
         if (null != user) {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
-        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
+        model.addAttribute("product", productMapper.convertToProductDto(product));
         model.addAttribute("cart", cartService.getCartProductsDto());
         model.addAttribute("rating", rating);
         model.addAttribute("status", statusNotification);

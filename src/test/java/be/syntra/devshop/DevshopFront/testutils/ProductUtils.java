@@ -24,7 +24,6 @@ public class ProductUtils {
                 .categoryNames(List.of("Headphones"))
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(Collections.emptySet())
                 .build();
     }
@@ -47,7 +46,6 @@ public class ProductUtils {
                 .categories(createCategoryList())
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(Collections.emptySet())
                 .build();
     }
@@ -62,7 +60,6 @@ public class ProductUtils {
                 .categories(createCategoryList())
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(getReviewSetWithDummyReview())
                 .build();
     }
@@ -77,7 +74,6 @@ public class ProductUtils {
                 .categoryNames(List.of("Headphones"))
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(getReviewSetWithDummyReview())
                 .build();
     }
@@ -101,7 +97,6 @@ public class ProductUtils {
                 .description("another description")
                 .archived(false)
                 .categories(createCategoryList())
-                .totalInCart(1)
                 .build();
     }
 

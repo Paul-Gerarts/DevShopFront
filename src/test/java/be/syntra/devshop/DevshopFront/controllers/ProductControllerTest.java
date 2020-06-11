@@ -104,7 +104,7 @@ class ProductControllerTest {
         final ProductDto dummyProductDto = getDummyProductDto();
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
-        when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
+        when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
@@ -194,7 +194,7 @@ class ProductControllerTest {
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
         when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
         when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
-        when(productMapper.convertToDisplayProductDto(dummyProduct)).thenReturn(dummyProductDto);
+        when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
 
         // when
@@ -260,7 +260,7 @@ class ProductControllerTest {
         when(productService.findById(any())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(anyLong(), anyString())).thenReturn(starRatingDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(dummyReview);
-        when(productMapper.convertToDisplayProductDto(any())).thenReturn(dummyProductDto);
+        when(productMapper.convertToProductDto(any())).thenReturn(dummyProductDto);
         when(cartService.getCart()).thenReturn(dummyCartDto);
 
         // when

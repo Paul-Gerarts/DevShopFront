@@ -30,9 +30,6 @@ public class Product {
 
     private boolean archived;
 
-    @Builder.Default
-    private int totalInCart = 0;
-
     @NotEmpty
     private List<Category> categories;
 

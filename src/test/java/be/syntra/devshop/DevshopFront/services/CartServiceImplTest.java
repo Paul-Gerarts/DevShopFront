@@ -76,7 +76,8 @@ class CartServiceImplTest {
         // then
         assertEquals(false,newCart.isFinalizedCart());
         assertEquals(false,newCart.isPaidCart());
-        assertEquals(0, newCart.getProductDtos().size());
+        //assertEquals(0, newCart.getProductDtos().size());
+        assertEquals(0, newCart.getCartContentDtoList().size(), 0);
     }
 
     @Test
@@ -91,7 +92,7 @@ class CartServiceImplTest {
         CartDto getCart = cartService.getCart();
 
         // then
-        assertEquals(getCart.getProductDtos().size(), 1);
+        assertEquals(getCart.getCartContentDtoList().size(), 1);
         assertEquals(getCart.isFinalizedCart(), false);
         assertEquals(getCart.isPaidCart(), false);
     }
@@ -106,7 +107,8 @@ class CartServiceImplTest {
         cartService.addOneToProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 3);
+        //assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 3);
+        assertEquals(currentCart.getCartContentDtoList().size(), 3);
     }
 
     @Test
@@ -114,13 +116,15 @@ class CartServiceImplTest {
         // given
         ProductDto dummyProductDto = getOtherDummyProductDto();
         cartService.addToCart(dummyProductDto.getId());
-        currentCart.getProductDtos().get(0).setTotalInCart(3);
+        //currentCart.getProductDtos().get(0).setTotalInCart(3);
+        currentCart.getCartContentDtoList().get(0).setCount(3);
 
         // when
         cartService.removeOneFromProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 2);
+        //assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 2);
+        assertEquals(currentCart.getCartContentDtoList().get(0).getCount(), 2);
     }
 
     @Test
@@ -133,7 +137,7 @@ class CartServiceImplTest {
         cartService.removeProductFromCart(1L);
 
         // then
-        assertEquals(currentCart.getProductDtos().size(), 0);
+        assertEquals(currentCart.getCartContentDtoList().size(), 0);
     }
 
     @Test
@@ -141,13 +145,14 @@ class CartServiceImplTest {
         // given
         ProductDto dummyProductDto = getOtherDummyProductDto();
         cartService.addToCart(dummyProductDto.getId());
-        currentCart.getProductDtos().get(0).setTotalInCart(1);
+        //currentCart.getProductDtos().get(0).setTotalInCart(1);
+        currentCart.getCartContentDtoList().get(0).setCount(1);
 
         // when
         cartService.removeOneFromProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getProductDtos().size(), 0);
+        assertEquals(currentCart.getCartContentDtoList().size(), 0);
     }
 
     @Test
