@@ -58,18 +58,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(Long id) {
-        /*//product.setTotalInCart(product.getTotalInCart() + 1);
-        productDto.setTotalInCart(productDto.getTotalInCart() + 1);
-        //List<Product> productList = getCart().getProducts();
-        List<ProductDto> productList = getCart().getProductDtos();
-        productList.add(productDto);
-        getCart().setProductDtos(productList);*/
-
-        ProductDto productDto = productMapper.convertToProductDto(productService.findById(id));
         List<CartContentDto> contentDtoList = getCart().getCartContentDtoList();
         if (productNotInCart(id)) {
             contentDtoList.add(CartContentDto.builder()
-                    //.productId(productDto.getId())
                     .productDto(productMapper.convertToProductDto(productService.findById(id)))
                     .count(1)
                     .build());
@@ -80,25 +71,6 @@ public class CartServiceImpl implements CartService {
                     .get();
             currentCartContentDto.setCount(currentCartContentDto.getCount() + 1);
         }
-
-        /*if (null != contentDtoList) {
-            List<CartContentDto> list = new ArrayList<>();
-            list.add(CartContentDto.builder().productId(id).count(1).build());
-            getCart().setCartContentDtoList(list);
-        } else {
-            Optional<CartContentDto> cartContentDtoOptional =
-                    contentDtoList.stream()
-                            .filter(content -> content.getId().equals(productDto.getId()))
-                            .findFirst();
-            CartContentDto updatedCartContentDto;
-            if (cartContentDtoOptional.isPresent()) {
-                updatedCartContentDto = cartContentDtoOptional.get();
-                updatedCartContentDto.setCount(updatedCartContentDto.getCount() + 1);
-            } else {
-                updatedCartContentDto = CartContentDto.builder().productId(productDto.getId()).count(1).build();
-            }
-            contentDtoList.add(updatedCartContentDto);
-        }*/
     }
 
     private boolean productNotInCart(Long id) {
@@ -112,9 +84,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addOneToProductInCart(Long productId) {
-        //Product productToAlter = getProductFromCartById(productId);
-        /*ProductDto productToAlter = getProductFromCartById(productId);
-        productToAlter.setTotalInCart(productToAlter.getTotalInCart() + 1);*/
         CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
         cartContentDto.setCount(cartContentDto.getCount() + 1);
     }
@@ -128,14 +97,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeOneFromProductInCart(Long productId) {
-        //Product productToAlter = getProductFromCartById(productId);
-        //ProductDto productToAlter = getProductFromCartById(productId);
-        /*final int totalInCart = productToAlter.getTotalInCart();
-        if (totalInCart == 1) {
-            removeProductFromCart(productId);
-        } else {
-            productToAlter.setTotalInCart(totalInCart - 1);
-        }*/
         CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
         if (cartContentDto.getCount() == 1) {
             removeProductFromCart(productId);
@@ -146,39 +107,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeProductFromCart(Long productId) {
-        //Product productToRemove = getProductFromCartById(productId);
-        /*ProductDto productToRemove = getProductFromCartById(productId);
-        productToRemove.setTotalInCart(0);
-        currentCart.getProductDtos().remove(productToRemove);*/
         CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
         getCart().getCartContentDtoList().remove(cartContentDto);
-    }
-
-    private ProductDto getProductFromCartById(Long productId) {
-        return currentCart.getProductDtos().stream()
-                .filter(product -> product.getId().equals(productId))
-                .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
 
     @Override
     public StatusNotification payCart(String userName) {
         currentCart.setUser(userName);
         setCartToFinalized(currentCart);
-     /*   CartDto cartDto = wrap(currentCart);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            objectMapper.writeValue(new File("target/testCartDto2.json"), cartDto);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, wrap(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);
-            /*currentCart.getProductDtos().forEach(product -> product.setTotalInCart(0));
-            currentCart.getProductDtos().clear();*/
             currentCart.getCartContentDtoList().clear();
             return StatusNotification.SUCCESS;
         }
@@ -208,13 +148,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public BigDecimal getCartTotalPrice(CartDto currentCart) {
-        /*return currentCart.getProductDtos().stream()
-                .map(product -> {
-                    BigDecimal pricePerProduct = product.getPrice();
-                    int totalInCart = product.getTotalInCart();
-                    return pricePerProduct.multiply(new BigDecimal(totalInCart));
-                })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);*/
         return getCart().getCartContentDtoList().stream()
                 .map(cartContentDto -> {
                     BigDecimal productPrice = cartContentDto.getProductDto().getPrice();
@@ -229,8 +162,13 @@ public class CartServiceImpl implements CartService {
         return CartProductsDto.builder().cartCountedProductDtoList(
                 getCart().getCartContentDtoList().stream()
                         .map(this::createCartCountedProduct)
-                        .collect(Collectors.toList())
-        ).build();
+                        .collect(Collectors.toList()))
+                .cartProductsIdList(
+                        getCart().getCartContentDtoList().stream()
+                                .map(CartContentDto::getProductDto)
+                                .map(ProductDto::getId)
+                                .collect(Collectors.toList()))
+                .build();
     }
 
     private CartCountedProductDto createCartCountedProduct(CartContentDto cartContentDto) {

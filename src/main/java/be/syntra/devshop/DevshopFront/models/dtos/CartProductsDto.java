@@ -9,4 +9,5 @@ import java.util.List;
 @Getter
 public class CartProductsDto {
     private List<CartCountedProductDto> cartCountedProductDtoList;
+    private List<Long> cartProductsIdList;
 }
