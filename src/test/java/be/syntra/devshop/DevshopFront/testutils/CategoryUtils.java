@@ -4,19 +4,22 @@ import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryChangeDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CategoryDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryUtils {
 
     public static List<Category> createCategoryList() {
-        return List.of(Category.builder()
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(Category.builder()
                         .id(1L)
                         .name("Headphones")
-                        .build(),
-                Category.builder()
+                .build());
+        categoryList.add(Category.builder()
                         .id(1L)
                         .name("Office")
                         .build());
+        return categoryList;
     }
 
     public static CategoryDto createCategoryDto() {
