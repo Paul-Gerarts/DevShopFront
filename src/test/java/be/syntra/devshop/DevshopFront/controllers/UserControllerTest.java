@@ -5,7 +5,6 @@ import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
-import be.syntra.devshop.DevshopFront.testutils.CartUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
@@ -21,8 +20,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,7 +50,7 @@ class UserControllerTest {
     @WithMockUser
     void displayCartWhenLoggedIn() throws Exception {
         // given
-        when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/detail"));
@@ -58,7 +60,7 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("cart"))
                 .andExpect(view().name("user/cartOverview"));
 
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartProductsDto();
     }
 
     @Test
@@ -102,7 +104,11 @@ class UserControllerTest {
     @WithMockUser
     void testDisplayCartOverview() throws Exception {
         //given
-        when(cartService.getCart()).thenReturn(CartUtils.getCartWithOneDummyProduct());
+        final CartDto cartDto = getCartWithOneDummyProduct();
+        when(principal.getName()).thenReturn("user");
+        when(cartService.getCart()).thenReturn(cartDto);
+        when(cartService.getCartTotalPrice(cartDto)).thenReturn(new BigDecimal("88"));
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         //when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/detail"));
@@ -115,6 +121,9 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("payment"))
                 .andExpect(model().attributeExists("cart"));
 
+        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartTotalPrice(cartDto);
+        verify(cartService, times(1)).getCartProductsDto();
     }
 
     @Test
@@ -134,10 +143,12 @@ class UserControllerTest {
     @WithMockUser
     void canPayCart() throws Exception {
         //given
-        final CartDto cartDto = CartUtils.getCartWithOneDummyProduct();
+        final CartDto cartDto = getCartWithOneDummyProduct();
         when(principal.getName()).thenReturn("user");
         when(cartService.payCart(anyString())).thenReturn(StatusNotification.SUCCESS);
         when(cartService.getCart()).thenReturn(cartDto);
+        when(cartService.getCartTotalPrice(cartDto)).thenReturn(new BigDecimal("88"));
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         //when
         final ResultActions postResult = mockMvc.perform(
@@ -152,7 +163,8 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("payment", "cart", "status"));
 
         verify(cartService, times(1)).payCart(principal.getName());
-        verify(cartService, times(1)).getCartTotalPrice(cartDto);
         verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartTotalPrice(cartDto);
+        verify(cartService, times(1)).getCartProductsDto();
     }
 }

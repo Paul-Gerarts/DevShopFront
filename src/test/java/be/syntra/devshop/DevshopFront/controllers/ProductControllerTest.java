@@ -29,6 +29,7 @@ import java.util.Set;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getDummyReview;
@@ -70,13 +71,12 @@ class ProductControllerTest {
     void displayProductOverViewTest() throws Exception {
 
         // given
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         final ProductList dummyProductList = getDummyProductList();
         SearchModel searchModelDummy = new SearchModel();
-        when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/products"));
@@ -92,7 +92,7 @@ class ProductControllerTest {
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(2)).getSearchModel();
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartProductsDto();
     }
 
     @Test
@@ -106,6 +106,8 @@ class ProductControllerTest {
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(ratingDto);
         when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+
         // when
         final ResultActions getResult = mockMvc.perform(get("/products/details/" + dummyProduct.getId()));
 
@@ -157,7 +159,8 @@ class ProductControllerTest {
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
-        when(cartService.getCart()).thenReturn(dummyCartDto);
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        doNothing().when(cartService).addToCart(dummyProduct.getId());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/")
@@ -173,12 +176,11 @@ class ProductControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("productlist", "searchModel", "cart"));
 
-        //verify(productService, times(1)).addToCart(any(ProductDto.class));
-        verify(productService, times(1)).findById(dummyProduct.getId());
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
         verify(searchService, times(2)).getSearchModel();
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).addToCart(dummyProduct.getId());
     }
 
     @Test
@@ -193,9 +195,9 @@ class ProductControllerTest {
         when(productService.findById(dummyProduct.getId())).thenReturn(dummyProduct);
         when(ratingService.findByUserNameAndId(dummyProduct.getId(), "user")).thenReturn(starRatingDto);
         when(ratingService.submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user")).thenReturn(SUCCESS);
-        when(cartService.getCart()).thenReturn(getCartWithOneDummyProduct());
         when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(getDummyReview());
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/"
@@ -216,7 +218,7 @@ class ProductControllerTest {
         verify(productService, times(1)).findById(dummyProduct.getId());
         verify(ratingService, times(1)).findByUserNameAndId(dummyProduct.getId(), "user");
         verify(ratingService, times(1)).submitRating(dummyProduct.getId(), starRatingDto.getRating(), "user");
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartProductsDto();
     }
 
     @Test
@@ -224,13 +226,7 @@ class ProductControllerTest {
     void addSelectedProductToCartFromDetailsPageTest() throws Exception {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
-        final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
-        SearchModel searchModelDummy = new SearchModel();
-        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
-        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());
-        when(cartService.getCart()).thenReturn(dummyCartDto);
+        doNothing().when(cartService).addToCart(dummyProduct.getId());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/details/addtocart/" + dummyProduct.getId()));
@@ -240,8 +236,7 @@ class ProductControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/products/details/" + dummyProduct.getId()));
 
-        //verify(productService, times(1)).addToCart(any(ProductDto.class));
-        verify(productService, times(1)).findById(dummyProduct.getId());
+        verify(cartService, times(1)).addToCart(dummyProduct.getId());
     }
 
     @ParameterizedTest
@@ -261,7 +256,8 @@ class ProductControllerTest {
         when(ratingService.findByUserNameAndId(anyLong(), anyString())).thenReturn(starRatingDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(dummyReview);
         when(productMapper.convertToProductDto(any())).thenReturn(dummyProductDto);
-        when(cartService.getCart()).thenReturn(dummyCartDto);
+        //when(cartService.getCart()).thenReturn(dummyCartDto);
+        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(post("/products/details/" + dummyProduct.getId() + endPoint)

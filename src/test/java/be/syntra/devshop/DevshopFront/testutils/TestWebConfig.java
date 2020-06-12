@@ -20,13 +20,23 @@ public class TestWebConfig {
         return new RestTemplate();
     }
 
-    @Bean
+    /*@Bean
     CartDto currentCart() {
-        /*return CartDto.builder()
+        *//*return CartDto.builder()
                 .cartCreationDateTime(LocalDateTime.now())
                 .finalizedCart(false)
                 .paidCart(false)
-                .build();*/
+                .build();*//*
+        return CartDto.builder()
+                .cartCreationDateTime(LocalDateTime.now())
+                .finalizedCart(false)
+                .paidCart(false)
+                .cartContentDtoList(new ArrayList<>())
+                .build();
+    }*/
+
+    @Bean
+    public CartDto currentCart() {
         return CartDto.builder()
                 .cartCreationDateTime(LocalDateTime.now())
                 .finalizedCart(false)

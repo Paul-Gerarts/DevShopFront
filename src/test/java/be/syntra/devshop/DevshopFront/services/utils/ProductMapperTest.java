@@ -58,8 +58,6 @@ class ProductMapperTest {
         // given
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCartDto = getCartWithOneDummyProduct();
-        when(cartService.getCart()).thenReturn(dummyCartDto);
-
 
         // when
         ProductsDisplayListDto productsDisplayList = productMapper.convertToProductsDisplayListDto(dummyProductList);

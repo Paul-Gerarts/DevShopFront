@@ -30,6 +30,7 @@ public class ProductUtils {
 
     public static ProductDto getOtherDummyProductDto() {
         return ProductDto.builder()
+                .id(1L)
                 .name("name of prod")
                 .price(new BigDecimal("1.86"))
                 .categoryNames(List.of("Headphones"))
@@ -123,10 +124,6 @@ public class ProductUtils {
         return List.of(getDummyNonArchivedProduct(), getOtherDummyNonArchivedProduct());
     }
 
-    public static List<Product> getDummyArchivedProductList() {
-        return List.of(getDummyArchivedProduct(), getOtherDummyArchivedProduct());
-    }
-
     public static List<Product> getDummyAllProductList() {
         return List.of(getDummyNonArchivedProduct(), getDummyArchivedProduct());
     }
@@ -136,6 +133,22 @@ public class ProductUtils {
                 .products(getDummyNonArchivedProductList())
                 .searchResultMinPrice(BigDecimal.ZERO)
                 .searchResultMaxPrice(BigDecimal.TEN)
+                .currentPage(1)
+                .hasNext(true)
+                .hasPrevious(true)
+                .totalPages(3)
+                .build();
+    }
+
+    public static ProductList getDummyEmptyProductList() {
+        return ProductList.builder()
+                .products(Collections.emptyList())
+                .searchResultMinPrice(BigDecimal.ZERO)
+                .searchResultMaxPrice(BigDecimal.TEN)
+                .currentPage(1)
+                .hasNext(true)
+                .hasPrevious(true)
+                .totalPages(3)
                 .build();
     }
 }

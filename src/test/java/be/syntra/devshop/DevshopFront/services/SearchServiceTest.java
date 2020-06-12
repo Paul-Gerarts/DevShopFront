@@ -14,6 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
@@ -300,5 +301,33 @@ class SearchServiceTest {
         // then
         assertThat(result.size()).isEqualTo(categories.size());
         assertThat(result.get(0)).isEqualTo(categories.get(0));
+    }
+
+    @Test
+    void canAddToSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+
+        // when
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).isEqualTo(List.of(categoryTestString));
+    }
+
+    @Test
+    void canRemoveFromSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        List<Category> categories = createCategoryList();
+        searchModelDummy.setCategories(categories);
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // when
+        searchService.removeFromSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).isEqualTo(Collections.emptyList());
     }
 }
