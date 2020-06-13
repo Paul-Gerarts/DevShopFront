@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CartCountedProductDto {
+public class CartDisplayProductDto {
     private ProductDto product;
     private Integer productCount;
 }

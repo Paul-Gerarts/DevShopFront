@@ -58,24 +58,24 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(Long id) {
-        List<CartContentDto> contentDtoList = getCart().getCartContentDtoList();
+        List<CartProductDto> contentDtoList = getCart().getCartProductDtoList();
         if (productNotInCart(id)) {
-            contentDtoList.add(CartContentDto.builder()
+            contentDtoList.add(CartProductDto.builder()
                     .productDto(productMapper.convertToProductDto(productService.findById(id)))
                     .count(1)
                     .build());
         } else {
-            CartContentDto currentCartContentDto = contentDtoList.stream()
-                    .filter(cartContentDto -> cartContentDto.getProductDto().getId().equals(id))
+            CartProductDto currentCartProductDto = contentDtoList.stream()
+                    .filter(cartProductDto -> cartProductDto.getProductDto().getId().equals(id))
                     .findFirst()
                     .get();
-            currentCartContentDto.setCount(currentCartContentDto.getCount() + 1);
+            currentCartProductDto.setCount(currentCartProductDto.getCount() + 1);
         }
     }
 
     private boolean productNotInCart(Long id) {
-        return getCart().getCartContentDtoList().stream()
-                .map(CartContentDto::getProductDto)
+        return getCart().getCartProductDtoList().stream()
+                .map(CartProductDto::getProductDto)
                 .map(ProductDto::getId)
                 .filter(i -> i.equals(id))
                 .findFirst()
@@ -84,12 +84,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addOneToProductInCart(Long productId) {
-        CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
-        cartContentDto.setCount(cartContentDto.getCount() + 1);
+        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
+        cartProductDto.setCount(cartProductDto.getCount() + 1);
     }
 
-    private CartContentDto getCartContentDtoFromCart(Long productId) {
-        return getCart().getCartContentDtoList().stream()
+    private CartProductDto getCartContentDtoFromCart(Long productId) {
+        return getCart().getCartProductDtoList().stream()
                 .filter(cartCountedProductDto -> productId.equals(cartCountedProductDto.getProductDto().getId()))
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
@@ -97,18 +97,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeOneFromProductInCart(Long productId) {
-        CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
-        if (cartContentDto.getCount() == 1) {
+        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
+        if (cartProductDto.getCount() == 1) {
             removeProductFromCart(productId);
         } else {
-            cartContentDto.setCount(cartContentDto.getCount() - 1);
+            cartProductDto.setCount(cartProductDto.getCount() - 1);
         }
     }
 
     @Override
     public void removeProductFromCart(Long productId) {
-        CartContentDto cartContentDto = getCartContentDtoFromCart(productId);
-        getCart().getCartContentDtoList().remove(cartContentDto);
+        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
+        getCart().getCartProductDtoList().remove(cartProductDto);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CartServiceImpl implements CartService {
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, wrap(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);
-            currentCart.getCartContentDtoList().clear();
+            currentCart.getCartProductDtoList().clear();
             return StatusNotification.SUCCESS;
         }
         return StatusNotification.PAYMENT_FAIL;
@@ -136,7 +136,7 @@ public class CartServiceImpl implements CartService {
                 .paidCart(currentCart.isPaidCart())
                 .cartCreationDateTime(currentCart.getCartCreationDateTime())
                 .user(currentCart.getUser())
-                .cartContentDtoList(currentCart.getCartContentDtoList())
+                .cartProductDtoList(currentCart.getCartProductDtoList())
                 .build();
     }
 
@@ -147,33 +147,33 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public BigDecimal getCartTotalPrice(CartDto currentCart) {
-        return currentCart.getCartContentDtoList().stream()
-                .map(cartContentDto -> {
-                    BigDecimal productPrice = cartContentDto.getProductDto().getPrice();
-                    int count = cartContentDto.getCount();
+        return currentCart.getCartProductDtoList().stream()
+                .map(cartProductDto -> {
+                    BigDecimal productPrice = cartProductDto.getProductDto().getPrice();
+                    int count = cartProductDto.getCount();
                     return productPrice.multiply(new BigDecimal(count));
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
-    public CartProductsDisplayDto getCartProductsDto() {
-        return CartProductsDisplayDto.builder().cartCountedProductDtoList(
-                getCart().getCartContentDtoList().stream()
+    public CartDisplayDto getCartDisplayDto() {
+        return CartDisplayDto.builder().cartDisplayProductDtoList(
+                getCart().getCartProductDtoList().stream()
                         .map(this::createCartCountedProduct)
                         .collect(Collectors.toList()))
                 .cartProductsIdList(
-                        getCart().getCartContentDtoList().stream()
-                                .map(CartContentDto::getProductDto)
+                        getCart().getCartProductDtoList().stream()
+                                .map(CartProductDto::getProductDto)
                                 .map(ProductDto::getId)
                                 .collect(Collectors.toList()))
                 .build();
     }
 
-    private CartCountedProductDto createCartCountedProduct(CartContentDto cartContentDto) {
-        return CartCountedProductDto.builder()
-                .product(productMapper.convertToProductDto(productService.findById(cartContentDto.getProductDto().getId())))
-                .productCount(cartContentDto.getCount())
+    private CartDisplayProductDto createCartCountedProduct(CartProductDto cartProductDto) {
+        return CartDisplayProductDto.builder()
+                .product(productMapper.convertToProductDto(productService.findById(cartProductDto.getProductDto().getId())))
+                .productCount(cartProductDto.getCount())
                 .build();
     }
 }

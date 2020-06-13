@@ -65,7 +65,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/?searchRequest=" + testRequest));
@@ -81,7 +81,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -94,7 +94,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/pricelow/?priceLow=" + priceLow));
@@ -110,7 +110,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -123,7 +123,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/pricehigh/?priceHigh=" + priceHigh));
@@ -139,7 +139,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -151,7 +151,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/description/?description=" + description));
@@ -167,7 +167,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @ParameterizedTest
@@ -180,7 +180,7 @@ class SearchControllerTest {
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get(url));
@@ -195,7 +195,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @ParameterizedTest
@@ -208,7 +208,7 @@ class SearchControllerTest {
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get(url));
@@ -222,7 +222,7 @@ class SearchControllerTest {
 
         verify(searchService, times(1)).setArchivedView(true);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -238,7 +238,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/category/?category=" + category));
@@ -254,7 +254,7 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -270,7 +270,7 @@ class SearchControllerTest {
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/delete/?category=" + category));
@@ -286,6 +286,6 @@ class SearchControllerTest {
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 }

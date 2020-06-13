@@ -2,8 +2,8 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Product;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDisplayDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
-import be.syntra.devshop.DevshopFront.models.dtos.CartProductsDisplayDto;
 import be.syntra.devshop.DevshopFront.models.dtos.PaymentDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
@@ -47,9 +47,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @ExtendWith(MockitoExtension.class)
 @Import({TestWebConfig.class, JsonUtils.class, WebContextTestExecutionListener.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-/*@TestExecutionListeners({WebContextTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class})*/
 class CartServiceImplTest {
 
     @Autowired
@@ -95,7 +92,7 @@ class CartServiceImplTest {
         // then
         assertEquals(false,newCart.isFinalizedCart());
         assertEquals(false,newCart.isPaidCart());
-        assertEquals(0, newCart.getCartContentDtoList().size(), 0);
+        assertEquals(0, newCart.getCartProductDtoList().size(), 0);
     }
 
     @Test
@@ -111,7 +108,7 @@ class CartServiceImplTest {
         CartDto getCart = cartService.getCart();
 
         // then
-        assertEquals(getCart.getCartContentDtoList().size(), 1);
+        assertEquals(getCart.getCartProductDtoList().size(), 1);
         assertEquals(getCart.isFinalizedCart(), false);
         assertEquals(getCart.isPaidCart(), false);
     }
@@ -130,7 +127,7 @@ class CartServiceImplTest {
 
         // then
         //assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 3);
-        assertEquals(currentCart.getCartContentDtoList().get(0).getCount(), 2);
+        assertEquals(currentCart.getCartProductDtoList().get(0).getCount(), 2);
     }
 
     @Test
@@ -142,14 +139,14 @@ class CartServiceImplTest {
         when(productMapper.convertToProductDto(dummyProduct)).thenReturn(dummyProductDto);
         cartService.addToCart(dummyProductDto.getId());
         //currentCart.getProductDtos().get(0).setTotalInCart(3);
-        currentCart.getCartContentDtoList().get(0).setCount(3);
+        currentCart.getCartProductDtoList().get(0).setCount(3);
 
         // when
         cartService.removeOneFromProductInCart(1L);
 
         // then
         //assertEquals(currentCart.getProductDtos().get(0).getTotalInCart(), 2);
-        assertEquals(currentCart.getCartContentDtoList().get(0).getCount(), 2);
+        assertEquals(currentCart.getCartProductDtoList().get(0).getCount(), 2);
     }
 
     @Test
@@ -165,7 +162,7 @@ class CartServiceImplTest {
         cartService.removeProductFromCart(1L);
 
         // then
-        assertEquals(currentCart.getCartContentDtoList().size(), 0);
+        assertEquals(currentCart.getCartProductDtoList().size(), 0);
     }
 
     @Test
@@ -181,7 +178,7 @@ class CartServiceImplTest {
         cartService.removeOneFromProductInCart(1L);
 
         // then
-        assertEquals(currentCart.getCartContentDtoList().size(), 0);
+        assertEquals(currentCart.getCartProductDtoList().size(), 0);
     }
 
     @Test
@@ -248,8 +245,8 @@ class CartServiceImplTest {
         cartService.addToCart(dummyProduct.getId());
 
         // then
-        assertEquals(currentCart.getCartContentDtoList().get(0).getCount(), 1);
-        assertEquals(currentCart.getCartContentDtoList().size(), 1);
+        assertEquals(currentCart.getCartProductDtoList().get(0).getCount(), 1);
+        assertEquals(currentCart.getCartProductDtoList().size(), 1);
     }
 
     @Test
@@ -265,8 +262,8 @@ class CartServiceImplTest {
         cartService.addToCart(dummyProduct.getId());
 
         // then
-        assertEquals(currentCart.getCartContentDtoList().get(0).getCount(), 2);
-        assertEquals(currentCart.getCartContentDtoList().size(), 1);
+        assertEquals(currentCart.getCartProductDtoList().get(0).getCount(), 2);
+        assertEquals(currentCart.getCartProductDtoList().size(), 1);
     }
 
     @Test
@@ -279,10 +276,10 @@ class CartServiceImplTest {
         cartService.addToCart(dummyProduct.getId());
 
         // when
-        final CartProductsDisplayDto cartProductsDto = cartService.getCartProductsDto();
+        final CartDisplayDto cartProductsDto = cartService.getCartDisplayDto();
 
         // then
-        assertEquals(cartProductsDto.getCartCountedProductDtoList().size(), 1);
+        assertEquals(cartProductsDto.getCartDisplayProductDtoList().size(), 1);
         assertEquals(cartProductsDto.getCartProductsIdList().get(0), dummyProduct.getId());
     }
 }

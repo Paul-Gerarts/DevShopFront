@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartContentDto {
+public class CartProductDto {
     private ProductDto productDto;
     private Integer count;
 }

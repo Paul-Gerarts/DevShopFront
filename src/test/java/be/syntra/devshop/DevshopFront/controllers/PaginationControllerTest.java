@@ -67,7 +67,7 @@ public class PaginationControllerTest {
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
         when(productService.findAllProductsBySearchModel()).thenReturn(getDummyProductList());
         doNothing().when(searchService).requestNextPage();
         doNothing().when(searchService).requestPreviousPage();
@@ -91,7 +91,7 @@ public class PaginationControllerTest {
 
         verify(searchService, times(2)).getSearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
@@ -103,7 +103,7 @@ public class PaginationControllerTest {
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
         when(productService.findAllProductsBySearchModel()).thenReturn(getDummyProductList());
 
         // when
@@ -127,7 +127,7 @@ public class PaginationControllerTest {
 
         verify(searchService, times(4)).getSearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 }

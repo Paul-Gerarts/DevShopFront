@@ -61,7 +61,7 @@ public class ProductController {
         model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         return "product/productOverview";
     }
 
@@ -97,7 +97,7 @@ public class ProductController {
         model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         return "product/productOverview";
     }
 
@@ -132,7 +132,7 @@ public class ProductController {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
         model.addAttribute("product", productMapper.convertToProductDto(product));
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("rating", rating);
         return "product/productDetails";
     }
@@ -144,7 +144,7 @@ public class ProductController {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
         model.addAttribute("product", productMapper.convertToProductDto(product));
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("rating", rating);
         model.addAttribute("status", statusNotification);
         return "product/productDetails";

@@ -50,7 +50,7 @@ class UserControllerTest {
     @WithMockUser
     void displayCartWhenLoggedIn() throws Exception {
         // given
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/detail"));
@@ -60,7 +60,7 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("cart"))
                 .andExpect(view().name("user/cartOverview"));
 
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -108,7 +108,7 @@ class UserControllerTest {
         when(principal.getName()).thenReturn("user");
         when(cartService.getCart()).thenReturn(cartDto);
         when(cartService.getCartTotalPrice(cartDto)).thenReturn(new BigDecimal("88"));
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         //when
         final ResultActions getResult = mockMvc.perform(get("/users/cart/detail"));
@@ -123,7 +123,7 @@ class UserControllerTest {
 
         verify(cartService, times(1)).getCart();
         verify(cartService, times(1)).getCartTotalPrice(cartDto);
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 
     @Test
@@ -148,7 +148,7 @@ class UserControllerTest {
         when(cartService.payCart(anyString())).thenReturn(StatusNotification.SUCCESS);
         when(cartService.getCart()).thenReturn(cartDto);
         when(cartService.getCartTotalPrice(cartDto)).thenReturn(new BigDecimal("88"));
-        when(cartService.getCartProductsDto()).thenReturn(getCartProductsDisplayDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         //when
         final ResultActions postResult = mockMvc.perform(
@@ -165,6 +165,6 @@ class UserControllerTest {
         verify(cartService, times(1)).payCart(principal.getName());
         verify(cartService, times(1)).getCart();
         verify(cartService, times(1)).getCartTotalPrice(cartDto);
-        verify(cartService, times(1)).getCartProductsDto();
+        verify(cartService, times(1)).getCartDisplayDto();
     }
 }

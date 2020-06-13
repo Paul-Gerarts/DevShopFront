@@ -76,7 +76,7 @@ public class PaginationController {
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productMapper.convertToProductsDisplayListDto(productList));
         //model.addAttribute("cart", cartService.getCart());
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         return PRODUCT_OVERVIEW;
     }
 

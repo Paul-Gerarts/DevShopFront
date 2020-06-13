@@ -73,7 +73,7 @@ public class UserController {
                 .totalCartPrice(cartService.getCartTotalPrice(currentCart))
                 .paymentOptions(Arrays.asList(PaymentOption.values()))
                 .build();
-        model.addAttribute("cart", cartService.getCartProductsDto());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("payment", paymentDto);
     }
 }

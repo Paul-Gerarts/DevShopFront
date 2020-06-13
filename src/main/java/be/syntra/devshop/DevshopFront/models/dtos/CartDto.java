@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CartDto {
@@ -22,5 +21,5 @@ public class CartDto {
     private LocalDateTime cartCreationDateTime = LocalDateTime.now();
     private boolean finalizedCart;
     private boolean paidCart;
-    private List<CartContentDto> cartContentDtoList = new ArrayList<>();
+    private List<CartProductDto> cartProductDtoList = new ArrayList<>();
 }

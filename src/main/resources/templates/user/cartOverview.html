@@ -17,7 +17,7 @@
     <main class="mdl-layout__content">
         <div class="page-content" th:object="${cart}">
             <span class="mdl-layout-title" id="title">Cart overview</span>
-            <label th:if="${cart.cartCountedProductDtoList.size() < 1}">No products in your cart, please use the
+            <label th:if="${cart.cartDisplayProductDtoList.size() < 1}">No products in your cart, please use the
                 overview
                 or search
                 to discover products to add to your cart.</label>
@@ -106,7 +106,7 @@
             </ul>-->
             <ul class="mdl-list">
                 <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item-flex"
-                    th:each="countedProduct,index : ${cart.cartCountedProductDtoList}">
+                    th:each="countedProduct,index : ${cart.cartDisplayProductDtoList}">
                     <a th:href="@{/products/details/{id}(id=${countedProduct.product.id})}"
                        class="cart-detail-href cart-product-item-flex-product-title" style="color: black;">
                         <label class="cart-product-item-title cart-detail-href"
@@ -206,7 +206,7 @@
             <form method="post" th:object="${cart}">
                 <button type="submit"
                         class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button mdl-color--blue mdl-title__margin"
-                        th:disabled="${status != null && status.label.equals('Success') && cart.cartCountedProductDtoList.isEmpty() }">
+                        th:disabled="${status != null && status.label.equals('Success') && cart.cartDisplayProductDtoList.isEmpty() }">
                     <label style="color: white" th:text="CHECKOUT"></label>
                 </button>
             </form>
