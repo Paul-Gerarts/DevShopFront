@@ -118,7 +118,6 @@ public class SearchController {
         model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute(SEARCH_MODEL, searchService.getSearchModel());
         model.addAttribute(PRODUCTS, productMapper.convertToProductsDisplayListDto(productList));
-        //model.addAttribute("cart", cartService.getCart());
         model.addAttribute("cart", cartService.getCartDisplayDto());
         return PRODUCT_OVERVIEW;
     }
