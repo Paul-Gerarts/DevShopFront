@@ -438,7 +438,7 @@ html, body, .spinner {
     top: 650px;
     position: absolute;
     font-size: x-large;
-    padding-left: 60px;
+    padding-left: 100px;
     z-index: 1;
 }
 

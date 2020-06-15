@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_EXISTS;
+import static java.lang.Boolean.parseBoolean;
 
 
 @Slf4j
@@ -90,9 +91,9 @@ public class AdminController {
         return handleChangedProductForm(productDto, bindingResult, model);
     }
 
-    @GetMapping("/toggle")
-    public String toggleArchivedSearch(Model model, boolean searchSwitch) {
-        searchService.setArchivedSearchSwitch(searchSwitch);
+    @GetMapping("/toggle/")
+    public String toggleArchivedSearch(Model model, @RequestParam(defaultValue = "false") String searchSwitch) {
+        searchService.setArchivedSearchSwitch(!parseBoolean(searchSwitch));
         return getProductOverview(model);
         // TODO: add controllerTest. All the rest is already tested.
     }

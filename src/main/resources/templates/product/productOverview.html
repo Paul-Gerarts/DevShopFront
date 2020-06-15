@@ -124,13 +124,20 @@
             </div>
         </div>
         <!--admin-archived-search-switch-->
-        <div class="search-filters admin-archived-switch">
-            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch">
-                <input type="checkbox" id="switch" class="mdl-switch__input">
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="search-filters admin-archived-switch">
+            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="searchSwitch">
+                <input onclick="toggleSwitch(this)" type="checkbox" id="searchSwitch" name="searchSwitch"
+                       th:value="${searchModel.isArchivedSearchSwitch()}" class="mdl-switch__input">
                 <span class="mdl-switch__label"></span>
             </label>
             <div class="admin-archived-switch-text">toggle archived product search</div>
         </div>
+        <script th:inline="javascript">
+            function toggleSwitch(element) {
+                const archivedSearch = element.value;
+                location = "/admin/toggle/?searchSwitch=" + archivedSearch;
+            }
+        </script>
         <!--search filters-->
         <div class="search-filters" style="min-height: 1000px;">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
@@ -161,95 +168,93 @@
                         <div class="sorting-text">sort by price</div>
                     </div>
                     <!--price-sliders-->
-                    <div sec:authorize="!hasRole('ROLE_ADMIN')">
-                        <div class="mdl-textfield__label sorting-text slider-low slider-low-title">select minimum price
+                    <div class="mdl-textfield__label sorting-text slider-low slider-low-title">select minimum price
+                    </div>
+                    <form class="search-filters slider-low" method="get" th:action="@{/search/pricelow/}"
+                          id="priceLowForm">
+                        <div class="range-wrap">
+                            <input class="mdl-slider mdl-js-slider range trigger-submit-low" th:name="priceLow"
+                                   type="range"
+                                   name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
+                                   value="0" step="10" style="width: 250px;">
+                            <output class="bubble"></output>
                         </div>
-                        <form class="search-filters slider-low" method="get" th:action="@{/search/pricelow/}"
-                              id="priceLowForm">
-                            <div class="range-wrap">
-                                <input class="mdl-slider mdl-js-slider range trigger-submit-low" th:name="priceLow"
-                                       type="range"
-                                       name="priceLow" id="sliderLow" min="0" th:max="${searchModel.getPriceHigh()}"
-                                       value="0" step="10" style="width: 250px;">
-                                <output class="bubble"></output>
-                            </div>
-                            <p class="slider-low-input" id="sliderLowInput"
-                               style="font-size: x-large; color: dodgerblue; min-width: 150px"
-                               th:text="'€ ' + ${searchModel.getPriceLow()}"></p>
-                        </form>
-                        <div class="mdl-textfield__label sorting-text slider-high slider-high-title">select maximum
-                            price
+                        <p class="slider-low-input" id="sliderLowInput"
+                           style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                           th:text="'€ ' + ${searchModel.getPriceLow()}"></p>
+                    </form>
+                    <div class="mdl-textfield__label sorting-text slider-high slider-high-title">select maximum
+                        price
+                    </div>
+                    <form class="search-filters slider-high" method="get" th:action="@{/search/pricehigh/}"
+                          id="priceHighForm">
+                        <div class="range-wrap">
+                            <input class="mdl-slider mdl-js-slider range trigger-submit-high" type="range"
+                                   th:name="priceHigh"
+                                   id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
+                                   value="100000" step="10" style="width: 250px;">
+                            <output class="bubble"></output>
                         </div>
-                        <form class="search-filters slider-high" method="get" th:action="@{/search/pricehigh/}"
-                              id="priceHighForm">
-                            <div class="range-wrap">
-                                <input class="mdl-slider mdl-js-slider range trigger-submit-high" type="range"
-                                       th:name="priceHigh"
-                                       id="sliderHigh" name="priceHigh" min="0" th:max="${searchModel.getPriceHigh()}"
-                                       value="100000" step="10" style="width: 250px;">
-                                <output class="bubble"></output>
-                            </div>
-                            <p class="slider-high-input" id="sliderHighInput"
-                               style="font-size: x-large; color: dodgerblue; min-width: 150px"
-                               th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
-                        </form>
-                        <script th:inline="javascript">
-                            document.getElementById("sliderLow").oninput = function () {
-                                document.getElementById("sliderLowInput").innerHTML = document.getElementById("sliderLow").value;
-                            }
+                        <p class="slider-high-input" id="sliderHighInput"
+                           style="font-size: x-large; color: dodgerblue; min-width: 150px"
+                           th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
+                    </form>
+                    <script th:inline="javascript">
+                        document.getElementById("sliderLow").oninput = function () {
+                            document.getElementById("sliderLowInput").innerHTML = document.getElementById("sliderLow").value;
+                        }
 
-                            document.getElementById("sliderHigh").oninput = function () {
-                                document.getElementById("sliderHighInput").innerHTML = document.getElementById("sliderHigh").value;
-                            }
+                        document.getElementById("sliderHigh").oninput = function () {
+                            document.getElementById("sliderHighInput").innerHTML = document.getElementById("sliderHigh").value;
+                        }
 
-                            const sliderTriggerLow = document.querySelector('.trigger-submit-low');
-                            const sliderTriggerHigh = document.querySelector('.trigger-submit-high');
+                        const sliderTriggerLow = document.querySelector('.trigger-submit-low');
+                        const sliderTriggerHigh = document.querySelector('.trigger-submit-high');
 
-                            sliderTriggerLow.addEventListener('change', function () {
-                                document.getElementById("priceLowForm").submit();
-                            });
+                        sliderTriggerLow.addEventListener('change', function () {
+                            document.getElementById("priceLowForm").submit();
+                        });
 
-                            sliderTriggerHigh.addEventListener('change', function () {
-                                document.getElementById("priceHighForm").submit();
-                            })
+                        sliderTriggerHigh.addEventListener('change', function () {
+                            document.getElementById("priceHighForm").submit();
+                        })
 
-                            const allRanges = document.querySelectorAll(".range-wrap");
-                            allRanges.forEach(wrap => {
-                                const range = wrap.querySelector(".range");
-                                const bubble = wrap.querySelector(".bubble");
+                        const allRanges = document.querySelectorAll(".range-wrap");
+                        allRanges.forEach(wrap => {
+                            const range = wrap.querySelector(".range");
+                            const bubble = wrap.querySelector(".bubble");
 
-                                range.addEventListener("input", () => {
-                                    setBubble(range, bubble);
-                                });
+                            range.addEventListener("input", () => {
                                 setBubble(range, bubble);
                             });
+                            setBubble(range, bubble);
+                        });
 
-                            function setBubble(range, bubble) {
-                                const val = range.value;
-                                const min = range.min ? range.min : 0;
-                                const max = range.max ? range.max : 100;
-                                const newVal = Number(((val - min) * 100) / (max - min));
-                                bubble.innerHTML = val;
+                        function setBubble(range, bubble) {
+                            const val = range.value;
+                            const min = range.min ? range.min : 0;
+                            const max = range.max ? range.max : 100;
+                            const newVal = Number(((val - min) * 100) / (max - min));
+                            bubble.innerHTML = val;
 
-                                // Sort of magic numbers based on size of the native UI thumb
-                                bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-                            }
-                        </script>
-                        <!--description-search-->
-                        <div class="searchbar description search-filters">
-                            <form class="searchbar" id="searchDescriptionForm" method="get"
-                                  th:action="@{/search/description/}">
-                                <em class="material-icons description-icon">search</em>
-                                <input th:if="${searchModel.description == null || searchModel.description == ''}"
-                                       class="searchbar-input description-search" type="text" id="descriptionNull"
-                                       th:name="description"
-                                       placeholder="Search for a product description here...">
-                                <input th:if="${searchModel.description != null && searchModel.description != ''}"
-                                       class="searchbar-input description-search" type="text" id="descriptionEntered"
-                                       th:name="description"
-                                       th:placeholder="${searchModel.getDescription()}">
-                            </form>
-                        </div>
+                            // Sort of magic numbers based on size of the native UI thumb
+                            bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+                        }
+                    </script>
+                    <!--description-search-->
+                    <div class="searchbar description search-filters">
+                        <form class="searchbar" id="searchDescriptionForm" method="get"
+                              th:action="@{/search/description/}">
+                            <em class="material-icons description-icon">search</em>
+                            <input th:if="${searchModel.description == null || searchModel.description == ''}"
+                                   class="searchbar-input description-search" type="text" id="descriptionNull"
+                                   th:name="description"
+                                   placeholder="Search for a product description here...">
+                            <input th:if="${searchModel.description != null && searchModel.description != ''}"
+                                   class="searchbar-input description-search" type="text" id="descriptionEntered"
+                                   th:name="description"
+                                   th:placeholder="${searchModel.getDescription()}">
+                        </form>
                     </div>
                     <!--category-filter-->
                     <select onchange="selectCategory(this)" class="category-dropdown category-select"
