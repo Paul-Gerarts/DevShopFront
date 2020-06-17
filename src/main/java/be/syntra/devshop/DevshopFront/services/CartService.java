@@ -11,8 +11,6 @@ public interface CartService {
 
     CartDto getCart();
 
-    //void addToCart(Product product);
-
     void addToCart(Long id);
 
     void addOneToProductInCart(Long productId);

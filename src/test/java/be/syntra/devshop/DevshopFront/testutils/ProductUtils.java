@@ -101,17 +101,6 @@ public class ProductUtils {
                 .build();
     }
 
-    public static Product getOtherDummyArchivedProduct() {
-        return Product.builder()
-                .id(2L)
-                .name("another product")
-                .price(new BigDecimal("0.99"))
-                .description("another description")
-                .archived(true)
-                .categories(createCategoryList())
-                .build();
-    }
-
     public static ProductsDisplayListDto getDummyProductDtoList() {
         return ProductsDisplayListDto.builder().products(getDummyListOfProductDtos()).build();
     }

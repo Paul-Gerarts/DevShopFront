@@ -3,7 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.*;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
@@ -30,7 +29,6 @@ import java.util.Set;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.UPDATED;
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
-import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
 import static be.syntra.devshop.DevshopFront.testutils.ReviewUtils.getDummyReview;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
@@ -154,7 +152,6 @@ class ProductControllerTest {
         // given
         final Product dummyProduct = getDummyNonArchivedProduct();
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -248,7 +245,6 @@ class ProductControllerTest {
         final Review dummyReview = getDummyReview();
         final StarRatingDto starRatingDto = createStarRatingDto();
         final ProductDto dummyProductDto = getDummyProductDtoWithReview();
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
         when(reviewService.submitReview(anyLong(), any())).thenReturn(StatusNotification.SAVED);
         when(reviewService.updateReview(anyLong(), any())).thenReturn(StatusNotification.REVIEW_UPDATED);
         when(reviewService.removeReview(anyLong(), any())).thenReturn(StatusNotification.REVIEW_DELETED);
@@ -256,7 +252,6 @@ class ProductControllerTest {
         when(ratingService.findByUserNameAndId(anyLong(), anyString())).thenReturn(starRatingDto);
         when(reviewService.findByUserNameAndId(anyLong(), anyString())).thenReturn(dummyReview);
         when(productMapper.convertToProductDto(any())).thenReturn(dummyProductDto);
-        //when(cartService.getCart()).thenReturn(dummyCartDto);
         when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when

@@ -1,12 +1,11 @@
 package be.syntra.devshop.DevshopFront.testutils;
 
 import be.syntra.devshop.DevshopFront.models.dtos.CartDisplayDto;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDisplayProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartProductDto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDto;
 
@@ -17,7 +16,7 @@ public class CartUtils {
         return CartDto.builder()
                 .finalizedCart(false)
                 .paidCart(false)
-                .cartProductDtoList(getDummyCartContentDtoList())
+                .cartProductDtoSet(getCartProductDtoSet())
                 .build();
     }
 
@@ -25,35 +24,33 @@ public class CartUtils {
         return CartDto.builder()
                 .finalizedCart(false)
                 .paidCart(false)
-                .cartProductDtoList(getDummyCartContentDtoList())
+                .cartProductDtoSet(getCartProductDtoSet())
                 .build();
+    }
+
+    public static CartDisplayDto getCartProductsDisplayDto() {
+        return CartDisplayDto.builder()
+                .cartProductDtoSet(getCartProductDtoSet())
+                .cartProductsIdSet(getProductIdSet())
+                .build();
+    }
+
+    private static Set<Long> getProductIdSet() {
+        Set<Long> cartProductsIdList = new HashSet<>();
+        cartProductsIdList.add(getDummyCartContentDto().getProductDto().getId());
+        return cartProductsIdList;
+    }
+
+    private static Set<CartProductDto> getCartProductDtoSet() {
+        Set<CartProductDto> cartProductDtoList = new HashSet<>();
+        cartProductDtoList.add(getDummyCartContentDto());
+        return cartProductDtoList;
     }
 
     private static CartProductDto getDummyCartContentDto() {
         return CartProductDto.builder()
                 .productDto(getDummyProductDto())
                 .count(1)
-                .build();
-    }
-
-    private static List<CartProductDto> getDummyCartContentDtoList() {
-        List<CartProductDto> cartProductDtoList = new ArrayList<>();
-        cartProductDtoList.add(getDummyCartContentDto());
-        return cartProductDtoList;
-    }
-
-    public static CartDisplayDto getCartProductsDisplayDto() {
-        CartDisplayProductDto cartDisplayProductDto = CartDisplayProductDto.builder()
-                .product(getDummyProductDto())
-                .productCount(1)
-                .build();
-        List<Long> cartProductsIdList = new ArrayList<>();
-        cartProductsIdList.add(cartDisplayProductDto.getProduct().getId());
-        List<CartDisplayProductDto> cartDisplayProductDtoList = new ArrayList<>();
-        cartDisplayProductDtoList.add(cartDisplayProductDto);
-        return CartDisplayDto.builder()
-                .cartDisplayProductDtoList(cartDisplayProductDtoList)
-                .cartProductsIdList(cartProductsIdList)
                 .build();
     }
 }

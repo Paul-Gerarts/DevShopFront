@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,5 +21,5 @@ public class CartDto {
     private LocalDateTime cartCreationDateTime = LocalDateTime.now();
     private boolean finalizedCart;
     private boolean paidCart;
-    private List<CartProductDto> cartProductDtoList = new ArrayList<>();
+    private Set<CartProductDto> cartProductDtoSet = new HashSet<>();
 }

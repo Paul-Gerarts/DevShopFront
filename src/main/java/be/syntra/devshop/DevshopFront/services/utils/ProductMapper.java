@@ -35,20 +35,6 @@ public class ProductMapper {
                 .build();
     }
 
-    public Product convertToProduct(ProductDto productDto) {
-        return Product.builder()
-                .id(productDto.getId())
-                .name(productDto.getName())
-                .price(productDto.getPrice())
-                .description(productDto.getDescription())
-                .archived(productDto.isArchived())
-                .categories(categoryMapper.mapToCategories(productDto.getCategoryNames()))
-                .averageRating(productDto.getAverageRating())
-                .ratings(productDto.getRatings())
-                .reviews(productDto.getReviews())
-                .build();
-    }
-
     public ProductsDisplayListDto convertToProductsDisplayListDto(ProductList productList) {
         List<ProductDto> productDtoList = productList.getProducts().stream()
                 .map(this::convertToProductDto)

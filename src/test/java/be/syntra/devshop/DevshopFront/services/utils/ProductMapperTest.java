@@ -1,11 +1,9 @@
 package be.syntra.devshop.DevshopFront.services.utils;
 
 import be.syntra.devshop.DevshopFront.models.Product;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
-import be.syntra.devshop.DevshopFront.services.CartService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithOneDummyProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyNonArchivedProduct;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,9 +25,6 @@ class ProductMapperTest {
 
     @Mock
     private CategoryMapper categoryMapper;
-
-    @Mock
-    private CartService cartService;
 
     @Test
     void convertToProductDtoTest() {
@@ -57,7 +51,6 @@ class ProductMapperTest {
     void convertToProductsDisplayListDto() {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCartDto = getCartWithOneDummyProduct();
 
         // when
         ProductsDisplayListDto productsDisplayList = productMapper.convertToProductsDisplayListDto(dummyProductList);

@@ -234,7 +234,6 @@ class SearchControllerTest {
                 .selectedCategories(List.of(category))
                 .searchResultView(true).build();
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -266,7 +265,6 @@ class SearchControllerTest {
                 .selectedCategories(List.of(category))
                 .searchResultView(true).build();
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(searchModel);

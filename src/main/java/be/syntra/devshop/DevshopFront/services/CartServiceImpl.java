@@ -2,7 +2,10 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.exceptions.ProductNotFoundException;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
-import be.syntra.devshop.DevshopFront.models.dtos.*;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDisplayDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
+import be.syntra.devshop.DevshopFront.models.dtos.CartProductDto;
+import be.syntra.devshop.DevshopFront.models.dtos.ProductDto;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +17,16 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class CartServiceImpl implements CartService {
-    private CartDto currentCart;
-    private ProductService productService;
-    private ProductMapper productMapper;
+    private final CartDto currentCart;
+    private final ProductService productService;
+    private final ProductMapper productMapper;
 
     @Value("${baseUrl}")
     private String baseUrl;
@@ -58,28 +62,16 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(Long id) {
-        List<CartProductDto> contentDtoList = getCart().getCartProductDtoList();
-        if (productNotInCart(id)) {
-            contentDtoList.add(CartProductDto.builder()
-                    .productDto(productMapper.convertToProductDto(productService.findById(id)))
-                    .count(1)
-                    .build());
-        } else {
-            CartProductDto currentCartProductDto = contentDtoList.stream()
-                    .filter(cartProductDto -> cartProductDto.getProductDto().getId().equals(id))
-                    .findFirst()
-                    .get();
-            currentCartProductDto.setCount(currentCartProductDto.getCount() + 1);
-        }
-    }
-
-    private boolean productNotInCart(Long id) {
-        return getCart().getCartProductDtoList().stream()
-                .map(CartProductDto::getProductDto)
-                .map(ProductDto::getId)
-                .filter(i -> i.equals(id))
+        Set<CartProductDto> contentDtoList = getCart().getCartProductDtoSet();
+        CartProductDto currentCartProductDto = contentDtoList.stream()
+                .filter(cartProductDto -> cartProductDto.getProductDto().getId().equals(id))
                 .findFirst()
-                .isEmpty();
+                .orElse(CartProductDto.builder()
+                        .productDto(productMapper.convertToProductDto(productService.findById(id)))
+                        .count(0)
+                        .build());
+        currentCartProductDto.setCount(currentCartProductDto.getCount() + 1);
+        contentDtoList.add(currentCartProductDto);
     }
 
     @Override
@@ -89,10 +81,10 @@ public class CartServiceImpl implements CartService {
     }
 
     private CartProductDto getCartContentDtoFromCart(Long productId) {
-        return getCart().getCartProductDtoList().stream()
+        Optional<CartProductDto> cartProductDto = getCart().getCartProductDtoSet().stream()
                 .filter(cartCountedProductDto -> productId.equals(cartCountedProductDto.getProductDto().getId()))
-                .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
+                .findFirst();
+        return cartProductDto.orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
     }
 
     @Override
@@ -108,18 +100,17 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeProductFromCart(Long productId) {
         CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
-        getCart().getCartProductDtoList().remove(cartProductDto);
+        getCart().getCartProductDtoSet().remove(cartProductDto);
     }
 
     @Override
     public StatusNotification payCart(String userName) {
         currentCart.setUser(userName);
-        setCartToFinalized(currentCart);
-
+        currentCart.setFinalizedCart(true);
         ResponseEntity<CartDto> cartDtoResponseEntity = restTemplate.postForEntity(resourceUrl, wrap(currentCart), CartDto.class);
         if (HttpStatus.CREATED.equals(cartDtoResponseEntity.getStatusCode())) {
             log.info("payCart() -> successful {}", currentCart);
-            currentCart.getCartProductDtoList().clear();
+            currentCart.getCartProductDtoSet().clear();
             return StatusNotification.SUCCESS;
         }
         return StatusNotification.PAYMENT_FAIL;
@@ -136,44 +127,44 @@ public class CartServiceImpl implements CartService {
                 .paidCart(currentCart.isPaidCart())
                 .cartCreationDateTime(currentCart.getCartCreationDateTime())
                 .user(currentCart.getUser())
-                .cartProductDtoList(currentCart.getCartProductDtoList())
+                .cartProductDtoSet(currentCart.getCartProductDtoSet())
                 .build();
-    }
-
-    private void setCartToFinalized(CartDto cartDto) {
-        cartDto.setFinalizedCart(true);
-        cartDto.setPaidCart(false);
     }
 
     @Override
     public BigDecimal getCartTotalPrice(CartDto currentCart) {
-        return currentCart.getCartProductDtoList().stream()
-                .map(cartProductDto -> {
-                    BigDecimal productPrice = cartProductDto.getProductDto().getPrice();
-                    int count = cartProductDto.getCount();
-                    return productPrice.multiply(new BigDecimal(count));
-                })
+        return currentCart.getCartProductDtoSet().stream()
+                .map(cartProductDto -> cartProductDto.getProductDto()
+                        .getPrice()
+                        .multiply(new BigDecimal(cartProductDto.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
     public CartDisplayDto getCartDisplayDto() {
-        return CartDisplayDto.builder().cartDisplayProductDtoList(
-                getCart().getCartProductDtoList().stream()
-                        .map(this::createCartCountedProduct)
-                        .collect(Collectors.toList()))
-                .cartProductsIdList(
-                        getCart().getCartProductDtoList().stream()
-                                .map(CartProductDto::getProductDto)
-                                .map(ProductDto::getId)
-                                .collect(Collectors.toList()))
+        return CartDisplayDto.builder()
+                .cartProductDtoSet(getProducts())
+                .cartProductsIdSet(getProductIds())
                 .build();
     }
 
-    private CartDisplayProductDto createCartCountedProduct(CartProductDto cartProductDto) {
-        return CartDisplayProductDto.builder()
-                .product(productMapper.convertToProductDto(productService.findById(cartProductDto.getProductDto().getId())))
-                .productCount(cartProductDto.getCount())
+    private Set<Long> getProductIds() {
+        return getCart().getCartProductDtoSet().stream()
+                .map(CartProductDto::getProductDto)
+                .map(ProductDto::getId)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<CartProductDto> getProducts() {
+        return getCart().getCartProductDtoSet().stream()
+                .map(this::createCartProduct)
+                .collect(Collectors.toSet());
+    }
+
+    private CartProductDto createCartProduct(CartProductDto cartProductDto) {
+        return CartProductDto.builder()
+                .productDto(productMapper.convertToProductDto(productService.findById(cartProductDto.getProductDto().getId())))
+                .count(cartProductDto.getCount())
                 .build();
     }
 }
