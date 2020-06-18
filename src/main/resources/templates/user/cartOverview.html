@@ -17,24 +17,26 @@
     <main class="mdl-layout__content">
         <div class="page-content" th:object="${cart}">
             <span class="mdl-layout-title" id="title">Cart overview</span>
-            <label th:if="${cart.getProducts().size() < 1}">No products in your cart, please use the overview or search
+            <label th:if="${cart.cartProductDtoSet.size() < 1}">No products in your cart, please use the
+                overview
+                or search
                 to discover products to add to your cart.</label>
             <ul class="mdl-list">
                 <li class="mdl-list__item md-list__item-mdl-color--grey-100 mdl-shadow--8dp cart-product-item-flex"
-                    th:each="product,index : ${cart.getProducts()}">
-                    <a th:href="@{/products/details/{id}(id=${product.id})}"
+                    th:each="countedProduct,index : ${cart.cartProductDtoSet}">
+                    <a th:href="@{/products/details/{id}(id=${countedProduct.productDto.id})}"
                        class="cart-detail-href cart-product-item-flex-product-title" style="color: black;">
                         <label class="cart-product-item-title cart-detail-href"
-                               th:text="${product.name}">Product Name</label>
+                               th:text="${countedProduct.productDto.name}">Product Name</label>
                     </a>
                     <div class="cart-product-item-flex-product-price">
                         <label class="cart-product-item-content"
-                               th:text="'€ ' + ${product.price}">€ 999.99</label>
+                               th:text="'€ ' + ${countedProduct.productDto.price}">€ 999.99</label>
                     </div>
                     <div class="cart-product-item-flex-product-minus">
                         <!-- show the regular link when numberInCart is > 1 -->
-                        <span th:if="${product.totalInCart > 1}">
-                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${product.id})}"
+                        <span th:if="${countedProduct.count > 1}">
+                            <a th:href="@{/users/cart/details/minus_one/{id}(id=${countedProduct.productDto.id})}"
                                style="text-decoration: none;">
                                 <label class="cart-product-item-content cart-detail-href">
                                     <em class="material-icons" style="font-size: 20px; padding-top: 9px">remove_circle_outline</em>
@@ -42,7 +44,7 @@
                             </a>
                         </span>
                         <!-- if above is not true show this link that just links to the modal by the css class name -->
-                        <span th:unless="${product.totalInCart > 1}">
+                        <span th:unless="${countedProduct.count > 1}">
                             <a style="text-decoration: none;">
                                 <label class="cart-product-item-content cart-detail-href ">
                                     <em th:id="${'minusid'+index.count}" class="material-icons show-modal"
@@ -53,10 +55,10 @@
                     </div>
                     <div class="cart-product-item-flex-product-count">
                         <label class="cart-product-item-content"
-                               th:text="${product.totalInCart}">99</label>
+                               th:text="${countedProduct.count}">99</label>
                     </div>
                     <div class="cart-product-item-flex-product-plus">
-                        <a th:href="@{/users/cart/details/plus_one/{id}(id=${product.id})}"
+                        <a th:href="@{/users/cart/details/plus_one/{id}(id=${countedProduct.productDto.id})}"
                            style="text-decoration: none;">
                             <label class="cart-product-item-content cart-detail-href">
                                 <em class="material-icons"
@@ -66,11 +68,11 @@
                     </div>
                     <div class="cart-product-item-flex-product-total">
                         <label class="cart-product-item-title"
-                               th:text="'€ ' + ${product.totalInCart*product.price}">€
+                               th:text="'€ ' + ${countedProduct.count * countedProduct.productDto.price}">€
                             999.99</label>
                     </div>
                     <div class="cart-product-item-flex-product-delete">
-                        <a th:href="@{/users/cart/details/delete/{id}(id=${product.id})}"
+                        <a th:href="@{/users/cart/details/delete/{id}(id=${countedProduct.productDto.id})}"
                            style="text-decoration: none;">
                             <label class="cart-product-item-content cart-detail-href">
                                 <em class="material-icons"
@@ -78,7 +80,8 @@
                             </label>
                         </a>
                     </div>
-                    <dialog th:if="${product.totalInCart == 1}" th:id="${'dialogid'+index.count}" class="mdl-dialog">
+                    <dialog th:if="${countedProduct.count == 1}" th:id="${'dialogid'+index.count}"
+                            class="mdl-dialog">
                         <h4 class="mdl-dialog__title">Remove this product from the Cart?</h4>
                         <div class="mdl-dialog__content">
                             <p>
@@ -92,7 +95,7 @@
                                 <em class="material-icons">undo</em>Back
                             </button>
                             <form method="get"
-                                  th:action="@{/users/cart/details/minus_one/{id}(id=${product.id})}">
+                                  th:action="@{/users/cart/details/minus_one/{id}(id=${countedProduct.productDto.id})}">
                                 <button type="submit"
                                         class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--red mdl-color-text--white">
                                     <em class="material-icons">clear</em>Remove Product
@@ -120,7 +123,7 @@
             <form method="post" th:object="${cart}">
                 <button type="submit"
                         class="mdl-button show-modal mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button mdl-color--blue mdl-title__margin"
-                        th:disabled="${status != null && status.label.equals('Success') && cart.getProducts().isEmpty() }">
+                        th:disabled="${status != null && status.label.equals('Success') && cart.cartProductDtoSet.isEmpty() }">
                     <label style="color: white" th:text="CHECKOUT"></label>
                 </button>
             </form>

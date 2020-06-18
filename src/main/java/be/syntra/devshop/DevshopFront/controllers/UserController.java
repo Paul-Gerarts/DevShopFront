@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/cart/details/plus_one/{id}")
     public String increaseCartProduct(@PathVariable Long id) {
-        cartService.addOneToProductInCart(id);
+        cartService.addToCart(id);
         return REDIRECT_CART_DETAIL_URL;
     }
 
@@ -73,7 +73,7 @@ public class UserController {
                 .totalCartPrice(cartService.getCartTotalPrice(currentCart))
                 .paymentOptions(Arrays.asList(PaymentOption.values()))
                 .build();
-        model.addAttribute("cart", currentCart);
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("payment", paymentDto);
     }
 }

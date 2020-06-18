@@ -40,8 +40,5 @@ public class ProductDto {
     @PositiveOrZero
     private double averageRating;
 
-    @Builder.Default
-    private int totalInCart = 0;
-
     private Set<Review> reviews;
 }

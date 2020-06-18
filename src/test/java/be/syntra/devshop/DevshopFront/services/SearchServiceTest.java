@@ -305,6 +305,31 @@ class SearchServiceTest {
     }
 
     @Test
+    void canAddToSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+
+        // when
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).contains(categoryTestString);
+    }
+
+    @Test
+    void canRemoveFromSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // when
+        searchService.removeFromSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).doesNotContain(categoryTestString);
+    }
+
+    @Test
     void canSetStarRatingTest() {
         // given
         SearchModel searchmodelDummy = searchService.getSearchModel();

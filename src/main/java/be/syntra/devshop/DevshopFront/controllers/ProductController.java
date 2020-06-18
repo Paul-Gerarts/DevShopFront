@@ -61,7 +61,7 @@ public class ProductController {
         model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         return "product/productOverview";
     }
 
@@ -91,19 +91,19 @@ public class ProductController {
 
     @PostMapping
     public String addSelectedProductToCart(@ModelAttribute("id") Long id, Model model) {
-        productService.addToCart(productService.findById(id));
+        cartService.addToCart(id);
         ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("pageSizeList", pageSizes);
         model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
         model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         return "product/productOverview";
     }
 
     @PostMapping("/details/addtocart/{id}")
     public String addSelectedProductFromDetailToCart(@PathVariable Long id) {
-        productService.addToCart(productService.findById(id));
+        cartService.addToCart(id);
         return REDIRECT_PRODUCT_DETAILS + id;
     }
 
@@ -131,8 +131,8 @@ public class ProductController {
         if (null != user) {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
-        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("product", productMapper.convertToProductDto(product));
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("rating", rating);
         return "product/productDetails";
     }
@@ -143,8 +143,8 @@ public class ProductController {
         if (null != user) {
             model.addAttribute("review", reviewService.findByUserNameAndId(id, user.getName()));
         }
-        model.addAttribute("product", productMapper.convertToDisplayProductDto(product));
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("product", productMapper.convertToProductDto(product));
+        model.addAttribute("cart", cartService.getCartDisplayDto());
         model.addAttribute("rating", rating);
         model.addAttribute("status", statusNotification);
         return "product/productDetails";

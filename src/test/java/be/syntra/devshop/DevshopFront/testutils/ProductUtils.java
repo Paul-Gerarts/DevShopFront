@@ -24,13 +24,13 @@ public class ProductUtils {
                 .categoryNames(List.of("Headphones"))
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(Collections.emptySet())
                 .build();
     }
 
     public static ProductDto getOtherDummyProductDto() {
         return ProductDto.builder()
+                .id(1L)
                 .name("name of prod")
                 .price(new BigDecimal("1.86"))
                 .categoryNames(List.of("Headphones"))
@@ -47,7 +47,6 @@ public class ProductUtils {
                 .categories(createCategoryList())
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(Collections.emptySet())
                 .build();
     }
@@ -62,7 +61,6 @@ public class ProductUtils {
                 .categories(createCategoryList())
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(getReviewSetWithDummyReview())
                 .build();
     }
@@ -77,7 +75,6 @@ public class ProductUtils {
                 .categoryNames(List.of("Headphones"))
                 .averageRating(0D)
                 .ratings(Collections.emptySet())
-                .totalInCart(1)
                 .reviews(getReviewSetWithDummyReview())
                 .build();
     }
@@ -101,18 +98,6 @@ public class ProductUtils {
                 .description("another description")
                 .archived(false)
                 .categories(createCategoryList())
-                .totalInCart(1)
-                .build();
-    }
-
-    public static Product getOtherDummyArchivedProduct() {
-        return Product.builder()
-                .id(2L)
-                .name("another product")
-                .price(new BigDecimal("0.99"))
-                .description("another description")
-                .archived(true)
-                .categories(createCategoryList())
                 .build();
     }
 
@@ -128,10 +113,6 @@ public class ProductUtils {
         return List.of(getDummyNonArchivedProduct(), getOtherDummyNonArchivedProduct());
     }
 
-    public static List<Product> getDummyArchivedProductList() {
-        return List.of(getDummyArchivedProduct(), getOtherDummyArchivedProduct());
-    }
-
     public static List<Product> getDummyAllProductList() {
         return List.of(getDummyNonArchivedProduct(), getDummyArchivedProduct());
     }
@@ -141,6 +122,22 @@ public class ProductUtils {
                 .products(getDummyNonArchivedProductList())
                 .searchResultMinPrice(BigDecimal.ZERO)
                 .searchResultMaxPrice(BigDecimal.TEN)
+                .currentPage(1)
+                .hasNext(true)
+                .hasPrevious(true)
+                .totalPages(3)
+                .build();
+    }
+
+    public static ProductList getDummyEmptyProductList() {
+        return ProductList.builder()
+                .products(Collections.emptyList())
+                .searchResultMinPrice(BigDecimal.ZERO)
+                .searchResultMaxPrice(BigDecimal.TEN)
+                .currentPage(1)
+                .hasNext(true)
+                .hasPrevious(true)
+                .totalPages(3)
                 .build();
     }
 }
