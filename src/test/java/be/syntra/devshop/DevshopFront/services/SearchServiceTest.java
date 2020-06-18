@@ -311,8 +311,8 @@ class SearchServiceTest {
         StarRatingDto starRating = createStarRatingDto();
 
         // when
-        searchmodelDummy.setStarRating(starRating.getRating());
-        Double result = searchService.getSearchModel().getStarRating();
+        searchmodelDummy.setAverageRating(starRating.getRating());
+        Double result = searchService.getSearchModel().getAverageRating();
 
         // then
         assertThat(result).isEqualTo(starRating.getRating());

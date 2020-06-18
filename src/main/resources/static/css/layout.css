@@ -143,7 +143,6 @@ html, body, .spinner {
 
 .search-filters-list-box {
     height: 60%;
-    /*TODO: make this admin-conditional?*/
 }
 
 .sorting {
@@ -293,7 +292,7 @@ html, body, .spinner {
 
 .selected-categories {
     position: absolute;
-    margin-top: 370px;
+    margin-top: 420px;
     min-width: 520px;
     max-width: 520px;
     display: flex;
@@ -436,10 +435,9 @@ html, body, .spinner {
     display: flex;
     flex-direction: row;
     top: 650px;
-    position: absolute;
     font-size: x-large;
-    padding-left: 100px;
-    z-index: 1;
+    padding-top: 60px;
+    padding-left: 105px;
 }
 
 .admin-archived-switch-text {

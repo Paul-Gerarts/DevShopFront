@@ -25,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.SUCCESS;
@@ -73,6 +74,7 @@ class ProductControllerTest {
         final CartDto dummyCartDto = getCartWithOneDummyProduct();
         final ProductList dummyProductList = getDummyProductList();
         SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(cartService.getCart()).thenReturn(dummyCartDto);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -154,6 +156,7 @@ class ProductControllerTest {
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCartDto = getCartWithOneDummyProduct();
         SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any(ProductList.class))).thenReturn(getDummyProductDtoList());

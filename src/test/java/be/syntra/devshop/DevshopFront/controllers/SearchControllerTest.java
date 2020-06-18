@@ -61,9 +61,11 @@ class SearchControllerTest {
         final String testRequest = "testRequest";
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
@@ -85,13 +87,14 @@ class SearchControllerTest {
     @Test
     void searchPriceLowTest() throws Exception {
         //given
-        final String priceLow = "6.66";
-        final BigDecimal price_low_big_d = new BigDecimal(priceLow);
+        final BigDecimal priceLow = new BigDecimal("6.66");
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
@@ -104,7 +107,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setPriceLow(price_low_big_d);
+        verify(searchService, times(1)).setPriceLow(priceLow);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -113,13 +116,14 @@ class SearchControllerTest {
     @Test
     void searchPriceHighTest() throws Exception {
         //given
-        final String priceHigh = "9999.99";
-        final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
+        final BigDecimal priceHigh = new BigDecimal("9999.99");
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
@@ -132,7 +136,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setPriceHigh(price_low_big_d);
+        verify(searchService, times(1)).setPriceHigh(priceHigh);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -144,9 +148,11 @@ class SearchControllerTest {
         final String description = "my prod description";
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCart()).thenReturn(dummyCart);
 
         // when
@@ -173,6 +179,7 @@ class SearchControllerTest {
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
                 .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
                 .selectedCategories(new ArrayList<>())
                 .build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
@@ -202,7 +209,11 @@ class SearchControllerTest {
     void canSortArchivedProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
+                .selectedCategories(new ArrayList<>()).build();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
 
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -230,6 +241,7 @@ class SearchControllerTest {
         final String category = "Accessories";
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
+                .priceHigh(BigDecimal.TEN)
                 .selectedCategories(List.of(category))
                 .searchResultView(true).build();
         final ProductList dummyProductList = getDummyProductList();
@@ -261,6 +273,7 @@ class SearchControllerTest {
         final String category = "Accessories";
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
+                .priceHigh(BigDecimal.TEN)
                 .selectedCategories(List.of(category))
                 .searchResultView(true)
                 .build();
@@ -293,8 +306,10 @@ class SearchControllerTest {
         final Double rating = 4.0D;
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
-                .starRating(rating)
+                .averageRating(rating)
                 .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
+                .selectedCategories(List.of())
                 .build();
         final ProductList dummyProductList = getDummyProductList();
         final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();

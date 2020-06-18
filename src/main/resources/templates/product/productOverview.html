@@ -123,21 +123,6 @@
 
             </div>
         </div>
-        <!--admin-archived-search-switch-->
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="search-filters admin-archived-switch">
-            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="searchSwitch">
-                <input onclick="toggleSwitch(this)" type="checkbox" id="searchSwitch" name="searchSwitch"
-                       th:value="${searchModel.isArchivedSearchSwitch()}" class="mdl-switch__input">
-                <span class="mdl-switch__label"></span>
-            </label>
-            <div class="admin-archived-switch-text">toggle archived product search</div>
-        </div>
-        <script th:inline="javascript">
-            function toggleSwitch(element) {
-                const archivedSearch = element.value;
-                location = "/admin/toggle/?searchSwitch=" + archivedSearch;
-            }
-        </script>
         <!--search filters-->
         <div class="search-filters" style="min-height: 1000px;">
             <ul class="search-filters-list-box mdl-list mdl-color--grey-100 mdl-shadow--8dp">
@@ -197,7 +182,7 @@
                         </div>
                         <p class="slider-high-input" id="sliderHighInput"
                            style="font-size: x-large; color: dodgerblue; min-width: 150px"
-                           th:text="'€ ' + ${searchModel.getPriceHigh()}"></p>
+                           th:text="'€ ' + ${searchModel.getPriceHigh().intValue()}"></p>
                     </form>
                     <script th:inline="javascript">
                         document.getElementById("sliderLow").oninput = function () {
@@ -258,7 +243,7 @@
                     </div>
                     <!--category-filter-->
                     <select onchange="selectCategory(this)" class="category-dropdown category-select"
-                            id="categorySelect" name="categorySelect">
+                            id="categorySelect" name="categorySelect" style="margin-top: 365px">
                         <option disabled selected value="none" style="color: black">Search for a category here...
                         </option>
                         <option th:each="category : ${searchModel.getCategories()}" style="color: black"
@@ -293,12 +278,46 @@
                             location = "/search/delete/?category=" + category;
                         }
                     </script>
+                    <!--star-rating-filter-->
+                    <select onchange="selectStarRating(this)" class="category-dropdown category-select"
+                            id="starRatingSelect" name="starRatingSelect">
+                        <option disabled selected value="none" style="color: black"
+                                th:text="${searchModel.averageRating == null} ? 'Select a star rating here...' : 'Selected rating = ' + ${searchModel.averageRating.intValue()}">
+                            Select a star rating here...
+                        </option>
+                        <option th:each="starValue : ${searchModel.getStarRatingValues()}" style="color: black"
+                                th:value="${starValue}"
+                                th:text="${starValue.intValue()}">
+                        </option>
+                    </select>
+                    <script th:inline="javascript">
+                        function selectStarRating(selectedStarRating) {
+                            const starRatingValue = selectedStarRating.options[selectedStarRating.selectedIndex].text;
+                            location = "/search/star_rating/?rating=" + starRatingValue;
+                        }
+                    </script>
                     <form class="search-filters reset-filters" method="get" th:action="@{/products}">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect mdl-color--blue mdl-color-text--white"
                                 style="margin-top: 80px">
                             <em class="material-icons">clear</em>Reset all filters
                         </button>
                     </form>
+                    <!--admin-archived-search-switch-->
+                    <div sec:authorize="hasRole('ROLE_ADMIN')" class="search-filters admin-archived-switch">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="searchSwitch">
+                            <input onclick="toggleSwitch(this)" type="checkbox" id="searchSwitch" name="searchSwitch"
+                                   th:value="${searchModel.isArchivedSearchSwitch()}" class="mdl-switch__input"
+                                   th:attr="checked=${searchModel.isArchivedSearchSwitch()}">
+                            <span class="mdl-switch__label"></span>
+                        </label>
+                        <div class="admin-archived-switch-text">archived product search</div>
+                    </div>
+                    <script th:inline="javascript">
+                        function toggleSwitch(element) {
+                            const archivedSearch = element.value;
+                            location = "/admin/toggle/?searchSwitch=" + archivedSearch;
+                        }
+                    </script>
                 </li>
             </ul>
         </div>

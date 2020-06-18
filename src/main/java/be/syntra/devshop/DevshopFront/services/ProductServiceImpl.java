@@ -95,6 +95,7 @@ public class ProductServiceImpl implements ProductService {
     private SearchModel wrap(SearchModel searchModel) {
         return SearchModel.builder()
                 .archivedView(searchModel.isArchivedView())
+                .archivedSearchSwitch(searchModel.isArchivedSearchSwitch())
                 .searchRequest(searchModel.getSearchRequest())
                 .searchResultView(searchModel.isSearchResultView())
                 .searchFailure(searchModel.isSearchFailure())
@@ -110,6 +111,7 @@ public class ProductServiceImpl implements ProductService {
                 .pageNumber(searchModel.getPageNumber())
                 .pageSize(searchModel.getPageSize())
                 .selectedCategories(searchModel.getSelectedCategories())
+                .averageRating(searchModel.getAverageRating())
                 .build();
     }
 

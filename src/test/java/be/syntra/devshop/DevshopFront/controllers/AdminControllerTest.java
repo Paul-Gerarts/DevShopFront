@@ -12,6 +12,8 @@ import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import be.syntra.devshop.DevshopFront.testutils.TestSecurityConfig;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -215,6 +218,7 @@ class AdminControllerTest {
         final ProductList dummyProductList = getDummyProductList();
         final ProductsDisplayListDto productsDisplayListDto = getDummyProductDtoList();
         SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
@@ -378,5 +382,36 @@ class AdminControllerTest {
         verify(productService, times(1)).findAllCategories();
         verify(categoryService, times(1)).setNewCategories(categoryToDelete, categoryToSet);
         verify(categoryService, times(1)).delete(categoryToDelete);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"true", "false"})
+    @WithMockUser(roles = {"ADMIN"})
+    void toggleArchivedSearchSwitchTest(boolean archivedSwitch) throws Exception {
+        // given
+        final ProductList dummyProductList = getDummyProductList();
+        final ProductsDisplayListDto productsDisplayListDto = getDummyProductDtoList();
+        SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
+        doNothing().when(searchService).setArchivedSearchSwitch(archivedSwitch);
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/admin/toggle/?searchSwitch=" + archivedSwitch));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("productlist"))
+                .andExpect(model().attribute("productlist", productsDisplayListDto));
+
+        verify(searchService, times(1)).setArchivedSearchSwitch(!archivedSwitch);
+        verify(searchService, times(1)).getSearchModel();
+        verify(productService, times(1)).findAllProductsBySearchModel();
+        verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
     }
 }

@@ -95,7 +95,6 @@ public class AdminController {
     public String toggleArchivedSearch(Model model, @RequestParam(defaultValue = "false") String searchSwitch) {
         searchService.setArchivedSearchSwitch(!parseBoolean(searchSwitch));
         return getProductOverview(model);
-        // TODO: add controllerTest. All the rest is already tested.
     }
 
     @GetMapping("/archived")
