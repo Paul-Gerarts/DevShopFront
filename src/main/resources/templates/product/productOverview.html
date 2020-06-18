@@ -283,7 +283,7 @@
                     <select onchange="selectStarRating(this)" class="category-dropdown category-select"
                             id="starRatingSelect" name="starRatingSelect">
                         <option disabled selected value="none" style="color: black"
-                                th:text="${searchModel.averageRating == null} ? 'Select a star rating here...' : 'Selected rating = ' + ${searchModel.averageRating.intValue()}">
+                                th:text="${searchModel.averageRating == null} ? 'Select minimum rating here...' : 'Selected rating = ' + ${searchModel.averageRating.intValue()}">
                             Select a star rating here...
                         </option>
                         <option th:each="starValue : ${searchModel.getStarRatingValues()}" style="color: black"

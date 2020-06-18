@@ -436,8 +436,8 @@ html, body, .spinner {
     flex-direction: row;
     top: 650px;
     font-size: x-large;
-    padding-top: 60px;
-    padding-left: 105px;
+    margin-top: 60px;
+    margin-left: 105px;
 }
 
 .admin-archived-switch-text {
