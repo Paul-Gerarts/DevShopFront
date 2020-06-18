@@ -13,6 +13,7 @@ import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_EXISTS;
+import static java.lang.Boolean.parseBoolean;
 
 
 @Slf4j
@@ -32,6 +34,8 @@ import static be.syntra.devshop.DevshopFront.models.StatusNotification.CATEGORY_
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Value("${pagination.page.size}")
+    private int[] pageSizes;
     private final ProductService productService;
     private final SearchService searchService;
     private final CategoryService categoryService;
@@ -90,15 +94,17 @@ public class AdminController {
         return handleChangedProductForm(productDto, bindingResult, model);
     }
 
+    @GetMapping("/toggle/")
+    public String toggleArchivedSearch(Model model, @RequestParam(defaultValue = "false") String searchSwitch) {
+        searchService.setArchivedSearchSwitch(!parseBoolean(searchSwitch));
+        return getProductOverview(model);
+    }
+
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
-        searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
-        ProductList productList = productService.findAllProductsBySearchModel();
-        model.addAttribute("searchModel", searchService.getSearchModel());
-        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
-        return "product/productOverview";
+        return getProductOverview(model);
     }
 
     @GetMapping("/manage_category")
@@ -145,6 +151,15 @@ public class AdminController {
         addCategoriesModel(model);
         addCategoryChangeDto(model);
         return CATEGORY_FORM;
+    }
+
+    private String getProductOverview(Model model) {
+        ProductList productList = productService.findAllProductsBySearchModel();
+        model.addAttribute("searchModel", searchService.getSearchModel());
+        model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
+        return "product/productOverview";
     }
 
     private String newCategory(Model model, String newCategory) {

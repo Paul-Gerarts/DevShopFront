@@ -26,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
+
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductList;
 import static org.mockito.Mockito.*;
@@ -63,6 +65,7 @@ public class PaginationControllerTest {
     void canRequestFirstPreviousNextPages(String url) throws Exception {
         // given
         SearchModel searchModel = new SearchModel();
+        searchModel.setPriceHigh(BigDecimal.TEN);
         searchModel.setPageSize(5);
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);
@@ -99,6 +102,7 @@ public class PaginationControllerTest {
     void canChangePageSize() throws Exception {
         // given
         SearchModel searchModel = new SearchModel();
+        searchModel.setPriceHigh(BigDecimal.TEN);
         searchModel.setPageSize(5);
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);

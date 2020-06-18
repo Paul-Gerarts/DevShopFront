@@ -26,6 +26,7 @@ public class SearchModel {
     private boolean nameSortActive = true;
     private boolean priceSortActive;
     private boolean archivedView;
+    private boolean archivedSearchSwitch;
     private boolean searchResultView;
     private boolean searchFailure;
     private boolean activeFilters;
@@ -34,25 +35,28 @@ public class SearchModel {
     private Integer pageSize = 5;
     private List<Category> categories;
     private List<String> selectedCategories = new ArrayList<>();
+    private List<Double> starRatingValues = List.of(1D, 2D, 3D, 4D, 5D);
+    private Double averageRating;
 
     @Override
     public String toString() {
         return "SearchModel{" +
                 "searchRequest='" + searchRequest + '\'' + "\n" +
-                ", description='" + description + '\'' + "\n" +
-                ", priceLow=" + priceLow + "\n" +
-                ", priceHigh=" + priceHigh + "\n" +
-                ", sortAscendingName=" + sortAscendingName + "\n" +
-                ", sortAscendingPrice=" + sortAscendingPrice + "\n" +
-                ", nameSortActive=" + nameSortActive + "\n" +
-                ", priceSortActive=" + priceSortActive + "\n" +
-                ", archivedView=" + archivedView + "\n" +
-                ", searchResultView=" + searchResultView + "\n" +
-                ", searchFailure=" + searchFailure + "\n" +
-                ", activeFilters=" + activeFilters + "\n" +
-                ", appliedFiltersHeader='" + appliedFiltersHeader + '\'' + "\n" +
-                ", pageNumber='" + pageNumber + '\'' + "\n" +
-                ", pageSize='" + pageSize + '\'' + "\n" +
+                "description='" + description + '\'' + "\n" +
+                "priceLow=" + priceLow + "\n" +
+                "priceHigh=" + priceHigh + "\n" +
+                "sortAscendingName=" + sortAscendingName + "\n" +
+                "sortAscendingPrice=" + sortAscendingPrice + "\n" +
+                "nameSortActive=" + nameSortActive + "\n" +
+                "priceSortActive=" + priceSortActive + "\n" +
+                "archivedView=" + archivedView + "\n" +
+                "archivedSearchSwitch=" + archivedSearchSwitch + "\n" +
+                "searchResultView=" + searchResultView + "\n" +
+                "searchFailure=" + searchFailure + "\n" +
+                "activeFilters=" + activeFilters + "\n" +
+                "appliedFiltersHeader='" + appliedFiltersHeader + '\'' + "\n" +
+                "pageNumber='" + pageNumber + '\'' + "\n" +
+                "pageSize='" + pageSize + '\'' + "\n" +
                 '}';
     }
 }

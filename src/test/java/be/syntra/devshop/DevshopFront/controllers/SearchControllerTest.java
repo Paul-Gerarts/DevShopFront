@@ -3,7 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
-import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDtoList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductList;
 import static org.mockito.Mockito.*;
@@ -61,9 +59,11 @@ class SearchControllerTest {
         // given
         final String testRequest = "testRequest";
         final ProductList dummyProductList = getDummyProductList();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
@@ -86,12 +86,13 @@ class SearchControllerTest {
     @Test
     void searchPriceLowTest() throws Exception {
         //given
-        final String priceLow = "6.66";
-        final BigDecimal price_low_big_d = new BigDecimal(priceLow);
+        final BigDecimal priceLow = new BigDecimal("6.66");
         final ProductList dummyProductList = getDummyProductList();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
@@ -104,7 +105,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setPriceLow(price_low_big_d);
+        verify(searchService, times(1)).setPriceLow(priceLow);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -114,12 +115,13 @@ class SearchControllerTest {
     @Test
     void searchPriceHighTest() throws Exception {
         //given
-        final String priceHigh = "9999.99";
-        final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
+        final BigDecimal priceHigh = new BigDecimal("9999.99");
         final ProductList dummyProductList = getDummyProductList();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
@@ -132,7 +134,7 @@ class SearchControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
 
-        verify(searchService, times(1)).setPriceHigh(price_low_big_d);
+        verify(searchService, times(1)).setPriceHigh(priceHigh);
         verify(searchService, times(1)).setSearchResultView(true);
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
@@ -144,9 +146,11 @@ class SearchControllerTest {
         //given
         final String description = "my prod description";
         final ProductList dummyProductList = getDummyProductList();
+        final SearchModel searchModelDummy = new SearchModel();
+        searchModelDummy.setPriceHigh(BigDecimal.TEN);
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
-        when(searchService.getSearchModel()).thenReturn(new SearchModel());
+        when(searchService.getSearchModel()).thenReturn(searchModelDummy);
         when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
@@ -171,7 +175,13 @@ class SearchControllerTest {
     void canSortProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
+                .selectedCategories(new ArrayList<>())
+                .build();
+
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -198,7 +208,11 @@ class SearchControllerTest {
     void canSortArchivedProductsTest(String url) throws Exception {
         // given
         final ProductList dummyProductList = getDummyProductList();
-        final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
+                .selectedCategories(new ArrayList<>()).build();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -225,6 +239,7 @@ class SearchControllerTest {
         final String category = "Accessories";
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
+                .priceHigh(BigDecimal.TEN)
                 .selectedCategories(List.of(category))
                 .searchResultView(true).build();
         final ProductList dummyProductList = getDummyProductList();
@@ -256,8 +271,10 @@ class SearchControllerTest {
         final String category = "Accessories";
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
+                .priceHigh(BigDecimal.TEN)
                 .selectedCategories(List.of(category))
-                .searchResultView(true).build();
+                .searchResultView(true)
+                .build();
         final ProductList dummyProductList = getDummyProductList();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
@@ -279,5 +296,38 @@ class SearchControllerTest {
         verify(searchService, times(1)).setArchivedView(false);
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(cartService, times(1)).getCartDisplayDto();
+    }
+
+    @Test
+    void searchStarRatingTest() throws Exception {
+        //given
+        final Double rating = 4D;
+        final SearchModel searchModel = SearchModel.builder()
+                .searchRequest("")
+                .averageRating(rating)
+                .searchResultView(true)
+                .priceHigh(BigDecimal.TEN)
+                .selectedCategories(List.of())
+                .build();
+        final ProductList dummyProductList = getDummyProductList();
+        when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
+        when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
+        when(searchService.getSearchModel()).thenReturn(searchModel);
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
+
+        // when
+        final ResultActions getResult = mockMvc.perform(get("/search/star_rating/?rating=" + rating));
+
+        // then
+        getResult
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/productOverview"))
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(model().attributeExists("searchModel", "productlist", "cart"));
+
+        verify(searchService, times(1)).setStarRating(rating);
+        verify(searchService, times(1)).setSearchResultView(true);
+        verify(searchService, times(1)).setArchivedView(false);
+        verify(productService, times(1)).findAllProductsBySearchModel();
     }
 }

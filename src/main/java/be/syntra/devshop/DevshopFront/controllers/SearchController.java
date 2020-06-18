@@ -81,6 +81,12 @@ public class SearchController {
         return setTemplateModel(model, applySearch(true));
     }
 
+    @GetMapping("/star_rating/")
+    public String searchProductStarRating(@RequestParam Double rating, Model model) {
+        searchService.setStarRating(rating);
+        return setTemplateModel(model, applySearch(true));
+    }
+
     @GetMapping("/sortbyname")
     public String sortByName(Model model) {
         searchService.setSortingByName();

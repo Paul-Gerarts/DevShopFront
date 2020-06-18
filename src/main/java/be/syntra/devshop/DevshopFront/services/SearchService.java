@@ -10,6 +10,8 @@ public interface SearchService {
 
     void setArchivedView(boolean archivedView);
 
+    void setArchivedSearchSwitch(boolean archivedSearchSwitch);
+
     void setSearchResultView(boolean searchResultView);
 
     void setPriceLow(BigDecimal priceLow);
@@ -43,4 +45,6 @@ public interface SearchService {
     void setRemainingCategories(String category);
 
     void removeFromSelectedCategories(String category);
+
+    void setStarRating(Double rating);
 }

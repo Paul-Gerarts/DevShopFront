@@ -41,6 +41,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void setArchivedSearchSwitch(boolean archivedSearchSwitch) {
+        searchModel.setArchivedSearchSwitch(archivedSearchSwitch);
+    }
+
+    @Override
     public void setSearchResultView(boolean searchResultView) {
         searchModel.setSearchResultView(searchResultView);
     }
@@ -100,7 +105,14 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public void setStarRating(Double rating) {
+        setAppliedFiltersToSearchModel();
+        searchModel.setAverageRating(rating);
+    }
+
+    @Override
     public void addToSelectedCategories(String category) {
+        setAppliedFiltersToSearchModel();
         Set<String> selectedCategories = new HashSet<>(getSelectedCategoriesList());
         selectedCategories.add(category);
         searchModel.setSelectedCategories(selectedCategories.parallelStream()
@@ -109,6 +121,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void removeFromSelectedCategories(String category) {
+        setAppliedFiltersToSearchModel();
         List<String> selectedCategories = getSelectedCategoriesList();
         selectedCategories.remove(category);
         searchModel.setSelectedCategories(selectedCategories);

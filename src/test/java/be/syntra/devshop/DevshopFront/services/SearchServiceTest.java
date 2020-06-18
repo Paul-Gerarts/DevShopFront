@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
+import be.syntra.devshop.DevshopFront.models.dtos.StarRatingDto;
 import be.syntra.devshop.DevshopFront.testutils.JsonUtils;
 import be.syntra.devshop.DevshopFront.testutils.TestWebConfig;
 import be.syntra.devshop.DevshopFront.testutils.WebContextTestExecutionListener;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
+import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingDto;
 import static junit.framework.TestCase.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -325,5 +327,33 @@ class SearchServiceTest {
 
         // then
         assertThat(searchService.getSearchModel().getSelectedCategories()).doesNotContain(categoryTestString);
+    }
+
+    @Test
+    void canSetStarRatingTest() {
+        // given
+        SearchModel searchmodelDummy = searchService.getSearchModel();
+        StarRatingDto starRating = createStarRatingDto();
+
+        // when
+        searchmodelDummy.setAverageRating(starRating.getRating());
+        Double result = searchService.getSearchModel().getAverageRating();
+
+        // then
+        assertThat(result).isEqualTo(starRating.getRating());
+    }
+
+    @Test
+    void canSetArchivedSearchSwitchTest() {
+        // given
+        SearchModel searchModelDummy = searchService.getSearchModel();
+        boolean searchSwitch = true;
+
+        // when
+        searchModelDummy.setArchivedSearchSwitch(searchSwitch);
+        boolean result = searchService.getSearchModel().isArchivedSearchSwitch();
+
+        // then
+        assertTrue(result);
     }
 }
