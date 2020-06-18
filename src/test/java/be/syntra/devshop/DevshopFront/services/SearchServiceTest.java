@@ -301,4 +301,29 @@ class SearchServiceTest {
         assertThat(result.size()).isEqualTo(categories.size());
         assertThat(result.get(0)).isEqualTo(categories.get(0));
     }
+
+    @Test
+    void canAddToSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+
+        // when
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).contains(categoryTestString);
+    }
+
+    @Test
+    void canRemoveFromSelectedCategoriesTest() {
+        // given
+        final String categoryTestString = "testCategory";
+        searchService.addToSelectedCategories(categoryTestString);
+
+        // when
+        searchService.removeFromSelectedCategories(categoryTestString);
+
+        // then
+        assertThat(searchService.getSearchModel().getSelectedCategories()).doesNotContain(categoryTestString);
+    }
 }

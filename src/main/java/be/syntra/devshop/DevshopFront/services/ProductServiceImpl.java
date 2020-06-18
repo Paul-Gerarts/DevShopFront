@@ -34,7 +34,6 @@ public class ProductServiceImpl implements ProductService {
 
     private String resourceUrl = null;
 
-    private final CartService cartService;
     private final SearchService searchService;
 
     @Autowired
@@ -42,10 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     public ProductServiceImpl(
-            CartService cartService,
             SearchService searchService
     ) {
-        this.cartService = cartService;
         this.searchService = searchService;
     }
 
@@ -160,11 +157,6 @@ public class ProductServiceImpl implements ProductService {
             return StatusNotification.UPDATED;
         }
         return StatusNotification.FORM_ERROR;
-    }
-
-    @Override
-    public void addToCart(Product product) {
-        cartService.addToCart(product);
     }
 
     @Override

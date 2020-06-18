@@ -11,7 +11,7 @@ public class PaymentUtils {
     public static PaymentDto createPaymentDtoWithTotalCartPrice() {
         return PaymentDto.builder()
                 .paymentOptions(Arrays.asList(PaymentOption.values()))
-                .totalCartPrice(new BigDecimal("88.99"))
+                .totalCartPrice(new BigDecimal("88"))
                 .build();
     }
 }

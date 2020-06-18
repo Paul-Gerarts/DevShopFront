@@ -58,9 +58,10 @@
                             <form th:object="${product}" method="post" th:action="@{/products}">
                             <input type="hidden" name="id" th:value="${product.id}"/>
                             <span sec:authorize="!hasRole('ROLE_ADMIN')" class="mdl-list__item-secondary-action">
-                                    <button th:disabled="${product.totalInCart > 0}">
-                                        <em th:if="${product.totalInCart == 0}" class="material-icons cart-icon">add_shopping_cart</em>
-                                        <em th:if="${product.totalInCart > 0}"
+                                    <button th:disabled="${#sets.contains(cart.cartProductsIdSet,product.id)}">
+                                        <em th:if="${!#sets.contains(cart.cartProductsIdSet,product.id)}"
+                                            class="material-icons cart-icon">add_shopping_cart</em>
+                                        <em th:if="${#sets.contains(cart.cartProductsIdSet,product.id)}"
                                             class="material-icons cart-icon-disabled">add_shopping_cart</em>
                                     </button>
                                 </span>

@@ -2,6 +2,7 @@ package be.syntra.devshop.DevshopFront.services;
 
 import be.syntra.devshop.DevshopFront.models.Category;
 import be.syntra.devshop.DevshopFront.models.Product;
+import be.syntra.devshop.DevshopFront.models.SearchModel;
 import be.syntra.devshop.DevshopFront.models.StatusNotification;
 import be.syntra.devshop.DevshopFront.models.dtos.*;
 import be.syntra.devshop.DevshopFront.services.utils.CategoryMapper;
@@ -24,14 +25,17 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryDto;
 import static be.syntra.devshop.DevshopFront.testutils.CategoryUtils.createCategoryList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.*;
+import static be.syntra.devshop.DevshopFront.testutils.SearchModelUtils.getDummySearchModel;
 import static be.syntra.devshop.DevshopFront.testutils.StarRatingUtils.createStarRatingSetDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -223,5 +227,90 @@ class ProductServiceImplTest {
         // then
         mockServer.verify();
         assertThat(result.getRatings().size()).isEqualTo(ratings.getRatings().size());
+    }
+
+    @Test
+    void canFindAllProductsBySearchModelTest() {
+        // given
+        final String productListAsJson = jsonUtils.asJsonString(getDummyProductList());
+        final String expectedEndpoint = baseUrl + endpoint + "/searching/";
+        when(searchService.getSearchModel()).thenReturn(getDummySearchModel());
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(productListAsJson));
+
+        // when
+        ProductList result = productService.findAllProductsBySearchModel();
+
+        // then
+        mockServer.verify();
+        assertThat(result.getProducts().size()).isEqualTo(getDummyProductList().getProducts().size());
+        assertThat(result.getCurrentPage()).isEqualTo(getDummyProductList().getCurrentPage());
+        assertThat(result.getTotalPages()).isEqualTo(getDummyProductList().getTotalPages());
+        assertThat(result.isHasNext()).isEqualTo(getDummyProductList().isHasNext());
+        assertThat(result.isHasPrevious()).isEqualTo(getDummyProductList().isHasPrevious());
+        verify(searchService, times(3)).getSearchModel();
+    }
+
+    @Test
+    void canFindAllProductsBySearchModelNoResultsTest() {
+        // given
+        final String productListAsJson = jsonUtils.asJsonString(getDummyEmptyProductList());
+        final String expectedEndpoint = baseUrl + endpoint + "/searching/";
+        when(searchService.getSearchModel()).thenReturn(getDummySearchModel());
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(productListAsJson));
+
+        // when
+        ProductList result = productService.findAllProductsBySearchModel();
+
+        // then
+        mockServer.verify();
+        assertThat(result.getProducts()).isEqualTo(Collections.emptyList());
+        assertThat(result.getCurrentPage()).isEqualTo(getDummyProductList().getCurrentPage());
+        assertThat(result.getTotalPages()).isEqualTo(getDummyProductList().getTotalPages());
+        assertThat(result.isHasNext()).isEqualTo(getDummyProductList().isHasNext());
+        assertThat(result.isHasPrevious()).isEqualTo(getDummyProductList().isHasPrevious());
+        verify(searchService, times(3)).getSearchModel();
+    }
+
+    @Test
+    void canAddSelectableCategoriesToSearchModel() {
+        // given
+        final List<Category> categories = createCategoryList();
+        final CategoryList categoryListDummy = new CategoryList(categories);
+        final String categoriesAsJson = jsonUtils.asJsonString(categoryListDummy);
+        final String expectedEndpoint = baseUrl + endpoint + "/categories";
+
+        SearchModel dummySearchModel = getDummySearchModel();
+        when(searchService.getSearchModel()).thenReturn(dummySearchModel);
+
+        mockServer
+                .expect(requestTo(expectedEndpoint))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(
+                        MockRestResponseCreators
+                                .withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(categoriesAsJson));
+
+        // when
+        productService.addSelectableCategoriesToSearchModel();
+
+        // then
+        verify(searchService, times(1)).getSearchModel();
     }
 }

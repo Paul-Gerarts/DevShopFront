@@ -3,7 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductsDisplayListDto;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -27,8 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductList;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,7 +67,7 @@ public class PaginationControllerTest {
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
-        when(cartService.getCart()).thenReturn(new CartDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
         when(productService.findAllProductsBySearchModel()).thenReturn(getDummyProductList());
         doNothing().when(searchService).requestNextPage();
         doNothing().when(searchService).requestPreviousPage();
@@ -92,7 +91,7 @@ public class PaginationControllerTest {
 
         verify(searchService, times(2)).getSearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartDisplayDto();
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 
@@ -104,7 +103,7 @@ public class PaginationControllerTest {
         final ProductsDisplayListDto productsDisplayListDto = new ProductsDisplayListDto();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(productsDisplayListDto);
-        when(cartService.getCart()).thenReturn(new CartDto());
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
         when(productService.findAllProductsBySearchModel()).thenReturn(getDummyProductList());
 
         // when
@@ -128,7 +127,7 @@ public class PaginationControllerTest {
 
         verify(searchService, times(4)).getSearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
-        verify(cartService, times(1)).getCart();
+        verify(cartService, times(1)).getCartDisplayDto();
         verify(productService, times(1)).findAllProductsBySearchModel();
     }
 }
