@@ -63,7 +63,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(Long id) {
-        Set contentDtoList = getCart().getCartProductDtoSet();
+        Set<CartProductDto> contentDtoList = getCart().getCartProductDtoSet();
         CartProductDto currentCartProductDto = getCartContentDtoFromCart(id)
                 .orElse(CartProductDto.builder()
                         .productDto(productMapper.convertToProductDto(productService.findById(id)))
