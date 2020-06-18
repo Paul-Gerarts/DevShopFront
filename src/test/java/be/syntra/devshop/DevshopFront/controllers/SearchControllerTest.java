@@ -3,7 +3,6 @@ package be.syntra.devshop.DevshopFront.controllers;
 import be.syntra.devshop.DevshopFront.configuration.WebConfig;
 import be.syntra.devshop.DevshopFront.exceptions.JWTTokenExceptionHandler;
 import be.syntra.devshop.DevshopFront.models.SearchModel;
-import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.ProductList;
 import be.syntra.devshop.DevshopFront.services.CartService;
 import be.syntra.devshop.DevshopFront.services.ProductService;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartProductsDisplayDto;
-import static be.syntra.devshop.DevshopFront.testutils.CartUtils.getCartWithMultipleNonArchivedProducts;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDtoList;
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductList;
 import static org.mockito.Mockito.*;
@@ -303,7 +301,7 @@ class SearchControllerTest {
     @Test
     void searchStarRatingTest() throws Exception {
         //given
-        final Double rating = 4.0D;
+        final Double rating = 4D;
         final SearchModel searchModel = SearchModel.builder()
                 .searchRequest("")
                 .averageRating(rating)
@@ -312,11 +310,10 @@ class SearchControllerTest {
                 .selectedCategories(List.of())
                 .build();
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(searchModel);
-        when(cartService.getCart()).thenReturn(dummyCart);
+        when(cartService.getCartDisplayDto()).thenReturn(getCartProductsDisplayDto());
 
         // when
         final ResultActions getResult = mockMvc.perform(get("/search/star_rating/?rating=" + rating));
