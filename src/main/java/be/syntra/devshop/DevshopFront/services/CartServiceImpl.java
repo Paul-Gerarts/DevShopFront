@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -62,10 +63,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(Long id) {
-        Set<CartProductDto> contentDtoList = getCart().getCartProductDtoSet();
-        CartProductDto currentCartProductDto = contentDtoList.stream()
-                .filter(cartProductDto -> cartProductDto.getProductDto().getId().equals(id))
-                .findFirst()
+        Set contentDtoList = getCart().getCartProductDtoSet();
+        CartProductDto currentCartProductDto = getCartContentDtoFromCart(id)
                 .orElse(CartProductDto.builder()
                         .productDto(productMapper.convertToProductDto(productService.findById(id)))
                         .count(0)
@@ -74,22 +73,19 @@ public class CartServiceImpl implements CartService {
         contentDtoList.add(currentCartProductDto);
     }
 
-    @Override
-    public void addOneToProductInCart(Long productId) {
-        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
-        cartProductDto.setCount(cartProductDto.getCount() + 1);
-    }
-
-    private CartProductDto getCartContentDtoFromCart(Long productId) {
-        Optional<CartProductDto> cartProductDto = getCart().getCartProductDtoSet().stream()
+    private Optional<CartProductDto> getCartContentDtoFromCart(Long productId) {
+        return getCart().getCartProductDtoSet().stream()
                 .filter(cartCountedProductDto -> productId.equals(cartCountedProductDto.getProductDto().getId()))
                 .findFirst();
-        return cartProductDto.orElseThrow(() -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart"));
+    }
+
+    private Supplier<ProductNotFoundException> productNotFoundExceptionSupplier(Long productId){
+        return () -> new ProductNotFoundException("Product with id = " + productId + " was not found in your cart");
     }
 
     @Override
     public void removeOneFromProductInCart(Long productId) {
-        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
+        CartProductDto cartProductDto = getCartContentDtoFromCart(productId).orElseThrow(productNotFoundExceptionSupplier(productId));
         if (cartProductDto.getCount() == 1) {
             removeProductFromCart(productId);
         } else {
@@ -99,7 +95,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeProductFromCart(Long productId) {
-        CartProductDto cartProductDto = getCartContentDtoFromCart(productId);
+        CartProductDto cartProductDto = getCartContentDtoFromCart(productId).orElseThrow(productNotFoundExceptionSupplier(productId));
         getCart().getCartProductDtoSet().remove(cartProductDto);
     }
 

@@ -123,7 +123,7 @@ class CartServiceImplTest {
         cartService.addToCart(dummyProductDto.getId());
 
         // when
-        cartService.addOneToProductInCart(dummyProduct.getId());
+        cartService.addToCart(dummyProduct.getId());
 
         // then
         assertEquals(currentCart.getCartProductDtoSet().iterator().next().getCount(), 2);

@@ -13,8 +13,6 @@ public interface CartService {
 
     void addToCart(Long id);
 
-    void addOneToProductInCart(Long productId);
-
     void removeOneFromProductInCart(Long productId);
 
     void removeProductFromCart(Long productId);

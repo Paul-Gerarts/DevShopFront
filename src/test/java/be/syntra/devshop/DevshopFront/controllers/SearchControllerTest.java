@@ -61,7 +61,6 @@ class SearchControllerTest {
         // given
         final String testRequest = "testRequest";
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
@@ -90,7 +89,6 @@ class SearchControllerTest {
         final String priceLow = "6.66";
         final BigDecimal price_low_big_d = new BigDecimal(priceLow);
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
@@ -119,7 +117,6 @@ class SearchControllerTest {
         final String priceHigh = "9999.99";
         final BigDecimal price_low_big_d = new BigDecimal(priceHigh);
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
@@ -147,7 +144,6 @@ class SearchControllerTest {
         //given
         final String description = "my prod description";
         final ProductList dummyProductList = getDummyProductList();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(searchService.getSearchModel()).thenReturn(new SearchModel());
@@ -176,7 +172,6 @@ class SearchControllerTest {
         // given
         final ProductList dummyProductList = getDummyProductList();
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);
@@ -204,7 +199,6 @@ class SearchControllerTest {
         // given
         final ProductList dummyProductList = getDummyProductList();
         final SearchModel searchModel = SearchModel.builder().searchRequest("").searchResultView(true).selectedCategories(new ArrayList<>()).build();
-        final CartDto dummyCart = getCartWithMultipleNonArchivedProducts();
         when(searchService.getSearchModel()).thenReturn(searchModel);
         when(productMapper.convertToProductsDisplayListDto(any())).thenReturn(getDummyProductDtoList());
         when(productService.findAllProductsBySearchModel()).thenReturn(dummyProductList);

@@ -84,7 +84,7 @@ class UserControllerTest {
         getResult
                 .andExpect(redirectedUrl("/users/cart/detail"));
 
-        verify(cartService).addOneToProductInCart(1L);
+        verify(cartService).addToCart(1L);
     }
 
     @Test

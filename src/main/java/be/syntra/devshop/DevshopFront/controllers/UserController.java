@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/cart/details/plus_one/{id}")
     public String increaseCartProduct(@PathVariable Long id) {
-        cartService.addOneToProductInCart(id);
+        cartService.addToCart(id);
         return REDIRECT_CART_DETAIL_URL;
     }
 
