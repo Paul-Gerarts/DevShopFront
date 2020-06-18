@@ -110,6 +110,8 @@ public class ProductServiceImpl implements ProductService {
                 .sortAscendingPrice(searchModel.isSortAscendingPrice())
                 .pageNumber(searchModel.getPageNumber())
                 .pageSize(searchModel.getPageSize())
+                .categories(searchModel.getCategories())
+                .starRatingValues(searchModel.getStarRatingValues())
                 .selectedCategories(searchModel.getSelectedCategories())
                 .averageRating(searchModel.getAverageRating())
                 .build();

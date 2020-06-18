@@ -13,6 +13,7 @@ import be.syntra.devshop.DevshopFront.services.SearchService;
 import be.syntra.devshop.DevshopFront.services.utils.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,8 @@ import static java.lang.Boolean.parseBoolean;
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Value("${pagination.page.size}")
+    private int[] pageSizes;
     private final ProductService productService;
     private final SearchService searchService;
     private final CategoryService categoryService;
@@ -99,7 +102,6 @@ public class AdminController {
 
     @GetMapping("/archived")
     public String displayArchivedProducts(Model model) {
-        searchService.resetSearchModel();
         searchService.setSearchResultView(false);
         searchService.setArchivedView(true);
         return getProductOverview(model);
@@ -155,6 +157,8 @@ public class AdminController {
         ProductList productList = productService.findAllProductsBySearchModel();
         model.addAttribute("searchModel", searchService.getSearchModel());
         model.addAttribute("productlist", productMapper.convertToProductsDisplayListDto(productList));
+        model.addAttribute("pageSizeList", pageSizes);
+        model.addAttribute("selectedPageSize", searchService.getSearchModel().getPageSize());
         return "product/productOverview";
     }
 

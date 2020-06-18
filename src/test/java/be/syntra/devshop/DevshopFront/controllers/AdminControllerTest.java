@@ -234,10 +234,9 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("productlist"))
                 .andExpect(model().attribute("productlist", productsDisplayListDto));
 
-        verify(searchService, times(1)).resetSearchModel();
         verify(searchService, times(1)).setSearchResultView(false);
         verify(searchService, times(1)).setArchivedView(true);
-        verify(searchService, times(1)).getSearchModel();
+        verify(searchService, times(2)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
     }
@@ -359,7 +358,7 @@ class AdminControllerTest {
         final List<Category> categories = createCategoryList();
         final CategoryList categoryList = new CategoryList(categories);
         final Long categoryToDelete = categories.get(0).getId();
-        final long categoryToSet = 2L;
+        final Long categoryToSet = 2L;
         when(productService.findAllCategories()).thenReturn(categoryList);
         when(categoryService.setNewCategories(categoryToDelete, categoryToSet)).thenReturn(StatusNotification.SUCCESS);
         when(categoryService.delete(categoryToDelete)).thenReturn(StatusNotification.DELETED);
@@ -410,7 +409,7 @@ class AdminControllerTest {
                 .andExpect(model().attribute("productlist", productsDisplayListDto));
 
         verify(searchService, times(1)).setArchivedSearchSwitch(!archivedSwitch);
-        verify(searchService, times(1)).getSearchModel();
+        verify(searchService, times(2)).getSearchModel();
         verify(productService, times(1)).findAllProductsBySearchModel();
         verify(productMapper, times(1)).convertToProductsDisplayListDto(any());
     }
