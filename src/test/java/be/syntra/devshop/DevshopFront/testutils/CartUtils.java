@@ -5,9 +5,7 @@ import be.syntra.devshop.DevshopFront.models.dtos.CartDto;
 import be.syntra.devshop.DevshopFront.models.dtos.CartProductDto;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static be.syntra.devshop.DevshopFront.testutils.ProductUtils.getDummyProductDto;
 
@@ -32,15 +30,9 @@ public class CartUtils {
 
     public static CartDisplayDto getCartProductsDisplayDto() {
         return CartDisplayDto.builder()
-                .cartProductDtoList(getSortedProductList())
+                .cartProductDtoSet(getCartProductDtoSet())
                 .cartProductsIdSet(getProductIdSet())
                 .build();
-    }
-
-    private static List<CartProductDto> getSortedProductList() {
-        return getCartProductDtoSet().stream()
-                .sorted((p1,p2) -> p1.getProductDto().getName().compareToIgnoreCase(p2.getProductDto().getName()))
-                .collect(Collectors.toList());
     }
 
     private static Set<Long> getProductIdSet() {

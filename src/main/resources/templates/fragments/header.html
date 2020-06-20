@@ -73,8 +73,8 @@
         </div>
         <div sec:authorize="!hasRole('ROLE_ADMIN')" th:if="${cart != null}" style="position: absolute; right: 250px;"
              th:object="${cart}">
-            <div style="position: absolute; right: 40px;" th:if="*{#lists.size(cartProductDtoList) > 0}">
-                <label th:text="*{#lists.size(cartProductDtoList)}" class="mdl-layout-title"
+            <div style="position: absolute; right: 40px;" th:if="*{#sets.size(cartProductDtoSet) > 0}">
+                <label th:text="*{#sets.size(cartProductDtoSet)}" class="mdl-layout-title"
                        style="padding-top: 13px; padding-right: 14px">0</label>
             </div>
             <a th:href="@{/cart/details}">

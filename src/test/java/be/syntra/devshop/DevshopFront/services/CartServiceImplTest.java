@@ -276,7 +276,7 @@ class CartServiceImplTest {
         final CartDisplayDto cartProductsDto = cartService.getCartDisplayDto();
 
         // then
-        assertEquals(cartProductsDto.getCartProductDtoList().size(), 1);
+        assertEquals(cartProductsDto.getCartProductDtoSet().size(), 1);
         assertEquals(cartProductsDto.getCartProductsIdSet().iterator().next(), dummyProduct.getId());
     }
 }
