@@ -17,8 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -139,9 +138,15 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartDisplayDto getCartDisplayDto() {
         return CartDisplayDto.builder()
-                .cartProductDtoSet(getProducts())
+                .cartProductDtoSet(getSortedProducts())
                 .cartProductsIdSet(getProductIds())
                 .build();
+    }
+
+    private Set<CartProductDto> getSortedProducts() {
+        SortedSet<CartProductDto> sorted = new TreeSet<>(Comparator.comparing(c -> c.getProductDto().getName()));
+        sorted.addAll(getProducts());
+        return sorted;
     }
 
     private Set<Long> getProductIds() {
