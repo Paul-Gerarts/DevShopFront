@@ -1,0 +1,4 @@
+packageSearchIndex = [{
+    "l": "All Packages",
+    "url": "allpackages-index.html"
+}, {"l": "be.syntra.devshop.DevshopFront"}, {"l": "be.syntra.devshop.DevshopFront.configuration"}, {"l": "be.syntra.devshop.DevshopFront.controllers"}, {"l": "be.syntra.devshop.DevshopFront.exceptions"}, {"l": "be.syntra.devshop.DevshopFront.factories"}, {"l": "be.syntra.devshop.DevshopFront.init"}, {"l": "be.syntra.devshop.DevshopFront.models"}, {"l": "be.syntra.devshop.DevshopFront.models.dtos"}, {"l": "be.syntra.devshop.DevshopFront.repositories"}, {"l": "be.syntra.devshop.DevshopFront.security"}, {"l": "be.syntra.devshop.DevshopFront.security.services"}, {"l": "be.syntra.devshop.DevshopFront.services"}, {"l": "be.syntra.devshop.DevshopFront.services.utils"}, {"l": "be.syntra.devshop.DevshopFront.testutils"}]

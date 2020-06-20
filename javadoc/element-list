@@ -1,0 +1,14 @@
+be.syntra.devshop.DevshopFront
+be.syntra.devshop.DevshopFront.configuration
+be.syntra.devshop.DevshopFront.controllers
+be.syntra.devshop.DevshopFront.exceptions
+be.syntra.devshop.DevshopFront.factories
+be.syntra.devshop.DevshopFront.init
+be.syntra.devshop.DevshopFront.models
+be.syntra.devshop.DevshopFront.models.dtos
+be.syntra.devshop.DevshopFront.repositories
+be.syntra.devshop.DevshopFront.security
+be.syntra.devshop.DevshopFront.security.services
+be.syntra.devshop.DevshopFront.services
+be.syntra.devshop.DevshopFront.services.utils
+be.syntra.devshop.DevshopFront.testutils

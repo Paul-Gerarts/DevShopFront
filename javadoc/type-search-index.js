@@ -1,0 +1,304 @@
+typeSearchIndex = [{
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "AdminController"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "AdminFunctions"}, {
+    "l": "All Classes",
+    "url": "allclasses-index.html"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "ApiError"}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "AuthorisationController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "AuthorisationControllerTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "AuthorisationService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "AuthorisationServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.security",
+    "l": "AuthSuccessHandler"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.configuration",
+    "l": "CachingConfig"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "CartController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CartDisplayDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CartDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CartProductDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "CartService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "CartServiceImpl"
+}, {"p": "be.syntra.devshop.DevshopFront.testutils", "l": "CartUtils"}, {
+    "p": "be.syntra.devshop.DevshopFront.models",
+    "l": "Category"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CategoryChangeDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CategoryDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "CategoryList"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services.utils",
+    "l": "CategoryMapper"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services.utils",
+    "l": "CategoryMapperTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "CategoryNotFoundException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "CategoryService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "CategoryServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "CategoryServiceTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "CategoryUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "CustomException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.security",
+    "l": "CustomLogoutHandler"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.init",
+    "l": "DataFillerExecutor"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "DataFillerImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.repositories",
+    "l": "DataFillerService"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "DataStore"}, {
+    "p": "be.syntra.devshop.DevshopFront",
+    "l": "DevshopFrontApplication"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "ErrorDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ErrorService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ErrorServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ErrorServiceTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "GlobalFormExceptionHandler"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "InvalidJWTTokenException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "JsonUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "JWTTokenDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "JWTTokenExceptionHandler"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "LogInDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "MainPageController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "MainPageControllerTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "MyErrorController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "MyErrorControllerTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "PaginationController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "PaginationControllerTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "PaymentDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models",
+    "l": "PaymentOption"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "PaymentUtils"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "Product"}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "ProductController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "ProductDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "ProductList"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services.utils",
+    "l": "ProductMapper"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "ProductNotFoundException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "ProductsDisplayListDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ProductService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ProductServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "ProductUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "RegisterUserDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.configuration",
+    "l": "RestTemplateHeaderModifierInterceptor"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "RestTemplateResponseErrorHandler"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "Review"}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "ReviewDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ReviewService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ReviewServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "ReviewServiceImplTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "ReviewUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "SearchController"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "SearchModel"}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "SearchModelUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "SearchService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "SearchServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.init",
+    "l": "SecureLogin"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.security.services",
+    "l": "SecurityLoginService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "SecurityLoginServiceTest"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "SecurityUser"}, {
+    "p": "be.syntra.devshop.DevshopFront.init",
+    "l": "SimpleCacheCustomize"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.security",
+    "l": "SpringSecurityConfig"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models",
+    "l": "StarRating"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "StarRatingDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "StarRatingService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "StarRatingServiceImpl"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "StarRatingServiceTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "StarRatingSet"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "StarRatingUtils"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models",
+    "l": "StatusNotification"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "TestSecurityConfig"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.testutils",
+    "l": "TestWebConfig"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.controllers",
+    "l": "UserController"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.models.dtos",
+    "l": "UserDto"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.factories",
+    "l": "UserFactory"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.factories",
+    "l": "UserFactoryTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "UserNotFoundException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.repositories",
+    "l": "UserRepository"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "UserRole"}, {
+    "p": "be.syntra.devshop.DevshopFront.factories",
+    "l": "UserRoleFactory"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.factories",
+    "l": "UserRoleFactoryTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.exceptions",
+    "l": "UserRoleNotFoundException"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.repositories",
+    "l": "UserRoleRepository"
+}, {"p": "be.syntra.devshop.DevshopFront.models", "l": "UserRoles"}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "UserRoleService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "UserRoleServiceTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "UserService"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.services",
+    "l": "UserServiceTest"
+}, {
+    "p": "be.syntra.devshop.DevshopFront.configuration",
+    "l": "WebConfig"
+}, {"p": "be.syntra.devshop.DevshopFront.testutils", "l": "WebContextTestExecutionListener"}]
