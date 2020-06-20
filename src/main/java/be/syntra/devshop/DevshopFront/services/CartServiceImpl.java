@@ -144,7 +144,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private Set<CartProductDto> getSortedProducts() {
-        SortedSet<CartProductDto> sorted = new TreeSet<>(Comparator.comparing(c -> c.getProductDto().getName()));
+        SortedSet<CartProductDto> sorted = new TreeSet<>(Comparator.comparing(cartProductDto -> cartProductDto.getProductDto().getName()));
         sorted.addAll(getProducts());
         return sorted;
     }
